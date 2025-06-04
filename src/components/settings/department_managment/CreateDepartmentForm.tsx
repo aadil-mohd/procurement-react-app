@@ -12,7 +12,6 @@ interface FormErrors {
 }
 
 interface ICreateDepartmentForm extends IModalProps {
-
     type?: "edit" | "create",
     department: IDepartment,
     trigger: () => void

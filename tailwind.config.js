@@ -1,3 +1,5 @@
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -21,7 +23,7 @@ export default {
         bgBlue: '#F6F8FB',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'], // Default to Helvetica Neue
+        sans: ['Helvetica Neue', ...defaultTheme.fontFamily.sans],
       },
     },
   },
