@@ -1,1 +1,45 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply font-sans;
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #93c5fd; /* Thumb color */
+    border-radius: 8px; /* Rounded edges */
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: #e0f2fe; /* Track color */
+    border-radius: 8px; /* Rounded edges */
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin; /* For Firefox */
+  }
+}
+
+.modal-open {
+  overflow: hidden;
+}
+
+/* Completely hide number input arrows for Chrome, Safari, Edge, Opera */
+input[type=number].hide-arrows::-webkit-inner-spin-button,
+input[type=number].hide-arrows::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Completely hide number input arrows for Firefox */
+input[type=number].hide-arrows {
+    -moz-appearance: textfield;
+}
+
+

@@ -29,12 +29,13 @@ const DepartmentManagment: React.FC = () => {
     count: 0
   });
 
-  const [filter, setFilter] = useState<IFilterDto>({
-    fields: [],
-    pageNo: 1,
-    pageSize: 10,
-    sortColumn: "CreatedAt",
-    sortOrder: "DESC",
+  const [filter, setFilter] = useState<any>({
+    nameFilter:"",
+    phoneFilter:"",
+    emailFilter:"",
+    id:undefined,
+    fromDate:undefined,
+    toDate:undefined
   });
 
   const handleThreeDots = (type: "edit" | "delete", department: IDepartment) => {
@@ -71,6 +72,29 @@ const DepartmentManagment: React.FC = () => {
   const setupDepartments = async (filterData: IFilterDto = filter) => {
     try {
       const response = await getAllDepartmentsAsync(filterData);
+      // const response = [{
+      //   id: "12",
+      //   createdAt: "2002-02-12",
+      //   createdBy: "12",
+      //   updatedAt: "2002-02-12",
+      //   updatedBy: "12",
+      //   clientId: "adsd",
+      //   departmentName: "DPPEE",
+      //   departmentCode: "sdsd"
+      // }];
+      
+      // for (let i = 0; i < 4; i++) {
+      //   response.push({
+      //     id: "12",
+      //     createdAt: "2002-02-12",
+      //     createdBy: "12",
+      //     updatedAt: "2002-02-12",
+      //     updatedBy: "12",
+      //     clientId: "adsd",
+      //     departmentName: "DPPEE",
+      //     departmentCode: "sdsd"
+      //   })
+      // }
       setDepartments(response);
     } catch (err: any) {
       notification.error({
@@ -80,7 +104,7 @@ const DepartmentManagment: React.FC = () => {
     }
   }
   useEffect(() => {
-    setFilter({ ...filter, globalSearch: searchQuery })
+    setFilter({ ...filter, nameFilter: searchQuery })
   }, [searchQuery]);
 
   useEffect(() => {
