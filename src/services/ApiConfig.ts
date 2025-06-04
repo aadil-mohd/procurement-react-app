@@ -1,4 +1,3 @@
 export const Urls = {
-    users : import.meta.env.VITE_API_USERS_URL,
-   
+    defaultUrl : import.meta.env.VITE_API_DEFAULT_URL,
 }
