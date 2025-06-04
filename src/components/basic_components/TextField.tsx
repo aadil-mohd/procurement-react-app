@@ -1,7 +1,6 @@
 import { useState } from "react";
-
+import { ITextFieldProp } from "../../types/Types";
 import { EyeIcon, EyeSlashIcon } from "../../utils/Icons"; // Add CalendarIcon
-import type { ITextFieldProp } from "../../types/Types";
 
 const TextField = ({
   id,
