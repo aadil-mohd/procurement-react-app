@@ -61,9 +61,9 @@ export const LoginComponent: React.FC<LoginComponentProps> = () => {
         }}
         className="bg-white rounded px-8 py-[50px] w-full sm:w-full md:w-full lg:w-[402px] xl:w-[402px]"
       >
-        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Sign In</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Welcome back</h2>
         <p className="text-gray-500 text-sm mb-8">
-          Enter your credentials below to continue
+          Welcome back! Please enter your details.
         </p>
         <TextField
           id="login-username"
