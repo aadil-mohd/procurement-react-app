@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import UserManagment from '../../components/settings/user_managment/UserManagment';
+import DepartmentManagment from '../../components/settings/department_managment/DepartmentManagment';
+//import UserManagment from '../../components/settings/user_managment/UserManagment';
 
 type SettingsSection =
   | 'User management'
@@ -57,17 +58,22 @@ const SettingsPage = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'User management':
-        return <UserManagment />;
+        //return <UserManagment />;
+        return <></>;
       case 'Manage department':
         return <DepartmentManagment />;
       case 'Budget allocation':
-        return <BudgetAllocation />;
+        //return <BudgetAllocation />;
+        return <></>;
       case 'Roles & permissions':
-        return <RolesPermissions />;
+        //return <RolesPermissions />;
+        return <></>;
       case 'Approval workflow':
-        return <ApprovalWorkflow />;
+        //return <ApprovalWorkflow />;
+        return <></>;
       default:
-        return <UserManagment />;
+        //return <UserManagment />;
+        return <></>;
     }
   };
 

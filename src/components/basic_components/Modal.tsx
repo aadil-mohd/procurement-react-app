@@ -1,6 +1,5 @@
-import type { ModalProps } from "../../types/Types";
 import { CloseIcon } from "../../utils/Icons";
-
+import { ModalProps } from "../../types/Types";
 
 const Modal = ({
   isOpen,

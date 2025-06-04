@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import capexLogo from "../../assets/capex_logo/capex-logo.png";
 import {
   BellIcon,
   ClipboardIcon,
@@ -9,17 +10,17 @@ import {
   SettingsIcon,
   UserIcon,
 } from "../../utils/Icons";
-
+import { NavItem } from "../../types/Types";
 import Modal from "./Modal"; // Assuming Modal is a separate component
-import type { NavItem } from "../../types/Types";
-
+import NotificationContent from "../dashboard/NotificationContent"; // Assuming NotificationContent is the content of the modal
+import { INotificationItem } from "../../types/commonTypes";
 
 interface NavbarProp{
-  notifications?:[];
-  trigger?:()=>void
+  notifications:INotificationItem[];
+  trigger:()=>void
 }
 
-const Navbar = ({ }: NavbarProp) => {
+const Navbar = ({ notifications,trigger }: NavbarProp) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
 
@@ -60,7 +61,7 @@ const Navbar = ({ }: NavbarProp) => {
     <div className="fixed top-0 left-0 w-full bg-white shadow-md z-10">
       <div className="flex items-center justify-between p-4">
         {/* Logo */}
-        <img src={""} alt="Logo" className="w-10 h-10" />
+        <img src={capexLogo} alt="Logo" className="w-10 h-10" />
 
         {/* Menu Icon for Mobile */}
         <button
@@ -98,13 +99,35 @@ const Navbar = ({ }: NavbarProp) => {
                 />
               ))}
 
-  
+              {/* Notifications (Open Modal) */}
+              <div className="relative inline-block">
+                <Nav_Link
+                  key="Notifications"
+                  to={undefined} // No route, just opens modal
+                  title="Notifications"
+                  icon={BellIcon}
+                  onClick={() => {
+                    setIsModalOpen(true); // Open the notification modal
+                    setIsDropdownOpen(false); // Close the dropdown
+                  }}
+                />
+                {notifications.some(n=>!n.isRead) && <span className="absolute top-2 right-3 inline-flex items-center justify-center w-2 h-2 text-xs text-white bg-red-500 rounded-full -translate-y-1/2 translate-x-1/2">
+                </span>}
+              </div>
             </div>
           </div>
         </div>
       )}
 
-    
+      {/* Modal for Notifications */}
+      <Modal
+        title="Notifications"
+        modalPosition="start"
+        content={<NotificationContent data={notifications} closeModal={() => setIsModalOpen(false)} trigger={trigger} />} // Assuming NotificationContent displays the notification list
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        width="40%"
+      />
     </div>
   );
 };
