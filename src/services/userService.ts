@@ -1,0 +1,139 @@
+import axios, { AxiosError } from 'axios';
+import { Urls } from './ApiConfig';
+import { getUserToken } from '../utils/common';
+
+// Define the expected shape of the login data
+interface ILogin {
+  username: string;
+  password: string;
+}
+
+// Updated registration interface to match complete user data structure
+interface IRegisterUser {
+  id: number;
+  photo: string;
+  userName: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  gender: string;
+  place: string;
+  isActive: boolean;
+  roleId: number;
+}
+
+// Define the expected shape for password reset request
+interface ResetPasswordRequest {
+  email: string;
+  token: string;
+  newPassword: string;
+}
+
+// Define the expected shape for forgot password request
+interface ForgotPasswordRequest {
+  email: string;
+}
+
+// Define the expected API response shape
+interface AuthResponse {
+  token: string;
+}
+
+// Define a custom error interface for API errors
+interface ApiError {
+  message: string;
+  status?: number;
+}
+
+// Shared error handling function
+const handleApiError = (err: unknown, defaultMessage: string): never => {
+  if (axios.isAxiosError(err)) {
+    const axiosError = err as AxiosError<ApiError>;
+    throw new Error(
+      axiosError.response?.data?.message || defaultMessage
+    );
+  }
+  throw new Error('An unexpected error occurred.');
+};
+
+export const userLoginAsync = async (data: ILogin): Promise<string> => {
+  try {
+    const response = await axios.post<AuthResponse>(
+      `${Urls.users}/api/Users/login`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      }
+    );
+    return response.data.token;
+  } catch (err) {
+    return handleApiError(err, 'Login failed. Please try again.');
+  }
+};
+
+export const userRegisterAsync = async (userData: IRegisterUser): Promise<string> => {
+  try {
+    const response = await axios.post<AuthResponse>(
+      `${Urls.users}/api/Users/CreateOrUpdateUser`,
+      userData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          Authorization: `Bearer ${getUserToken()}`,
+        },
+      }
+    );
+    return response.data.token;
+  } catch (err) {
+    return handleApiError(err, 'Registration failed. Please try again.');
+  }
+};
+
+export const requestPasswordResetAsync = async (data: ForgotPasswordRequest): Promise<void> => {
+  try {
+    if (!data.email) {
+      throw new Error('Email is required');
+    }
+
+    const encodedEmail = encodeURIComponent(data.email); // to safely encode special characters
+    const url = `${Urls.users}/api/Users/forgot-password?email=${encodedEmail}`;
+    await axios.post<void>(
+      url,
+      null, // no body, since we're sending email as query
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      }
+    );
+  } catch (err) {
+    return handleApiError(err, 'Failed to send password reset email. Please try again.');
+  }
+};
+
+
+export const resetPasswordAsync = async (data: ResetPasswordRequest): Promise<void> => {
+  try {
+    if (!data.email || !data.token || !data.newPassword) {
+      throw new Error('Email, token, and new password are required');
+    }
+    await axios.post<void>(
+      `${Urls.users}/api/Users/reset-password`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      }
+    );
+  } catch (err) {
+    return handleApiError(err, 'Failed to reset password. Please try again.');
+  }
+};
