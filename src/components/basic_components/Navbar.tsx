@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import capexLogo from "../../assets/capex_logo/capex-logo.png";
+import procurementLogo from "../../assets/procurement_logo/procurement-logo.svg";
 import {
   BellIcon,
   ClipboardIcon,
@@ -61,7 +61,7 @@ const Navbar = ({ notifications,trigger }: NavbarProp) => {
     <div className="fixed top-0 left-0 w-full bg-white shadow-md z-10">
       <div className="flex items-center justify-between p-4">
         {/* Logo */}
-        <img src={capexLogo} alt="Logo" className="w-10 h-10" />
+        <img src={procurementLogo} alt="Logo" className="w-10 h-10" />
 
         {/* Menu Icon for Mobile */}
         <button
