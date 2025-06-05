@@ -59,16 +59,7 @@ const handleApiError = (err: unknown, defaultMessage: string): never => {
 
 export const userLoginAsync = async (data: ILogin): Promise<string> => {
   try {
-    const response = await axios.post<AuthResponse>(
-      `${Urls}/api/Users/login`,
-      data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      }
-    );
+    const response = await axios.post<AuthResponse>(`${Urls.defaultUrl}/api/Users/login`, data);
     return response.data.token;
   } catch (err) {
     return handleApiError(err, 'Login failed. Please try again.');
@@ -78,7 +69,7 @@ export const userLoginAsync = async (data: ILogin): Promise<string> => {
 export const userRegisterAsync = async (userData: IRegisterUser): Promise<string> => {
   try {
     const response = await axios.post<AuthResponse>(
-      `${Urls}/api/Users/CreateOrUpdateUser`,
+      `${Urls.defaultUrl}/api/Users/CreateOrUpdateUser`,
       userData,
       {
         headers: {
@@ -101,7 +92,7 @@ export const requestPasswordResetAsync = async (data: ForgotPasswordRequest): Pr
     }
 
     const encodedEmail = encodeURIComponent(data.email); // to safely encode special characters
-    const url = `${Urls}/api/Users/forgot-password?email=${encodedEmail}`;
+    const url = `${Urls.defaultUrl}/api/Users/forgot-password?email=${encodedEmail}`;
     await axios.post<void>(
       url,
       null, // no body, since we're sending email as query
@@ -124,7 +115,7 @@ export const resetPasswordAsync = async (data: ResetPasswordRequest): Promise<vo
       throw new Error('Email, token, and new password are required');
     }
     await axios.post<void>(
-      `${Urls}/api/Users/reset-password`,
+      `${Urls.defaultUrl}/api/Users/reset-password`,
       data,
       {
         headers: {
