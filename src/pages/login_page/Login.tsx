@@ -31,11 +31,11 @@ export const Login: React.FC<LoginProps> = ({  }) => {
             backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(1, 1, 1, 0.2)), url(${backgroundImage})`,
           }}
         >
-          <p className="text-xl mb-2 text-left">
-            We’ve been using Untitled to kick start every new project
+          <p className="text-2xl mb-2 text-left font-semibold">
+          Transform Your Procurement Process
           </p>
-          <p className="text-left">
-            Urna pellentesque proin nulla quis feugiat scelerisque aliquam. Diam pellentesque quis ullamcorper quis molestie ut sit donec.
+          <p className="text-left text-base">
+            Efficiently manage your purchases, optimize costs, and accelerate your project's success — all from one seamless platform.
           </p>
         </div>
 
