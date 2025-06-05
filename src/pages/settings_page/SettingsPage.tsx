@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DepartmentManagment from '../../components/settings/department_managment/DepartmentManagment';
+import ApprovalWorkflow from '../../components/settings/approval_workflow/ApprovalWorkflow';
 //import UserManagment from '../../components/settings/user_managment/UserManagment';
 
 type SettingsSection =
@@ -69,8 +70,8 @@ const SettingsPage = () => {
         //return <RolesPermissions />;
         return <></>;
       case 'Approval workflow':
-        //return <ApprovalWorkflow />;
-        return <></>;
+        return <ApprovalWorkflow />;
+        //return <></>;
       default:
         //return <UserManagment />;
         return <></>;

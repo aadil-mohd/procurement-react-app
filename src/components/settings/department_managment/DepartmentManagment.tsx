@@ -72,29 +72,6 @@ const DepartmentManagment: React.FC = () => {
   const setupDepartments = async (filterData: IFilterDto = filter) => {
     try {
       const response = await getAllDepartmentsAsync(filterData);
-      // const response = [{
-      //   id: "12",
-      //   createdAt: "2002-02-12",
-      //   createdBy: "12",
-      //   updatedAt: "2002-02-12",
-      //   updatedBy: "12",
-      //   clientId: "adsd",
-      //   departmentName: "DPPEE",
-      //   departmentCode: "sdsd"
-      // }];
-      
-      // for (let i = 0; i < 4; i++) {
-      //   response.push({
-      //     id: "12",
-      //     createdAt: "2002-02-12",
-      //     createdBy: "12",
-      //     updatedAt: "2002-02-12",
-      //     updatedBy: "12",
-      //     clientId: "adsd",
-      //     departmentName: "DPPEE",
-      //     departmentCode: "sdsd"
-      //   })
-      // }
       setDepartments(response);
     } catch (err: any) {
       notification.error({

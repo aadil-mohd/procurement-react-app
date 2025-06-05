@@ -81,6 +81,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/settings/user-managment" element={<SettingsPage />} />
                     <Route path="/settings/department-managment" element={<SettingsPage />} />
+                    <Route path="/settings/workflow-managment" element={<SettingsPage />} />
                   </Routes>
                 ) : (
                   <div className="flex items-center justify-center h-full">
