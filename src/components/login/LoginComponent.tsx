@@ -7,9 +7,11 @@ import { Loader2Icon } from "lucide-react";
 import type { ILogin } from "../../types/Types";
 
 // Define props type
-interface LoginComponentProps {}
+interface LoginComponentProps {
+  setUserLoggedIn:React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const LoginComponent: React.FC<LoginComponentProps> = () => {
+export const LoginComponent: React.FC<LoginComponentProps> = ({setUserLoggedIn}) => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState<ILogin>({
     username: "",
@@ -39,6 +41,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = () => {
       });     
 
       // Redirect to dashboard or home
+      setUserLoggedIn(true);
       navigate("/");
     } catch (error: any) {
       const errorMessage =

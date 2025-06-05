@@ -7,10 +7,10 @@ import ProcurementLogo from "../../assets/procurement_logo/procurement-logo.svg"
 
 // Fixing the prop type for setExpenditureTypes
 interface LoginProps {
-
+  setUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Login: React.FC<LoginProps> = ({  }) => {
+export const Login: React.FC<LoginProps> = ({ setUserLoggedIn }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const Login: React.FC<LoginProps> = ({  }) => {
           }}
         >
           <p className="text-2xl mb-2 text-left font-semibold">
-          Transform Your Procurement Process
+            Transform Your Procurement Process
           </p>
           <p className="text-left text-base">
             Efficiently manage your purchases, optimize costs, and accelerate your project's success — all from one seamless platform.
@@ -51,7 +51,7 @@ export const Login: React.FC<LoginProps> = ({  }) => {
               <p className="text-[34px] ml-2"></p>
             </div>
             {/* Pass setExpenditureTypes properly to LoginComponent */}
-            <LoginComponent/>
+            <LoginComponent setUserLoggedIn={setUserLoggedIn}/>
           </div>
         </div>
 

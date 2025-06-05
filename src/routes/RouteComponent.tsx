@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/basic_components/Sidebar';
 
 
@@ -10,6 +10,7 @@ import ResetPassPage from '../pages/forgot_pass_page/ResetPass';
 import { Login } from '../pages/login_page/Login';
 import Navbar from '../components/basic_components/Navbar';
 import SettingsPage from '../pages/settings_page/SettingsPage';
+import { getUserToken } from '../utils/common';
 
 
 const RouteComponent: React.FC = () => {
@@ -18,14 +19,30 @@ const RouteComponent: React.FC = () => {
 
   // State for user login status
   // TODO: Update this state via Login component or auth system
-  const [userLoggedIn, _] = useState(true);
+  const [userLoggedIn, setUserLoggedIn] = useState(true);
+  const [_, setUserInfo] = useState({ name: "" });
 
+  const navigate = useNavigate();
   // Update isMobile based on window resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    let isTokenExist = getUserToken();
+    if (isTokenExist) {
+      setUserLoggedIn(true)
+      let user_name = localStorage.getItem("name") || "Shaan";
+      //let clientId = Cookies.get("clientId") ?? "no client id"
+      setUserInfo((u) => ({ ...u, name: user_name }));
+      // setupCommonDatas(clientId);
+    } else {
+      setUserLoggedIn(false);
+      navigate("/login");
+    }
+  }, [])
 
   return (
     <div className="w-full h-full">
@@ -36,7 +53,7 @@ const RouteComponent: React.FC = () => {
           path="/login"
           element={
             <div className="w-full">
-              <Login />
+              <Login setUserLoggedIn={setUserLoggedIn}/>
             </div>
           }
         />
