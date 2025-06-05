@@ -23,7 +23,7 @@ export default {
         bgBlue: '#F6F8FB',
       },
       fontFamily: {
-        sans: ['Helvetica Neue', ...defaultTheme.fontFamily.sans],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
     },
   },

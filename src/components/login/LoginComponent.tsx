@@ -36,7 +36,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = () => {
       notification.success({
         message: "Login successful",
         description: "You have been logged in successfully.",
-      });
+      });     
 
       // Redirect to dashboard or home
       navigate("/");
