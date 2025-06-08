@@ -3,28 +3,17 @@ import { useState } from "react";
 import { IUserDetails } from "../../../types/userTypes";
 import userPhoto from '../../../assets/profile_photo/userPhoto.png';
 
-
-// Approver entry in your form data
-export interface IFormApprover {
-    userId: string;
-    // add any other properties if needed
-}
-
 interface ApprovalflowUsers {
-    priority: number;
-    userId: string;
+    id: number;
+    stepOrder: number;
+    approvalFlowMasterId: number;
+    defaultApproverEmail: string;
+    approverRole: string;
 }
 
 interface ApprovalFlowData {
     flowName: string;
-    expendituretypeId: string;
-    departmentId: string;
-    budgetedType: boolean;
-    minAmount: string;
-    maxAmount: string;
-    currency: string;
-    approvalflowUsers: ApprovalflowUsers[];
-
+    steps: ApprovalflowUsers[];
 }
 
 interface ApproverSearchDropdownProps {
@@ -49,12 +38,12 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
     setFormData,
 }) => {
     // Find the currently selected approver from the provided approvers list.
-    const currentApprover = approvers.find((a) => a.id === currentValue);
+    const currentApprover = approvers.find((a) => a.email === currentValue);
     // Using index to control open/close state of the dropdown
     const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
 
     const filteredApprovers = approvers.filter(
-        (user) => !formData.approvalflowUsers.some((approver) => approver.userId === user.id)
+        (user) => !formData.steps.some((approver) => approver.defaultApproverEmail === user.email)
     );
 
     const handleDropdownClick = (e: React.MouseEvent) => {
@@ -62,19 +51,19 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
         setIsDropdownOpen(isDropdownOpen === index ? null : index);
     };
 
-    const updateApprover = (index: number, userId: string) => {
+    const updateApprover = (index: number, email: string) => {
         setFormData((prev: ApprovalFlowData) => ({
             ...prev,
-            approvalflowUsers: prev.approvalflowUsers.map((approver, i) =>
-                i === index ? { ...approver, userId } : approver
+            steps: prev.steps.map((approver, i) =>
+                i === index ? { ...approver, defaultApproverEmail:email } : approver
             ),
         }));
         setIsDropdownOpen(null);
         setSearchQuery("");
     };
 
-    const handleApproverSelect = (userId: string) => {
-        updateApprover(index, userId);
+    const handleApproverSelect = (email: string) => {
+        updateApprover(index, email);
         setSearchQuery("");
         setApproverSelected(true);
         setIsDropdownOpen(null);
@@ -110,7 +99,7 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
                                     {/* <div className="font-medium text-gray-500 text-xs">{currentApprover.email}</div> */}
                                     <div className="mt-1 text-xs text-gray-500">
                                         <div>
-                                            {currentApprover.role} | <span>{currentApprover.department}</span>
+                                            {currentApprover.roleName} | <span>{currentApprover.departmentName}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +140,7 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
                                 <div
                                     key={approver.id}
                                     className="p-2 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => handleApproverSelect(approver.id)}
+                                    onClick={() => handleApproverSelect(approver.email)}
                                 >
                                     <div className="flex items-center">
                                         <div className="w-8 h-8 bg-gray-300 rounded-full mr-3">
@@ -174,7 +163,7 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
                                             {/* <div className="font-medium text-gray-500 text-xs">{currentApprover.email}</div> */}
                                             <div className="mt-1 text-xs text-gray-500">
                                                 <div>
-                                                    {approver.role} | <span>{approver.department}</span>
+                                                    {approver.roleName} | <span>{approver.departmentName}</span>
                                                 </div>
                                             </div>
                                         </div>

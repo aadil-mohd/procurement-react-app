@@ -1,36 +1,28 @@
-import React, {  useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '../../basic_components/TextField';
-// import SelectField from '../../basic_components/SelectField';
 import { IFilterDto, IModalProps } from '../../../types/commonTypes';
 import ApproverSearchDropdown from './ApproverSearchDropdown';
-import { IUserDetails } from '../../../types/userTypes';
 import { notification } from 'antd';
 import { createWorkFlowAsync, editWorkFlowAsync } from '../../../services/flowService';
 import { Loader2 } from 'lucide-react';
+import { getAllUsersByFilterAsync } from '../../../services/userService';
 
 interface ApprovalflowUsers {
-    priority: number;
-    userId: string;
+    id: number;
+    stepOrder: number;
+    approvalFlowMasterId: number;
+    defaultApproverEmail: string;
+    approverRole: string;
 }
 
 interface ApprovalFlowData {
     flowName: string;
-    expendituretypeId: string;
-    departmentId: string;
-    budgetedType: boolean;
-    minAmount: string;
-    maxAmount: string;
-    currency: string;
-    approvalflowUsers: ApprovalflowUsers[];
+    steps: ApprovalflowUsers[];
 }
 
 interface FormErrors {
-    flowName?: string;
-    expendituretypeId?: string;
-    departmentId?: string;
-    minAmount?: string;
-    maxAmount?: string;
-    approvalflowUsers?: string[];
+    flowName: string;
+    steps: ApprovalflowUsers[];
 }
 
 interface IApprovalWorkflowForm extends IModalProps {
@@ -55,24 +47,22 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
 }) => {
     const [formData, setFormData] = useState<ApprovalFlowData>({
         flowName: initialData?.flowName || "",
-        expendituretypeId: initialData?.expendituretypeId || "",
-        departmentId: initialData?.departmentId || "",
-        budgetedType: true,
-        currency: initialData?.currency || "USD",
-        minAmount: initialData?.minAmount.toString() || "",
-        maxAmount: initialData?.maxAmount.toString() || "",
-        approvalflowUsers: initialData?.flowUsers || []
+        steps: initialData?.steps || []
     });
-    const [errors, setErrors] = useState<FormErrors>({});
-    // const { expenditureTypes, departments } : { expenditureTypes:any[], departments:any[] } = { expenditureTypes:[], departments:[] };
-
+    const [errors, setErrors] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);
     const [isButtonLoading, setIsButtonnLoading] = useState(false);
-    const [approversList, setApproversList] = useState<IUserDetails[]>();
+    const [usersList, setUsersList] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [approverSelected, setApproverSelected] = useState(true);
 
 
+    useEffect(() => {
+        setFormData({
+            flowName: initialData?.flowName || "",
+            steps: initialData?.steps || []
+        });
+    }, [initialData])
     useEffect(() => {
         handleSearch()
     }, [searchQuery])
@@ -88,8 +78,8 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     const getApproversFilter = async (filterDto: IFilterDto = defaultFilter) => {
         try {
             setIsLoading(true);
-            let approvers = {data:[]};;
-            setApproversList(approvers.data);
+            let approvers = await getAllUsersByFilterAsync(filterDto)
+            setUsersList(approvers);
             // setTrigger(false);
         } catch (err: any) {
             notification.error({
@@ -103,29 +93,16 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
 
 
     const validateForm = (): FormErrors => {
-        const newErrors: FormErrors = {};
+        const newErrors: any = {};
 
         if (!formData.flowName.trim()) {
             newErrors.flowName = "Flow name is required";
         }
-        if (!formData.expendituretypeId) {
-            newErrors.expendituretypeId = "Expenditure type is required";
-        }
-        if (!formData.departmentId) {
-            newErrors.departmentId = "Department is required";
-        }
-        if (!formData.minAmount || !formData.maxAmount) {
-            newErrors.minAmount = "Budget range is required";
-        }
-        if (formData.minAmount && formData.maxAmount &&
-            Number(formData.minAmount) > Number(formData.maxAmount)) {
-            newErrors.minAmount = "Minimum amount cannot be greater than maximum amount";
-        }
-        if (!formData.approvalflowUsers || formData.approvalflowUsers.length == 0) {
-            newErrors.approvalflowUsers = ["At least one approver is required"];
+        if (!formData.steps || formData.steps.length == 0) {
+            newErrors.steps = ["At least one approver is required"];
         }
 
-        formData.approvalflowUsers.forEach(u => { if (!u.userId) newErrors.approvalflowUsers = ["At least one approver is required"]; })
+        formData.steps.forEach(u => { if (!u.defaultApproverEmail) newErrors.steps = ["At least one approver is required"]; })
 
         return newErrors;
     };
@@ -137,7 +114,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                if (formData.approvalflowUsers.length == 0) return;
+                if (formData.steps.length == 0) return;
                 setIsButtonnLoading(true);
                 if (type == "create") {
                     console.log(formData)
@@ -178,11 +155,14 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
         setApproverSelected(false);
         setFormData(prev => ({
             ...prev,
-            approvalflowUsers: [
-                ...prev.approvalflowUsers,
+            steps: [
+                ...prev.steps,
                 {
-                    priority: prev.approvalflowUsers.length + 1,
-                    userId: ""
+                    id: 0,
+                    approvalFlowMasterId: 0,
+                    approverRole: "",
+                    defaultApproverEmail: "",
+                    stepOrder: prev.steps.length + 1
                 }
             ]
         }));
@@ -192,26 +172,15 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
         setApproverSelected(true)
         setFormData(prev => ({
             ...prev,
-            approvalflowUsers: prev.approvalflowUsers
+            steps: prev.steps
                 .filter((_, i) => i !== index)
                 .map((approver, i) => ({
                     ...approver,
-                    priority: i + 1
+                    stepOrder: i + 1
                 }))
         }));
     };
 
-    // const handleAmountChange = (value: string, field: 'minAmount' | 'maxAmount') => {
-    //     // Only allow numbers and decimal point
-    //     const sanitizedValue = value.replace(/[^\d.]/g, '');
-    //     // Ensure only one decimal point
-    //     const parts = sanitizedValue.split('.');
-    //     const formattedValue = parts.length > 2 ? `${parts[0]}.${parts[1]}` : sanitizedValue;
-
-    //     setFormData(prev => ({ ...prev, [field]: formattedValue }));
-    //     // Clear related errors
-    //     setErrors(prev => ({ ...prev, [field]: undefined }));
-    // };
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col h-full bg-white rounded">
@@ -235,7 +204,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                         value={formData.flowName}
                         setValue={(value) => {
                             setFormData(prev => ({ ...prev, flowName: value }));
-                            setErrors(prev => ({ ...prev, flowName: undefined }));
+                            setErrors((prev: any) => ({ ...prev, flowName: undefined }));
                         }}
                         placeholder="Enter flow name"
                         style=""
@@ -245,119 +214,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                     {errors.flowName && (
                         <p className="text-red-500 text-xs mt-1">{errors.flowName}</p>
                     )}
-                </div>
-
-                {/* Expenditure Type
-                <div>
-                    <label className="block text-sm font-medium mb-2">
-                        Expenditure type <span className="text-red-500">*</span>
-                    </label>
-                    {expenditureTypes && (
-                        <SelectField
-                            id="expendituretypeId"
-                            label=""
-                            style="w-full h-10"
-                            value={expenditureTypes?.find(t => t.id === formData.expendituretypeId)?.expenditureType || "Select expenditure type"}
-                            options={expenditureTypes?.map(t => ({
-                                label: t.expenditureType || "",
-                                value: t.id || ""
-                            }))}
-                            onChange={(value) => {
-                                setFormData(prev => ({ ...prev, expendituretypeId: value }));
-                                setErrors(prev => ({ ...prev, expendituretypeId: undefined }));
-                            }}
-                            onClick={() => setErrors(prev => ({ ...prev, expendituretypeId: undefined }))}
-                        />
-                    )}
-                    {errors.expendituretypeId && (
-                        <p className="text-red-500 text-xs mt-1">{errors.expendituretypeId}</p>
-                    )}
-                </div> */}
-
-                {/* Department
-                <div>
-                    <label className="block text-sm font-medium mb-2">
-                        Department <span className="text-red-500">*</span>
-                    </label>
-                    {departments && (
-                        <SelectField
-                            id="departmentId"
-                            label=""
-                            style="w-full h-10"
-                            value={departments.find(d => d.id === formData.departmentId)?.departmentName || "Select department"}
-                            options={departments.map(d => ({
-                                label: d.departmentName || "",
-                                value: d.id || ""
-                            }))}
-                            onChange={(value) => {
-                                setFormData(prev => ({ ...prev, departmentId: value }));
-                                setErrors(prev => ({ ...prev, departmentId: undefined }));
-                            }}
-                            onClick={() => setErrors(prev => ({ ...prev, departmentId: undefined }))}
-                        />
-                    )}
-                    {errors.departmentId && (
-                        <p className="text-red-500 text-xs mt-1">{errors.departmentId}</p>
-                    )}
-                </div> */}
-
-                {/* Budgeted Toggle */}
-                <div>
-                    {/* <div className="flex items-center justify-start">
-                        <label className="block text-sm font-medium mr-2">Budgeted</label>
-                        <button
-                            disabled
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, budgetedType: !prev.budgetedType }))}
-                            className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors ${formData.budgetedType ? 'bg-blue-600' : 'bg-gray-200'
-                                }`}
-                        >
-                            <span
-                                className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${formData.budgetedType ? 'translate-x-6' : 'translate-x-1'
-                                    }`}
-                            />
-                        </button>
-                    </div> */}
-                </div>
-
-                {/* Budget Range 
-                <div>
-                    <label className="block text-sm font-medium mb-2">Budget Range</label>
-                    <div className="flex gap-2 items-center">
-                        <div className="">
-                            <div className="relative bg-white border border-gray-300 rounded px-3 py-2 cursor-default text-sm flex items-center justify-between h-[34px]">
-                                <span>{"USD"}</span>
-                                {/* <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
-                    <path d="m6 9 6 6 6-6" />
-                  </svg> 
-                            </div>
-                        </div>
-                        <TextField
-                            id="minAmount"
-                            field="Budget From"
-                            value={formData.minAmount}
-                            setValue={(value) => handleAmountChange(value, 'minAmount')}
-                            placeholder="From"
-                            style=""
-                            type="number"
-                            width="w-full"
-                        />
-                        <span className="text-sm">To</span>
-                        <TextField
-                            id="maxAmount"
-                            field="Budget To"
-                            value={formData.maxAmount}
-                            setValue={(value) => handleAmountChange(value, 'maxAmount')}
-                            placeholder="To"
-                            style=""
-                            type="number"
-                            width="w-full"
-                        />
-                    </div>
-                    {errors.minAmount && (
-                        <p className="text-red-500 text-xs mt-1">{errors.minAmount}</p>
-                    )}
-                </div> */}
+                </div>             
 
                 {/* Approval Workflow */}
                 <div className="space-y-2">
@@ -366,7 +223,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                         <p className="text-red-500 text-xs mt-1">{errors.approvalflowUsers}</p>
                     )}
                     <div className="space-y-8">
-                        {formData.approvalflowUsers.map((approver, index) => (
+                        {formData.steps.map((approver, index) => (
                             <div key={index} className="relative">
                                 <div className="shadow-lg rounded-lg bg-white p-4">
                                     <div className="flex justify-between items-center mb-2">
@@ -381,10 +238,10 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                                             </svg>
                                         </button>
                                     </div>
-                                    {approversList && <ApproverSearchDropdown setApproverSelected={setApproverSelected} formData={formData} isLoading={isLoading} setFormData={setFormData} approvers={approversList} setSearchQuery={setSearchQuery} index={index} currentValue={approver.userId} />}
+                                    {usersList && <ApproverSearchDropdown setApproverSelected={setApproverSelected} formData={formData} isLoading={isLoading} setFormData={setFormData} approvers={usersList} setSearchQuery={setSearchQuery} index={index} currentValue={approver.defaultApproverEmail} />}
                                 </div>
 
-                                {(approverSelected ? (index < formData.approvalflowUsers.length) : (index < formData.approvalflowUsers.length - 1)) && (
+                                {(approverSelected ? (index < formData.steps.length) : (index < formData.steps.length - 1)) && (
                                     <div className="absolute left-1/2 -translate-x-1/2 h-8 flex items-center justify-center">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-gray-400">
                                             <path

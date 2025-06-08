@@ -1,19 +1,18 @@
 import axios from "axios"
-import { IFilterDto } from "../types/commonTypes";
 import { Urls } from "./ApiConfig";
 import { getUserToken } from "../utils/common";
 //import { IFlowDetails } from "../types/capexTypes";
 
   
 
-export const getFlowsByfilterAsync= async (filter : IFilterDto ): Promise<any[]> => {
+export const getApprovalFlowAsync= async (): Promise<any> => {
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/ApprovalFlows/filter`,filter,{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/flow`,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }
         })
-        return response.data.data;
+        return response.data;
     }catch(err:any){
         throw err.response.data
     }

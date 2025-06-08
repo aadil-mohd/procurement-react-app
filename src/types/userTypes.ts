@@ -12,9 +12,9 @@ export interface IUserDetails {
     phone: string
     password: string
     roleId: string
-    role: string
+    roleName: string
     departmentId: string
-    department: string
+    departmentName: string
     gender: string
     place: string
     isActive: string

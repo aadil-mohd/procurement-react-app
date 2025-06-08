@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { Urls } from './ApiConfig';
 import { getUserToken } from '../utils/common';
+import { IFilterDto } from '../types/commonTypes';
 
 // Define the expected shape of the login data
 interface ILogin {
@@ -44,6 +45,14 @@ interface AuthResponse {
 interface ApiError {
   message: string;
   status?: number;
+}
+
+const defaultFilter = {
+    fields: [],
+    pageNo: 1,
+    pageSize: 10,
+    sortColumn: "CreatedAt",
+    sortOrder: "DESC"
 }
 
 // Shared error handling function
@@ -128,3 +137,16 @@ export const resetPasswordAsync = async (data: ResetPasswordRequest): Promise<vo
     return handleApiError(err, 'Failed to reset password. Please try again.');
   }
 };
+
+export const getAllUsersByFilterAsync = async (filter: IFilterDto = defaultFilter): Promise<any[]> => {
+    try {
+        let response = await axios.post(`${Urls.defaultUrl}/api/Users/filter`, filter, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    } catch (err:any) {
+        throw err.response.data
+    }
+}
