@@ -11,6 +11,7 @@ import { Login } from '../pages/login_page/Login';
 import Navbar from '../components/basic_components/Navbar';
 import SettingsPage from '../pages/settings_page/SettingsPage';
 import { getUserToken } from '../utils/common';
+import RfpRequestFormComponent from '../components/rfp_request/RfpRequestForm';
 
 
 const RouteComponent: React.FC = () => {
@@ -96,6 +97,7 @@ const RouteComponent: React.FC = () => {
                 {userLoggedIn ? (
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
+                    <Route path="/rfps/create-rfp" element={<RfpRequestFormComponent />} />
                     <Route path="/settings/user-managment" element={<SettingsPage />} />
                     <Route path="/settings/department-managment" element={<SettingsPage />} />
                     <Route path="/settings/workflow-managment" element={<SettingsPage />} />

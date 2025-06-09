@@ -187,7 +187,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
             {/* Fixed Header */}
             <div className="sticky top-0 bg-white z-10 px-4 py-3 border-b">
                 <p className="text-xl font-bold">
-                    {type === "create" ? "Add new flow" : "Edit flow"}
+                    {type === "create" ? "Create flow" : "Edit flow"}
                 </p>
             </div>
 

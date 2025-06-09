@@ -32,7 +32,7 @@ const ApprovalWorkflow: React.FC = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [usersData, setUsersData] = useState<IUserDetails[] | null>(null);
   const [workflow, setWorkflow] = useState<any>();
-  const [viewType, seViewType] = useState<"view" | "edit" | "add">("view");
+  const [viewType, seViewType] = useState<"view" | "edit" | "create">("view");
 
   const [filter, setFilter] = useState<IFilterDto>(defaultFilterData);
 
@@ -44,7 +44,7 @@ const ApprovalWorkflow: React.FC = () => {
         console.log(response, "response")
         setWorkflow(response);
       } catch (err) {
-        seViewType("add");
+        seViewType("create");
       }
       let users = await getAllUsersByFilterAsync();
       setUsersData(users);
