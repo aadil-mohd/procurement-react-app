@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DepartmentManagment from '../../components/settings/department_managment/DepartmentManagment';
 import ApprovalWorkflow from '../../components/settings/approval_workflow/ApprovalWorkflow';
-//import UserManagment from '../../components/settings/user_managment/UserManagment';
+import UserManagement from '../../components/settings/user_managment/UserManagment';
 
 type SettingsSection =
   | 'User management'
@@ -41,6 +41,8 @@ const SettingsPage = () => {
       // Default to User management if no match
       setActiveSection('User management');
       navigate('/settings/user-managment');
+      console.log("user");
+      
     }
   }, [location.pathname]);
 
@@ -59,7 +61,7 @@ const SettingsPage = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'User management':
-        //return <UserManagment />;
+        return <UserManagement />;
         return <></>;
       case 'Manage department':
         return <DepartmentManagment />;
@@ -73,8 +75,7 @@ const SettingsPage = () => {
         return <ApprovalWorkflow />;
         //return <></>;
       default:
-        //return <UserManagment />;
-        return <></>;
+        return <UserManagement />;
     }
   };
 

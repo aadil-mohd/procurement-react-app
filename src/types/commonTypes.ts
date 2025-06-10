@@ -58,6 +58,14 @@ export interface INotificationItem {
     isArchived: boolean;
   }
 
+  export interface ICountryCode {
+    id: string;
+    countryName: string,
+    code: string;
+    countryCode: string;
+    currency: string;
+    currencyLabel: string;
+}
 
 
 

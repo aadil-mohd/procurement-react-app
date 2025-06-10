@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
 import { Loader2Icon } from "lucide-react";
 import type { ILogin } from "../../types/Types";
+import Cookies from "js-cookie";
+import { parseJwt } from "../../utils/common";
 
 // Define props type
 interface LoginComponentProps {
@@ -33,7 +35,17 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({setUserLoggedIn})
       });
 
       // Save token to localStorage
-      localStorage.setItem("auth_token", token);
+      // localStorage.setItem("auth_token", token);
+
+      Cookies.set("token", token as string);
+      const decoded_data = parseJwt(token as string);
+      Cookies.set("userId", decoded_data["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
+      Cookies.set("roleId", decoded_data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]);
+      Cookies.set("name", decoded_data["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name  "]);
+      Cookies.set("tenantId", decoded_data["tenantId"]);
+      Cookies.set("companyId", decoded_data["companyId"]);
+      Cookies.set("branchId", decoded_data["branchId"]);
+      Cookies.set("exp", decoded_data["exp"]);
 
       notification.success({
         message: "Login successful",
