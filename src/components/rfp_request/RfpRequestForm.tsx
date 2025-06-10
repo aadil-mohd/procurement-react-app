@@ -1,28 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BriefCase, CostSumm, PaperClip, QuotesIcon, TableCloseIcon } from "../../utils/Icons";
-import QuotesRecommendation from "./QuoteRecommendation";
 import AddAttachment from "./AddAttachment";
-import BusinessCaseBenefits from "./BuisnessCase";
 import GeneralInformation from "./GeneralInformation";
+import { getAllUsersByFilterAsync } from "../../services/userService";
+import { getAllDepartmentsAsync } from "../../services/departmentService";
+import { IRfp } from "../../types/rfpTypes";
+import RfpDetails from "./RfpDetails";
+import { getAllCategoriesAsync } from "../../services/categoryService";
+import TimeLineOwnership from "./TimeLineOwnership";
+
+const defaultRfpState: IRfp = {
+  id: 0,
+  rfpTitle: "",
+  rfpDescription: "",
+  buyerName: "",
+  buyerOrganizationName: "",
+  departmentId: "",
+  isOpen: false,
+  isSerial: false,
+  rfpCurrency: "USD",
+  bidValue: 0,
+  hideContractValueFromVendor: false,
+  estimatedContractValue: 0,
+  isTenderFeeApplicable: false,
+  tenderFee: 0,
+  categoryId: 0,
+  purchaseRequisitionId: "",
+  expressInterestLastDate: "",
+  responseDueDate: "",
+  buyerReplyEndDate: "",
+  clarificationDate: "",
+  closingDate: "",
+  closingTime: "",
+  rfpDocuments:[],
+  rfpOwners:[]
+}
 
 function RfpRequestFormComponent() {
   const navigate = useNavigate();
-  const [requestData, setRequestData] = useState<any>({
-    projectName: "",
-    projectDescription: "",
-    expenditureTypeId: "",
-    requestingDepartmentId: "",
-    currency: "",
-    estimatedBudget: 0,
-    purpose: "",
-    benefits: "",
-    estimatedSavings: "",
-    ownerName: "",
-    ownerEmail: "",
-    approvalLevelRequired: "",
-    action: "draft",
-  });
+  const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
   const [tabs, setTabs] = useState(
     [
       { tab: "General Information", isOpen: true },
@@ -35,7 +52,26 @@ function RfpRequestFormComponent() {
   const [quotes, setQuotes] = useState<any[]>([]);
   const [attachments, setAttachments] = useState<File[]>([]);
 
+  const [masterData, setMasterData] = useState<any>({ users: [], departments: [],categories:[] });
+
   const [activeSections, setActiveSections] = useState<string>("General Information");
+
+  const setupRfpFormAsync = async () => {
+    try {
+      const users = await getAllUsersByFilterAsync();
+      const departments = await getAllDepartmentsAsync();
+      const categories = await getAllCategoriesAsync()
+      setMasterData({
+        users:users, departments:departments.data,categories
+      })
+    } catch (err) {
+
+    }
+  }
+
+  useEffect(() => {
+    setupRfpFormAsync();
+  }, [])
 
   useEffect(() => {
     renderDynamicContent("General Information");
@@ -84,21 +120,7 @@ function RfpRequestFormComponent() {
   };
 
   const handleCancel = () => {
-    setRequestData({
-      projectName: "",
-      projectDescription: "",
-      expenditureTypeId: "",
-      requestingDepartmentId: "",
-      currency: "",
-      estimatedBudget: 0,
-      purpose: "",
-      benefits: "",
-      estimatedSavings: "",
-      ownerName: "",
-      ownerEmail: "",
-      approvalLevelRequired: "",
-      action: "draft",
-    });
+    setRequestData(defaultRfpState);
     // setActiveSections([]);
     navigate("/"); // Redirect to another page, e.g., home page
   };
@@ -118,30 +140,24 @@ function RfpRequestFormComponent() {
     switch (section) {
       case "General Information":
         return (
-          <GeneralInformation setRequestData={setRequestData} requestData={requestData} />
+          <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />
         );
       case "Attachments":
         return (
           <AddAttachment
-            setData={(field, value) =>
-              setAttachments(value)
-            }
+            masterData={masterData} setRequestData={setRequestData} requestData={requestData}
           />
         );
       case "Timeline & Ownership":
         return (
-          <BusinessCaseBenefits
-            setData={(field, value) =>
-              setRequestData((prev:any) => ({ ...prev, [field]: value }))
-            }
+          <TimeLineOwnership
+            masterData={masterData} setRequestData={setRequestData} requestData={requestData}
           />
         );
       case "RFP Details":
         return (
-          <QuotesRecommendation
-            setData={(field, value) =>
-              setQuotes(value)
-            }
+          <RfpDetails
+            masterData={masterData} setRequestData={setRequestData} requestData={requestData}
           />
         );
       default:

@@ -49,8 +49,8 @@ interface ApiError {
 
 const defaultFilter = {
     fields: [],
-    pageNo: 1,
-    pageSize: 10,
+    pageNo: 0,
+    pageSize: 0,
     sortColumn: "CreatedAt",
     sortOrder: "DESC"
 }
