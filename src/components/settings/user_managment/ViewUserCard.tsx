@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { User } from '../../../types/userTypes';
 import { formatDate } from '../../../utils/common';
 import { Modal as AntdModal, Button, message } from 'antd';
-import { deleteUserAsync, updateUserAsync } from '../../../services/userService';
+import { deleteUserAsync, createOrUpdateUserAsync } from '../../../services/userService';
 import userPhoto from '../../../assets/profile_photo/userPhoto.png'
 
 interface ViewUserCardProp {
@@ -16,18 +16,20 @@ const ViewUserCard: React.FC<ViewUserCardProp> = ({ userDetails, closeModal, tri
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "block", user: User } | null>(null);
 
+  console.log(userDetails,"dddd");
+  
   const handleConfirmAction = async () => {
     if (!confirmAction) return;
 
     try {
       if (confirmAction.type === "delete") {
-        await deleteUserAsync(confirmAction.user.id as string);
+        await deleteUserAsync(confirmAction.user.id as number);
         message.success('User deleted successfully');
       } else if (confirmAction.type === "block") {
-        const formData = new FormData();
-        formData.append("id", confirmAction.user.id as string);
-        formData.append("isActive", (!confirmAction.user.isActive).toString());
-        await updateUserAsync(confirmAction.user.id as string, formData);
+        const formData = {};
+        // formData.append("id", confirmAction.user.id as string);
+        // formData.append("isActive", (!confirmAction.user.isActive).toString());
+        await createOrUpdateUserAsync(formData);
         message.success(`User ${confirmAction.user.isActive ? 'blocked' : 'unblocked'} successfully`);
       }
       setIsConfirmModalOpen(false);
@@ -66,11 +68,11 @@ const ViewUserCard: React.FC<ViewUserCardProp> = ({ userDetails, closeModal, tri
         <div className="grid grid-cols-2 gap-6 p-4 rounded-md bg-bgBlue">
           <div>
             <p className="text-sm text-gray-500">Department</p>
-            <p className="text-sm font-medium text-gray-800">{userDetails.department}</p>
+            <p className="text-sm font-medium text-gray-800">{userDetails.departmentName}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Role</p>
-            <p className="text-sm font-medium text-gray-800">{userDetails.role}</p>
+            <p className="text-sm font-medium text-gray-800">{userDetails.roleName}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Phone</p>

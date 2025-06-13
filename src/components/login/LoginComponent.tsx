@@ -40,7 +40,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({setUserLoggedIn})
       Cookies.set("token", token as string);
       const decoded_data = parseJwt(token as string);
       Cookies.set("userId", decoded_data["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
-      Cookies.set("roleId", decoded_data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]);
+      Cookies.set("role", decoded_data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]);
       Cookies.set("name", decoded_data["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name  "]);
       Cookies.set("tenantId", decoded_data["tenantId"]);
       Cookies.set("companyId", decoded_data["companyId"]);

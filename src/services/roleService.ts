@@ -6,7 +6,33 @@ import { IRole } from "../types/roleTypes";
 
 export const getAllRolesFilterAsync = async (filter: IFilterDto = { fields: [], sortColumn: "createdAt" }): Promise<{ data: IRole[]; count: number }> => {
     try {
-        const response = await axios.post(`${Urls.defaultUrl}/api/Roles`, {
+        const response = await axios.get(`${Urls.defaultUrl}/api/Roles`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return { data:response.data, count:response.data.length };
+    } catch (error: any) {
+        throw error.response.data
+    }
+}
+
+export const getAllPermissionsAsync = async (): Promise<string[]> => {
+    try {
+        const response = await axios.get(`${Urls.defaultUrl}/api/Roles/GetAllPermissions`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    } catch (error: any) {
+        throw error.response.data
+    }
+}
+
+export const assignPermissionsToRoleAsync = async (rolePermission:object): Promise<object> => {
+    try {
+        const response = await axios.post(`${Urls.defaultUrl}/api/Roles/AssignPermissionsToRole`, rolePermission ,{
             headers: {
                 Authorization: `Bearer ${getUserToken()}`
             }
@@ -33,7 +59,7 @@ export const createRoleAsync = async (roleData: any) => {
 
 export const getPermissionsByRoleIdAsync = async (roleId: string): Promise<IRole> => {
     try {
-        const response = await axios.get(`${Urls.defaultUrl}/api/Roles/${roleId}`, {
+        const response = await axios.get(`${Urls.defaultUrl}/api/Roles/GetRoleById?roleId=${roleId}`, {
             headers: {
                 Authorization: `Bearer ${getUserToken()}`,
             },

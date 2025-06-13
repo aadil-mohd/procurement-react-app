@@ -6,7 +6,7 @@ export interface IRole {
     updatedBy?: string
     clientId?: string
     roleName?: string
-    permissions?:Permission[]
+    permissions?:object[]
 }
 
 export interface Permission {
@@ -16,7 +16,7 @@ export interface Permission {
     updatedAt?: string;
     updatedBy?: string;
     roleId?: string;
-    permission: string;
+    permissionName: string;
     grandAccess: boolean;
     canView: boolean;
     canEdit: boolean;

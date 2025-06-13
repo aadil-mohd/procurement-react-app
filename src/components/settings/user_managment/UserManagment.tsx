@@ -9,7 +9,7 @@ import Modal from '../../basic_components/Modal';
 import { Modal as AntdModal } from 'antd';
 import CreateUserForm from './CreateUserForm';
 import ViewUserCard from './ViewUserCard';
-import { deleteUserAsync, getAllUsersByFilterAsync, updateUserAsync } from '../../../services/userService';
+import { deleteUserAsync, getAllUsersByFilterAsync, createOrUpdateUserAsync } from '../../../services/userService';
 //import { formatDate, getUserCredentials, handleFile } from '../../../utils/common';
 import { formatDate, getUserCredentials } from '../../../utils/common';
 import { User } from '../../../types/userTypes';
@@ -22,8 +22,8 @@ import userPhoto from '../../../assets/profile_photo/userPhoto.png'
 const columns = [
     { key: 'userWithLogo', label: 'Name' },
     { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Role' },
-    { key: 'department', label: 'Department' },
+    { key: 'roleName', label: 'Role' },
+    { key: 'departmentName', label: 'Department' },
     { key: 'dateAdded', label: 'Date Added' },
     { key: 'lastUpdated', label: 'Last Active' },
     { key: 'status', label: 'Status' }
@@ -65,8 +65,9 @@ const UserManagement: React.FC = () => {
             const users_list: User[] = users.map((u) => {
                 return { ...u, dateAdded: formatDate(u.createdAt), place: u.place !== "undefined" ? u.place : "", lastUpdated: formatDate(u.updatedAt), photoUrl: u.photo , status: u.isActive ? "Active" : "Inactive", userWithLogo: <div className='flex items-center'><img src={u.photo || userPhoto} className='w-[25px] h-[25px]' style={{ borderRadius: "50%" }} /><p className='pl-[15px]'>{u.name}</p></div> }
             });
-            setUsers(users_list.filter((x)=>x.role!=="Admin"));
+            setUsers(users_list.filter((x)=>x.roleName!=="Admin"));
             setUsersCount(users.length);
+            
 
             //setup roles and departments
             const { data: alldepartments } = await getAllDepartmentsAsync();
@@ -98,15 +99,16 @@ const UserManagement: React.FC = () => {
     const handleConfirmAction = async () => {
         try {
             if (confirmAction?.type === "delete") {
-                const response = await deleteUserAsync(confirmAction.user.id as string);
+                const response = await deleteUserAsync(confirmAction.user.id as number);
                 if (response) {
                     setTrigger(true);
                 }
             } else if (confirmAction?.type === "block") {
-                const formData = new FormData();
-                formData.append("id", confirmAction.user.id as string);
-                formData.append("isActive", (!confirmAction.user.isActive).toString());
-                const response = await updateUserAsync(confirmAction.user.id as string, formData)
+                // const formData = new FormData();
+                // formData.append("id", confirmAction.user.id as string);
+                // formData.append("isActive", (!confirmAction.user.isActive).toString());
+                 const formData = {};               
+                const response = await createOrUpdateUserAsync(formData)
                 if (response) {
                     setTrigger(true);
                 }

@@ -116,7 +116,7 @@ const SettingsTable: React.FC<TableProps> = ({
     const pageSize = filter.pageSize ?? 10;
     // const [pages, setPages] = useState<number[]>([]);
     const tableContainerRef = useRef<HTMLDivElement>(null);
-
+        console.log(data,columns,"hiiidsf");
     useEffect(() => {
         // if (totalCount ?? 0 > 0) {
         //     const pagesNeeded = Math.ceil(totalCount ?? 0 / pageSize);

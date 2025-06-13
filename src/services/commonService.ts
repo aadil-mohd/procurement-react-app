@@ -5,7 +5,7 @@ import { Urls } from "./ApiConfig";
 
 export const getAllCountryCodes = async () => {
     try {
-        let response = await axios.get(`${Urls.defaultUrl}/api/ClientConfigurations/countries`, {
+        let response = await axios.get(`${Urls.defaultUrl}/api/Common/GetAllCountry`, {
             headers: {
                 Authorization: `Bearer ${getUserToken()}`
             }

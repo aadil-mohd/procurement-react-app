@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { Urls } from './ApiConfig';
 import { getUserToken } from '../utils/common';
 import { IFilterDto, SuccessResponse } from '../types/commonTypes';
-import { IUserDetails } from "../types/userTypes";
+import { IUserDetails, User } from "../types/userTypes";
 
 // Define the expected shape of the login data
 interface ILogin {
@@ -139,7 +139,7 @@ export const resetPasswordAsync = async (data: ResetPasswordRequest): Promise<vo
   }
 };
 
-export const getAllUsersByFilterAsync = async (filter: IFilterDto = defaultFilter): Promise<any[]> => {
+export const getAllUsersByFilterAsync = async (filter: IFilterDto = defaultFilter): Promise<IUserDetails[]> => {
     try {
         let response = await axios.post(`${Urls.defaultUrl}/api/Users/filter`, filter, {
             headers: {
@@ -165,9 +165,11 @@ export const getUserDataByIdAsync = async (id: string) => {
     }
 }
 
-export const createNewUserAsync = async (formData: FormData): Promise<IUserDetails> => {
+export const createOrUpdateUserAsync = async (formData:User): Promise<IUserDetails> => {
     try {
-        let response = await axios.post(`${Urls.defaultUrl}/api/Users`, formData, {
+      console.log(formData);
+      
+        let response = await axios.post(`${Urls.defaultUrl}/api/Users/CreateOrUpdateUser`, formData, {
             headers: {
                 Authorization: `Bearer ${getUserToken()}`
             }
@@ -178,22 +180,22 @@ export const createNewUserAsync = async (formData: FormData): Promise<IUserDetai
     }
 }
 
-export const updateUserAsync = async (id: string, formData: FormData): Promise<boolean> => {
-    try {
-        let response = await axios.put(`${Urls.defaultUrl}/api/Users/${id}`, formData, {
-            headers: {
-                Authorization: `Bearer ${getUserToken()}`
-            }
-        })
-        return response.data;
-    }catch(err:any){
-        throw err.response.data
-    }
-}
+// export const updateUserAsync = async (formData:User): Promise<boolean> => {
+//     try {
+//         let response = await axios.put(`${Urls.defaultUrl}/api/Users/${formData.}`, formData, {
+//             headers: {
+//                 Authorization: `Bearer ${getUserToken()}`
+//             }
+//         })
+//         return response.data;
+//     }catch(err:any){
+//         throw err.response.data
+//     }
+// }
 
-export const deleteUserAsync = async(id:string):Promise<SuccessResponse> =>{
+export const deleteUserAsync = async(id:number):Promise<SuccessResponse> =>{
     try{
-        let response = await axios.delete(`${Urls.defaultUrl}/api/Users/${id}`, {
+        let response = await axios.delete(`${Urls.defaultUrl}/api/Users/DeleteUser?userId=${id}`, {
             headers: {
                 Authorization: `Bearer ${getUserToken()}`
             }
