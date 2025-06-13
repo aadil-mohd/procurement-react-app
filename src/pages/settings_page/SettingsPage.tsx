@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DepartmentManagment from '../../components/settings/department_managment/DepartmentManagment';
 import ApprovalWorkflow from '../../components/settings/approval_workflow/ApprovalWorkflow';
-//import UserManagment from '../../components/settings/user_managment/UserManagment';
+import UserManagement from '../../components/settings/user_managment/UserManagment';
+import RolesPermissions from '../../components/settings/roles_and_permissions/RolesPermissions';
 
 type SettingsSection =
   | 'User management'
@@ -36,11 +37,13 @@ const SettingsPage = () => {
     const matchingRoute = navigationItems.find(item => item.path === currentPath);
 
     if (matchingRoute) {
-      setActiveSection(matchingRoute.name);
+      setActiveSection(matchingRoute.name);    
     } else {
       // Default to User management if no match
       setActiveSection('User management');
       navigate('/settings/user-managment');
+      console.log("user");
+      
     }
   }, [location.pathname]);
 
@@ -59,22 +62,20 @@ const SettingsPage = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'User management':
-        //return <UserManagment />;
+        return <UserManagement />;
         return <></>;
       case 'Manage department':
         return <DepartmentManagment />;
       case 'Budget allocation':
         //return <BudgetAllocation />;
         return <></>;
-      case 'Roles & permissions':
-        //return <RolesPermissions />;
-        return <></>;
+      case 'Roles & permissions': 
+        return <RolesPermissions />;
       case 'Approval workflow':
         return <ApprovalWorkflow />;
         //return <></>;
       default:
-        //return <UserManagment />;
-        return <></>;
+        return <UserManagement />;
     }
   };
 

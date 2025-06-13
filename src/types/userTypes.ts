@@ -21,7 +21,7 @@ export interface IUserDetails {
 }
 
 export interface User {
-    id?: string
+    id?: number
     createdAt?: string
     createdBy?: string
     updatedAt?: string
@@ -36,10 +36,15 @@ export interface User {
     phone?: string
     password: string
     roleId?: string
-    role?: string
+    roleName?: string
     departmentId?: string
-    department?: string
+    departmentName?: string
     gender?: string
     place?: string
-    isActive?: string
+    isActive?: boolean
+    isVendor?:boolean
+    isEmailSent?:boolean
+    tenantId?:string
+    companyId?:string
+    branchId?:string    
 }

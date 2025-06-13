@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/basic_components/Sidebar';
-
-
+import Cookies from "js-cookie";
 import Dashboard from '../pages/dashboard/Dashboard';
 import Register from '../pages/login_page/Register';
 import ForgotPassPage from '../pages/forgot_pass_page/ForgotPass';
@@ -12,9 +11,20 @@ import Navbar from '../components/basic_components/Navbar';
 import SettingsPage from '../pages/settings_page/SettingsPage';
 import { getUserToken } from '../utils/common';
 import RfpRequestFormComponent from '../components/rfp_request/RfpRequestForm';
+import { ICountryCode } from "../types/commonTypes";
+import { getAllCountryCodes } from "../services/commonService";
 
+interface procurementContextProp {
+  countryCodes: ICountryCode[] | null;
+}
+
+export const procurementContext = createContext<procurementContextProp>({
+  countryCodes: null,
+})
 
 const RouteComponent: React.FC = () => {
+
+  const [countryCodes, setCountryCodes] = useState<ICountryCode[]>([]);
   // State for mobile detection
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -31,14 +41,26 @@ const RouteComponent: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+    // setup common datas like expendituretypes, departments
+  async function setupCommonDatas(clientId: string) {
+    try {
+
+      let countryCodesData = await getAllCountryCodes();
+      setCountryCodes(countryCodesData.sort((a: any, b: any) => (a.countryCode ?? "").localeCompare(b.countryCode ?? "")));
+
+    } catch (e) {
+      console.error("route", e);
+    }
+  }
+
   useEffect(() => {
-    let isTokenExist = getUserToken();
+    let isTokenExist = Cookies.get("token");
     if (isTokenExist) {
       setUserLoggedIn(true)
-      let user_name = localStorage.getItem("name") || "Shaan";
-      //let clientId = Cookies.get("clientId") ?? "no client id"
+      let user_name = Cookies.get("name");
+      let clientId = Cookies.get("clientId") ?? "no client id"
       setUserInfo((u) => ({ ...u, name: user_name }));
-      // setupCommonDatas(clientId);
+      setupCommonDatas(clientId);
     } else {
       setUserLoggedIn(false);
       navigate("/login");
@@ -48,6 +70,7 @@ const RouteComponent: React.FC = () => {
   return (
     <div className="w-full h-full">
       {/* <ErrorBoundary> */}
+      <procurementContext.Provider value={{ countryCodes }}>
       <Routes>
         {/* Login Route */}
         <Route
@@ -101,6 +124,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/settings/user-managment" element={<SettingsPage />} />
                     <Route path="/settings/department-managment" element={<SettingsPage />} />
                     <Route path="/settings/workflow-managment" element={<SettingsPage />} />
+                    <Route path="/settings/roles-managment" element={<SettingsPage />} />
                   </Routes>
                 ) : (
                   <div className="flex items-center justify-center h-full">
@@ -114,6 +138,7 @@ const RouteComponent: React.FC = () => {
           }
         />
       </Routes>
+      </procurementContext.Provider>
       {/* </ErrorBoundary> */}
     </div>
   );
