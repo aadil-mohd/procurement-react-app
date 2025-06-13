@@ -13,10 +13,10 @@ import { getAllRfpsByFilterAsync } from "../../services/rfpService";
 
 const tempfilter = {
   fields: [],
-  pageNo: 1,
-  pageSize: 10,
+  pageNo: 0,
+  pageSize: 0,
   sortColumn: "CreatedAt",
-  sortOrder: "DESC"
+  sortDirection: "DESC"
 }
 
 function RequestPage() {

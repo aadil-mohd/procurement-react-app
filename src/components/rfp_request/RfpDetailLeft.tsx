@@ -64,7 +64,7 @@ type UserBadgesProps = {
 
 export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col mb-[16px]">
             <span className="text-[14px] text-gray-500 mb-[8px]">{title}</span>
             <div className="flex items-center gap-[8px]">
                 {users.map((user, idx) => (
@@ -73,7 +73,7 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
                         className="flex items-center bg-purple-100 rounded-full py-1 px-3"
                     >
                         <img
-                            src={user.avatarUrl}
+                            src={user.avatarUrl || userPhoto}
                             alt={user.name}
                             className="w-[24px] h-[24px] rounded-full mr-[8px]"
                         />
@@ -121,12 +121,10 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
     const setDocuments = async () => {
         try {
             if (requestData) {
-                const documents: any = []
-                // const documents_to_display = requestData.rfpDocumentsPath.map(d => {
-                //     const file = handleFile(d.document, d.documentName.split('.')[0]);
-                //     return ({ ...d, attachmentComponent: <a className="text-[13px] flex" href={file.url} download={file.fileName}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{file.fileName}</p></a> })
-                // })
-                setRfpDocuments(documents);
+                const documents_to_display = requestData.rfpDocumentsPath.map((d:any)=> 
+                    ({ ...d, attachmentComponent: <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
+                )
+                setRfpDocuments(documents_to_display);
             }
         } catch (err) { }
     }
@@ -142,7 +140,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                 {/* Project Name,ID */}
                 <div className="mb-[16px]" style={{ width: "504px" }}>
                     <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.rfpTitle}</span>
-                    <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {requestData?.tenderNumber}</span>
+                    <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {requestData?.tenderNumber || "-"}</span>
                 </div>
                 {/* Description */}
                 <div className="mb-[24px]" style={{ width: "504px" }}>
@@ -153,7 +151,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                 <div className="h-full" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">General Details</span></span>
                     <CommonCard data={{
-                        "Category": requestData?.categoryId as string,
+                        "Category": requestData?.categoryName ?? "-" as string,
                         "Purchase\u00A0Requisition\u00A0ID": requestData?.purchaseRequisitionId as string,
                         "RFP Status": <ShowStatus type="rfps" status={requestData?.isOpen ? "open" : "closed"} />
                     }} className="mb-[16px]" />
@@ -182,7 +180,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Rfp Details</span></span>
                     <CommonCard data={{
                         "Buyer Name": requestData?.buyerName as string,
-                        "Department": requestData?.departmentId as string,
+                        "Department": requestData?.departmentName ?? "-" as string,
                         "Organization": requestData?.buyerOrganizationName as string
                     }} className="mb-[16px]" />
                     <KeyValueGrid className="mb-[16px]"
@@ -210,41 +208,9 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Ownership</span></span>
                     <UserBadges title="Technical Owners" users={owners.technical} />
                     <UserBadges title="Commercial Owners" users={owners.commercial} />
-                </div>
-
-                {/* Cost Summury */}
-                {/* <div className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Cost&nbsp;Summary</div>
-                    <ViewTable columnLabels={costSummuryColumnLabels} columns={costSummuryColumns} items={requestData.capexCostSummuries.map((item: any) => ({
-                        ...item,
-                        estimatedAmount: `${convertCurrencyLabel(requestData.currency)}${item.estimatedAmount.toFixed(2)}`
-                    }))}
-
-                    /> */}
-                {/* Purpose */}
-                {/* <div className="mt-[16px] mb-[4px] text-[14px]" style={{ color: "gray" }}>Purpose</div>
-                    <p className="text-[14px] mb-[16px]">{requestData.purpose ? requestData.purpose : "No data"}</p> */}
-                {/* Benifits */}
-                {/* <div className="mb-[4px] text-[14px]" style={{ color: "gray" }}>Benifits</div>
-                    <p className="text-[14px] mb-[16px]">{requestData.benefits ? requestData.benefits : "No data"}</p> */}
-                {/* Owner Details */}
-                {/* <CommonCard data={{
-                        "Owner name": requestData.ownerName as string,
-                        "Owner email": requestData.ownerEmail as string,
-                        "Approval level required": requestData.approvalLevelRequired as string
-                    }} className="mb-[14px]" /> */}
-                {/* Quotes and recommendations */}
-                {/* <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Quotes&nbsp;and&nbsp;recommendations</span></span>
-                    <div className="text-[14px] mb-[4px]" style={{ color: "gray" }}>Quotes</div>
-                    <ViewTable columnLabels={quotesColumnLabels} columns={quotesColumns} items={capexquotes.map(item => ({
-                        ...item,
-                        amount: `${convertCurrencyLabel(requestData.currency)}${item.amount.toFixed(2)}`
-                    }))} /> */}
-
-                {/* <div className="mt-[16px] mb-[4px] text-[14px]" style={{ color: "gray" }}>Estimated savings/Additional profits</div>
-                    <p className="text-[14px] mb-[16px]">{requestData.estimatedSavings ? requestData.estimatedSavings : "No data"}</p>
-
-                    <div className="text-[14px] mb-[4px]" style={{ color: "gray" }}>Supporting documents</div> */}
+                    <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
                 {rfpDocuments.length > 0 ? <div className="flex flex-col">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs">No documents found</div>}
+                </div>
             </>}
         </div>
     )
