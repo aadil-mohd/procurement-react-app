@@ -1,7 +1,8 @@
 import { currencies } from "./constants";
+import Cookies from "js-cookie";
 
 export const getUserToken = (): string => {
-    let token = localStorage.getItem("auth_token");
+    let token = Cookies.get("token");
     return token ? token : "";
 }
 
@@ -21,6 +22,22 @@ export const formatDate = (date: string): string => {
 
     return `${year}-${month}-${day}`;
 };
+
+export const parseJwt = (token: string) => {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string } => {
+    const [userId, roleId, name, departmentId] = [Cookies.get("userId") as string, Cookies.get("roleId") as string, Cookies.get("name") as string, Cookies.get("departmentId") as string]
+    return { userId, roleId, name, departmentId }
+}
+
 
 export const fetchAndConvertToFile = async (fileUrl: string): Promise<{ document: File, documentName: string }> => {
     console.log(fileUrl,"fileUrl")
