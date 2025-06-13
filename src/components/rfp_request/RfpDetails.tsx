@@ -3,6 +3,7 @@ import SelectField from "../basic_components/SelectField";
 import { currencies } from "../../utils/constants";
 import { convertCurrencyLabel } from "../../utils/common";
 import TextField from "../basic_components/TextField";
+import PeoplePicker from "../basic_components/PeoplePicker";
 
 interface RfpDetailsProps {
   requestData: any

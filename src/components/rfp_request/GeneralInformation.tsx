@@ -170,7 +170,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({ requestData, se
           onChange={(selectedValue) => {
             setRequestData((prev:any) => ({
               ...prev,
-              departmentId:selectedValue
+              categoryId:selectedValue
             }));
           }}
         />

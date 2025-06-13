@@ -8,13 +8,12 @@ export const currencies = [
 // capex related constants
 
 // capex column labels for table
-export const capex_column_labels = {
-    capexId: 'ID',
-    projectName: 'Request Name',
-    expenditureType: 'Expenditure Type',
-    estimatedBudgetLabel: 'Estimated Budget',
-    requestingDepartment: 'Department',
-    status: 'Status',
+export const rfp_column_labels = {
+    tenderNumber: 'ID',
+    rfpTitle: 'Request Name',
+    buyerName: 'Buyer',
+    bidValue: 'Bid Value',
+    isOpen: 'Status',
 };
 
 export const costSummuryColumnLabels = {
@@ -70,10 +69,8 @@ export const milestoneStatuses = [
     { label: "On track", value: "on_track" },
 ]
 
-export const requestStatuses = [
-    { label: "Approved", value: "approved" },
-    { label: "Rejected", value: "rejected" },
-    { label: "Pending", value: "pending" },
+export const rfpStatuses = [
+    { label: "Open", value: "open" },
+    { label: "Closed", value: "closed" },
     { label: "Draft", value: "draft" },
-    { label: "Under clarification", value: "under_clarification"},
 ]

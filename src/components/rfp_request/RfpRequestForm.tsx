@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BriefCase, CostSumm, PaperClip, QuotesIcon, TableCloseIcon } from "../../utils/Icons";
 import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
@@ -9,6 +9,8 @@ import { IRfp } from "../../types/rfpTypes";
 import RfpDetails from "./RfpDetails";
 import { getAllCategoriesAsync } from "../../services/categoryService";
 import TimeLineOwnership from "./TimeLineOwnership";
+import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../services/rfpService";
+import { fetchAndConvertToFile } from "../../utils/common";
 
 const defaultRfpState: IRfp = {
   id: 0,
@@ -33,12 +35,13 @@ const defaultRfpState: IRfp = {
   clarificationDate: "",
   closingDate: "",
   closingTime: "",
-  rfpDocuments:[],
-  rfpOwners:[]
+  rfpDocuments: [],
+  rfpOwners: []
 }
 
 function RfpRequestFormComponent() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
   const [tabs, setTabs] = useState(
     [
@@ -48,22 +51,47 @@ function RfpRequestFormComponent() {
       { tab: "Attachments", isOpen: false }
     ]
   )
-  const [costSummuries, setCostSummuries] = useState<any[]>([]);
-  const [quotes, setQuotes] = useState<any[]>([]);
-  const [attachments, setAttachments] = useState<File[]>([]);
 
-  const [masterData, setMasterData] = useState<any>({ users: [], departments: [],categories:[] });
+  const [attachments, setAttachments] = useState<any[]>([]);
 
+  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [] });
+  const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
   const [activeSections, setActiveSections] = useState<string>("General Information");
-
   const setupRfpFormAsync = async () => {
     try {
       const users = await getAllUsersByFilterAsync();
       const departments = await getAllDepartmentsAsync();
       const categories = await getAllCategoriesAsync()
       setMasterData({
-        users:users, departments:departments.data,categories
+        users: users, departments: departments.data, categories
       })
+      if (id && !isNaN(Number(id))) {
+        try {
+          console.log(id)
+          const rfpRequest = await getRfpByIdAsync(Number(id));
+          setRequestData(rfpRequest);
+          console.log(rfpRequest);
+          const ownersTemp:any = { technical: [], commercial: [] }
+          rfpRequest.rfpOwners.forEach((item: any) => {
+            const user:any = users.find((u: any) => u.id == item.ownerId);
+            console.log(user);
+            if (user) {
+              if (item.ownerType == 1) ownersTemp.technical.push(user);
+              if (item.ownerType == 2) ownersTemp.commercial.push(user);
+            }
+          });
+          setOwners(ownersTemp)
+          const filesArray:any = []
+          for(let url of rfpRequest.rfpDocumentsPath){
+            const file = await fetchAndConvertToFile(url);
+            console.log(file)
+            filesArray.push(file);
+          }
+          setAttachments(filesArray);
+        } catch (err) {
+
+        }
+      }
     } catch (err) {
 
     }
@@ -81,39 +109,50 @@ function RfpRequestFormComponent() {
     const tempTabs = tabs.map(t => t.tab == section ? { ...t, isOpen: true } : { ...t, isOpen: false });
     setTabs(tempTabs);
     setActiveSections(section);
-    // if (activeSections.includes(section)) {
-    //   showWarning(section); // Ask for confirmation before closing the section
-    // } else {
-    //   setActiveSections((prev) => [...prev, section]);
-    // }
   };
-
-  // Show warning using Modal
-  // const showWarning = (section: string) => {
-  //   Modal.confirm({
-  //     title: "Are you sure?",
-  //     content: `Do you want to close the "${section}" section? This action cannot be undone.`,
-  //     onOk() {
-  //       handleSectionClose(section);
-  //     },
-  //     onCancel() {
-  //       // Action when canceling the closure
-  //     },
-  //   });
-  // };
-
-  // const handleSectionClose = (section: string) => {
-  //   setActiveSections((prev) => prev.filter((sec) => sec !== section)); // Remove the section
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       console.log("Request Data:", requestData);
-      console.log("costSummuries:", costSummuries);
-      console.log("quotes:", quotes);
       console.log("attachments:", attachments);
+      const formData = new FormData();
+      const formDataTemp: Record<string, any> = requestData
+      formDataTemp.bidValue = Number(requestData.bidValue);
+      formDataTemp.estimatedContractValue = Number(requestData.estimatedContractValue);
+      for (var key in formDataTemp) {
+        if (formDataTemp.hasOwnProperty(key)) {
+          const value = formDataTemp[key];
+          if (value != null && key != "rfpDocumentsPath") {
+            if (key == "rfpDocuments") {
+              attachments.forEach((item: any) => {
+                formData.append(key, item.document);
+              })
+            } else if (key == "rfpOwners") {
+              let i = 0;
+              owners.technical.forEach((item: any) => {
+                formData.append(`rfpOwners[${i}].ownerType`, "1");
+                formData.append(`rfpOwners[${i}].ownerId`, item.id);
+                formData.append(`rfpOwners[${i}].rfpId`, formDataTemp.id);
+                i++;
+                console.log(item, i, "technical")
+              })
+              owners.commercial.forEach((item: any) => {
+                formData.append(`rfpOwners[${i}].ownerType`, "2");
+                formData.append(`rfpOwners[${i}].ownerId`, item.id);
+                formData.append(`rfpOwners[${i}].rfpId`, formDataTemp.id);
+                i++;
+                console.log(item, i, "commercial")
+              })
+            }
+            else {
+              formData.append(key, value);
+            }
+          }
+        }
+      }
 
+      createOrUpdateRfpAsync(formData);
     } catch (err) {
 
     }
@@ -145,13 +184,14 @@ function RfpRequestFormComponent() {
       case "Attachments":
         return (
           <AddAttachment
-            masterData={masterData} setRequestData={setRequestData} requestData={requestData}
+            attachments={attachments} setAttachments={setAttachments}
           />
         );
       case "Timeline & Ownership":
         return (
           <TimeLineOwnership
             masterData={masterData} setRequestData={setRequestData} requestData={requestData}
+            owners={owners} setOwners={setOwners}
           />
         );
       case "RFP Details":

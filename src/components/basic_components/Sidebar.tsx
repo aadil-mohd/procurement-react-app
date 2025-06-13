@@ -29,7 +29,7 @@ const Sidebar = ({ notifications,trigger }: SidebarProp) => {
   // Navigation Items Configuration
   const navItems: NavItem[] = [
     { to: "/", title: "Dashboard", icon: HomeIcon },
-    { to: "/requests", title: "Requests", icon: ClipboardIcon },
+    { to: "/rfps", title: "Requests", icon: ClipboardIcon },
     { to: "/spend_analysys", title: "spend analysys", icon: DocumentTextIcon },
     { to: "/settings/user-managment", title: "Settings", icon: SettingsIcon },
   ];

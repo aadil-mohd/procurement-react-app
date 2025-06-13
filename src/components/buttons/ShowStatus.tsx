@@ -1,16 +1,16 @@
 import React from 'react';
-import { projectStatuses, milestoneStatuses, requestStatuses } from '../../utils/constants';
+import { projectStatuses, milestoneStatuses, rfpStatuses } from '../../utils/constants';
 
 interface ShowStatusProps {
   status: string;
-  type: 'project' | 'milestone' | 'request' ;
+  type: 'project' | 'milestone' | 'rfps' ;
 }
 
 const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
   const getStatusClass = () => {
     switch (status.toLowerCase()) {
       // Common Statuses
-      case 'completed':
+      case 'closed':
         return 'bg-green-500/30 text-green-900 min-w-16';
       case 'on_hold':
       case 'delayed':
@@ -19,7 +19,7 @@ const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
       case 'in_progress':
         return 'bg-blue-500/30 text-blue-900 min-w-16';
       case 'not_started':
-      case 'pending':
+      case 'open':
         return 'bg-orange-500/40 text-orange-900 min-w-16';
       case 'approved':
         return 'bg-green-500/40 text-green-900 min-w-16';
@@ -35,9 +35,9 @@ const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
     const statusList =
       type === 'project' ? projectStatuses :
       type === 'milestone' ? milestoneStatuses :
-      requestStatuses; // default to requestStatuses
+      rfpStatuses; // default to requestStatuses
 
-    return statusList.find((e) => e.value === status)?.label || status;
+    return statusList.find((e:any) => e.value === status)?.label || status;
   };
 
   return (

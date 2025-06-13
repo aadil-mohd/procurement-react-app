@@ -4,8 +4,6 @@ import { FilterIcon, MagnifyingGlass, SortIcon } from '../../utils/Icons';
 import ShowStatus from '../buttons/ShowStatus';
 import { IFilterDto } from '../../types/commonTypes';
 import Modal from './Modal';
-import RequestForm from '../requests/RequestForm';
-import { ICapexRequest } from '../../types/capexTypes';
 import DropdownMenu from './DropdownMenu';
 import { EllipsisVerticalIcon } from 'lucide-react';
 
@@ -29,7 +27,7 @@ interface TableProps extends Partial<IDot> {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   totalCount: number;
   rowNavigationPath?: string;
-  type: "project" | "milestone" | "request";
+  type: "project" | "milestone" | "rfps";
 }
 
 const Table: React.FC<TableProps> = ({
@@ -53,7 +51,6 @@ const Table: React.FC<TableProps> = ({
 }) => {
   const [pages, setPages] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<ICapexRequest>();
   const navigate = useNavigate();
   const currentPage = filter.pageNo ?? 1;
   const pageSize = filter.pageSize ?? 10;
@@ -126,9 +123,9 @@ const Table: React.FC<TableProps> = ({
   };
 
   const handleRowClick = (item: any) => {
-    if (type === "request") {
-      if (item.status === "draft") {
-        setSelectedRequest(item);
+    if (type === "rfps") {
+      if (item?.isDraft === true) {
+        navigate(`/${rowNavigationPath}/${item.id}`);
         setIsModalOpen(true);
       } else {
         navigate(`/${rowNavigationPath}/${item.id}`);
@@ -190,7 +187,7 @@ const Table: React.FC<TableProps> = ({
                   >
                     {columns.map((col) => (
                       <td key={col} className="px-4 py-2 border-b text-sm">
-                        {col === 'status' ? <ShowStatus status={item[col]} type={type} /> : item[col]}
+                        {col === 'isOpen' ? <ShowStatus status={item[col] ? "open" : "closed"} type={type} /> : item[col]}
                       </td>
                     ))}
                     {dots && (
@@ -255,22 +252,7 @@ const Table: React.FC<TableProps> = ({
         )}
       </div>
 
-      <Modal
-        content={
-          <RequestForm
-            type="edit"
-            capexRequest={selectedRequest as any}
-            closeModal={() => setIsModalOpen(false)}
-            trigger={trigger ? trigger : () => {}}
-          />
-        }
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        modalPosition="end"
-        width="w-full md:w-2/5"
-        CloseButton={false}
-        contentPosition="center"
-      />
+      
     </div>
   );
 };

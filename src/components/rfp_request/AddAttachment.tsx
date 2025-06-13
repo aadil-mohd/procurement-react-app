@@ -1,36 +1,29 @@
-import React, { SetStateAction } from "react";
-import { IRfp } from "../../types/rfpTypes";
+import React from "react";
 
 interface AddAttachmentProps {
-  requestData: any
-  setRequestData: React.Dispatch<SetStateAction<any>>;
-  masterData: any
+  setAttachments: React.Dispatch<React.SetStateAction<any[]>>
+  attachments: any[];
 }
 
-const AddAttachment: React.FC<AddAttachmentProps> = ({
-  requestData,
-  setRequestData,
-  masterData
-}) => {
+const AddAttachment: React.FC<AddAttachmentProps> = ({setAttachments,attachments }) => {
 
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const selectedFiles = event.target.files ? event.target.files[0] : null;
-  //   if (selectedFiles) {
-  //     setRequestData((prev:IRfp) => ({...prev,  rfpDocuments: [...prev.rfpDocuments,selectedFiles]})); // Add new files to the current list
-  //   }
-  // };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files ? event.target.files[0] : null;
+    if (selectedFiles) {
+      setAttachments((prevFiles) => [...prevFiles,{document:selectedFiles,documentName:selectedFiles.name} as any]); // Add new files to the current list
+    }
+  };
 
-  // const removeFile = (index: number) => {
-  //   const updatedFiles = attachments.filter((_, i) => i !== index);
-  //   if (setAttachmentsToDelete && attachments[index].id) setAttachmentsToDelete(x => ([...x, attachments[index].id as string]))
-  //   setAttachments(updatedFiles);
-  // };
+  const removeFile = (index: number) => {
+    const updatedFiles = attachments.filter((_, i) => i !== index);
+    setAttachments(updatedFiles);
+  };
 
   return (
     <div className="w-full rounded-md ">
 
       {/* Display uploaded files */}
-      {/* <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         {attachments.map((file, index) => (
           <div
             key={index}
@@ -50,10 +43,10 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
             </div>
           </div>
         ))}
-      </div> */}
+      </div>
 
       {/* File input section */}
-      {/* <div className="flex flex-col items-center justify-center border" style={{ border: "1px dotted black", height: "100px" }}>
+      <div className="flex flex-col items-center justify-center border" style={{ border: "1px dotted black", height: "100px" }}>
         <label
           htmlFor="file-upload"
           className="text-blue-600 hover:underline cursor-pointer text-sm font-medium mb-1"
@@ -68,7 +61,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
           className="hidden"
         />
         <span className="text-xs text-gray-500">Max. file size : 20MB</span>
-      </div> */}
+      </div>
     </div>
   );
 };
