@@ -16,7 +16,7 @@ export const Login: React.FC<LoginProps> = ({ setUserLoggedIn }) => {
   useEffect(() => {
     const isTokenExist = Cookies.get("token");
     if (isTokenExist) {
-      navigate("/");
+      //navigate("/");
     }
   }, [navigate]);
 

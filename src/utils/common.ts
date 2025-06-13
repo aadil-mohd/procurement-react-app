@@ -33,6 +33,16 @@ export const parseJwt = (token: string) => {
     return JSON.parse(jsonPayload);
 }
 
+export const convertToAmPm = (timeString:string) => {
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, seconds);
+
+  // Options for formatting time to 12-hour format with AM/PM
+  const options:any = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+  return date.toLocaleTimeString([], options);
+};
+
 export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string } => {
     const [userId, roleId, name, departmentId] = [Cookies.get("userId") as string, Cookies.get("roleId") as string, Cookies.get("name") as string, Cookies.get("departmentId") as string]
     return { userId, roleId, name, departmentId }

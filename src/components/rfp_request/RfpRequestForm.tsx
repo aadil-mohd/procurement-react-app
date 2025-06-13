@@ -69,7 +69,7 @@ function RfpRequestFormComponent() {
         try {
           console.log(id)
           const rfpRequest = await getRfpByIdAsync(Number(id));
-          setRequestData(rfpRequest);
+          setRequestData({...rfpRequest,rfpDocuments:[]});
           console.log(rfpRequest);
           const ownersTemp:any = { technical: [], commercial: [] }
           rfpRequest.rfpOwners.forEach((item: any) => {
@@ -82,10 +82,10 @@ function RfpRequestFormComponent() {
           });
           setOwners(ownersTemp)
           const filesArray:any = []
-          for(let url of rfpRequest.rfpDocumentsPath){
-            const file = await fetchAndConvertToFile(url);
+          for(let filedetail of rfpRequest.rfpDocumentsPath){
+            const file = await fetchAndConvertToFile(filedetail?.filePath);
             console.log(file)
-            filesArray.push(file);
+            filesArray.push({...file,documentName:filedetail?.fileTitle});
           }
           setAttachments(filesArray);
         } catch (err) {
@@ -123,8 +123,9 @@ function RfpRequestFormComponent() {
       for (var key in formDataTemp) {
         if (formDataTemp.hasOwnProperty(key)) {
           const value = formDataTemp[key];
-          if (value != null && key != "rfpDocumentsPath") {
+          if (value != null) {
             if (key == "rfpDocuments") {
+              console.log(attachments,"attachments")
               attachments.forEach((item: any) => {
                 formData.append(key, item.document);
               })
