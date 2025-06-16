@@ -209,7 +209,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <UserBadges title="Technical Owners" users={owners.technical} />
                     <UserBadges title="Commercial Owners" users={owners.commercial} />
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                {rfpDocuments.length > 0 ? <div className="flex flex-col">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs">No documents found</div>}
+                {rfpDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
         </div>
