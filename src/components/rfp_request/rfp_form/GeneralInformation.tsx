@@ -1,6 +1,6 @@
 import React, { SetStateAction } from "react";
-import TextField from "../basic_components/TextField";
-import SelectField from "../basic_components/SelectField";
+import TextField from "../../basic_components/TextField";
+import SelectField from "../../basic_components/SelectField";
 
 interface GeneralInformationProps {
   requestData: any

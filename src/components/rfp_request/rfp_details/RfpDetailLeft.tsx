@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { DocumentIcon, GeneralDetailIcon } from "../../utils/Icons";
-import { convertCurrencyLabel, convertToAmPm } from "../../utils/common";
-import ShowStatus from "../buttons/ShowStatus";
+import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
+import { convertCurrencyLabel, convertToAmPm } from "../../../utils/common";
+import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
-import userPhoto from "../../assets/profile_photo/userPhoto.png"
-import { getAllUsersByFilterAsync } from "../../services/userService";
+import userPhoto from "../../../assets/profile_photo/userPhoto.png"
+import { getAllUsersByFilterAsync } from "../../../services/userService";
 
 interface RfpDetailLeftProp {
     requestData: any | undefined

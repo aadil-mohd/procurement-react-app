@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BriefCase, CostSumm, PaperClip, QuotesIcon, TableCloseIcon } from "../../utils/Icons";
+import { BriefCase, CostSumm, PaperClip, QuotesIcon, TableCloseIcon } from "../../../utils/Icons";
 import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
-import { getAllUsersByFilterAsync } from "../../services/userService";
-import { getAllDepartmentsAsync } from "../../services/departmentService";
-import { IRfp } from "../../types/rfpTypes";
+import { getAllUsersByFilterAsync } from "../../../services/userService";
+import { getAllDepartmentsAsync } from "../../../services/departmentService";
+import { IRfp } from "../../../types/rfpTypes";
 import RfpDetails from "./RfpDetails";
-import { getAllCategoriesAsync } from "../../services/categoryService";
+import { getAllCategoriesAsync } from "../../../services/categoryService";
 import TimeLineOwnership from "./TimeLineOwnership";
-import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../services/rfpService";
-import { fetchAndConvertToFile } from "../../utils/common";
+import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpService";
+import { fetchAndConvertToFile } from "../../../utils/common";
 
 const defaultRfpState: IRfp = {
   id: 0,

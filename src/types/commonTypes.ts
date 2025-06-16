@@ -8,7 +8,7 @@ export interface ColumnData{
 
 export interface IFilterDto{
     fields:ColumnData[]
-    sortOrder?:string | undefined
+    sortDirection?:string | undefined
     sortColumn?:string | undefined
     pageNo?:number
     pageSize?:number

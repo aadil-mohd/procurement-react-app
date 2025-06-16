@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import RfpDetailLeft from "../../components/rfp_request/RfpDetailLeft";
+import RfpDetailLeft from "../../components/rfp_request/rfp_details/RfpDetailLeft";
 // import RequestDetailRight from "../../components/requests/RequestDetailRight";
 // import { ICapexRequestDetail } from "../../types/capexTypes";
 import { useParams } from "react-router-dom";
 import { getRfpByIdAsync } from "../../services/rfpService";
 import PageLoader from "../../components/basic_components/PageLoader";
+import RfpDetailRight from "../../components/rfp_request/rfp_details/RfpDetailRight";
 
 
 const RequestDetailPage: React.FC = () => {
@@ -30,7 +31,7 @@ const RequestDetailPage: React.FC = () => {
         <div className="desktop-wide:flex desktop-wide:justify-center">
             <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
                 {rfpData ? <><RfpDetailLeft requestData={rfpData} />
-                    <div>next section</div></> : <PageLoader />}
+                    <RfpDetailRight rfp={rfpData} trigger={()=>{}}/></> : <PageLoader />}
             </div>
         </div>
     )

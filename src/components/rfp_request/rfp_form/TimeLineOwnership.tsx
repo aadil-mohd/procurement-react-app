@@ -1,8 +1,8 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import TextField from "../basic_components/TextField";
-import { formatDate } from "../../utils/common";
-import { IRfp } from "../../types/rfpTypes";
-import PeoplePicker from "../basic_components/PeoplePicker";
+import TextField from "../../basic_components/TextField";
+import { formatDate } from "../../../utils/common";
+import { IRfp } from "../../../types/rfpTypes";
+import PeoplePicker from "../../basic_components/PeoplePicker";
 
 interface TimeLineOwnershipProps {
   requestData: any

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { FilterIcon, MagnifyingGlass, SortIcon } from '../../utils/Icons';
 import ShowStatus from '../buttons/ShowStatus';
 import { IFilterDto } from '../../types/commonTypes';
-import Modal from './Modal';
 import DropdownMenu from './DropdownMenu';
 import { EllipsisVerticalIcon } from 'lucide-react';
 
@@ -22,12 +21,13 @@ interface TableProps extends Partial<IDot> {
   columnLabels: Record<string, string>;
   filter: IFilterDto;
   setFilter: React.Dispatch<React.SetStateAction<IFilterDto>>;
-  setIsFilterModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsSortModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFilterModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSortModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setIsModalOpenItem?: React.Dispatch<React.SetStateAction<any>>;
   totalCount: number;
   rowNavigationPath?: string;
-  type: "project" | "milestone" | "rfps";
+  type: "proposal" | "rfps";
 }
 
 const Table: React.FC<TableProps> = ({
@@ -46,11 +46,11 @@ const Table: React.FC<TableProps> = ({
   setBlockOption,
   setDeleteOption,
   setEditOption,
+  setIsModalOpenItem,
   trigger,
   type,
 }) => {
   const [pages, setPages] = useState<number[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const currentPage = filter.pageNo ?? 1;
   const pageSize = filter.pageSize ?? 10;
@@ -97,16 +97,16 @@ const Table: React.FC<TableProps> = ({
 
   const toggleDropdown = (index: number, event: React.MouseEvent) => {
     event.stopPropagation();
-    
+
     if (openDropdown === index) {
       setOpenDropdown(null);
     } else {
       const buttonRect = event.currentTarget.getBoundingClientRect();
       const containerRect = tableContainerRef.current?.getBoundingClientRect();
-      
+
       if (containerRect) {
         const isNearBottom = buttonRect.bottom > containerRect.bottom - 50;
-        
+
         const dropdownHeight = 120;
         const topPosition = isNearBottom
           ? buttonRect.top + window.scrollY - dropdownHeight + 40
@@ -117,7 +117,7 @@ const Table: React.FC<TableProps> = ({
           left: buttonRect.left + window.scrollX - 110,
         });
       }
-      
+
       setOpenDropdown(index);
     }
   };
@@ -126,12 +126,12 @@ const Table: React.FC<TableProps> = ({
     if (type === "rfps") {
       if (item?.isDraft === true) {
         navigate(`/${rowNavigationPath}/${item.id}`);
-        setIsModalOpen(true);
       } else {
         navigate(`/${rowNavigationPath}/${item.id}`);
       }
-    } else if (type === "project") {
-      navigate(`/${rowNavigationPath}/${item.id}`);
+    } else if (type === "proposal") {
+      //navigate(`/${rowNavigationPath}/${item.id}`);
+      setIsModalOpenItem && setIsModalOpenItem(item);
     }
   };
 
@@ -152,13 +152,13 @@ const Table: React.FC<TableProps> = ({
             </div>
             <button
               className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
-              onClick={() => setIsFilterModalOpen(true)}
+              onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
             >
               <FilterIcon className="size-6 mr-2" /> Filter
             </button>
             <button
               className="px-3 py-2 w-[75px] h-[32px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
-              onClick={() => setIsSortModalOpen(true)}
+              onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
             >
               <SortIcon className="size-6 mr-2" /> Sort
             </button>
@@ -252,7 +252,7 @@ const Table: React.FC<TableProps> = ({
         )}
       </div>
 
-      
+
     </div>
   );
 };

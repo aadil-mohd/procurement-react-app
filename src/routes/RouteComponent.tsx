@@ -10,7 +10,7 @@ import { Login } from '../pages/login_page/Login';
 import Navbar from '../components/basic_components/Navbar';
 import SettingsPage from '../pages/settings_page/SettingsPage';
 import { getUserToken } from '../utils/common';
-import RfpRequestFormComponent from '../components/rfp_request/RfpRequestForm';
+import RfpRequestFormComponent from '../components/rfp_request/rfp_form/RfpRequestForm';
 import { ICountryCode } from "../types/commonTypes";
 import { getAllCountryCodes } from "../services/commonService";
 import RequestPage from '../pages/request_page/RequestPage';
