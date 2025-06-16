@@ -92,7 +92,7 @@ if raw material or licensing costs increase significantly.
 Any revisions will be mutually agreed upon before execution.`}</p>
             </div>
 
-            <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Ownership</span></span>
+            <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Documents</span></span>
             <div className="flex flex-col mb-[16px]">
               <a className="text-[13px] flex" href={""} download={""}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{"temp.pdf"}</p></a>
               <a className="text-[13px] flex" href={""} download={""}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{"temp.pdf"}</p></a>
