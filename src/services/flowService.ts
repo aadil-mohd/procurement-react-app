@@ -34,7 +34,8 @@ export const getApprovalFlowById = async (id:string)=>{
 
 export const createWorkFlowAsync= async (body:any ) => {
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/ApprovalFlows`,body,{
+        console.log(body,"body==")
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/CreateApprovalFlowAsync`,body,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }

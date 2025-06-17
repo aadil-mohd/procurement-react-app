@@ -16,6 +16,7 @@ interface ApprovalflowUsers {
 }
 
 interface ApprovalFlowData {
+    id?:number
     flowName: string;
     steps: ApprovalflowUsers[];
 }
@@ -46,6 +47,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     closeModal
 }) => {
     const [formData, setFormData] = useState<ApprovalFlowData>({
+        id:initialData?.id || 0,
         flowName: initialData?.flowName || "",
         steps: initialData?.steps || []
     });
