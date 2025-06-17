@@ -38,6 +38,17 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
     const [activeTab, setActiveTab] = useState("Proposals");
     const tabs = ["Proposals", "Clarifications"];
 
+    const setupTabsAsync = async()=>{
+        try{
+            
+        }catch(err){
+
+        }
+    }
+
+    useEffect(()=>{
+
+    },[activeTab])
 
     const [filter, setFilter] = useState<IFilterDto>({
         fields: [],
