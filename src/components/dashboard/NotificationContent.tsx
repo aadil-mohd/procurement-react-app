@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import ShowStatus from "../buttons/ShowStatus";
 // import { getCapexRequestsFilterAsync } from "../../services/capexService";
 import { IModalProps, INotificationItem } from "../../types/commonTypes";
-//import { deleteNotificationAsync, updateNotificationAsync } from "../../services/capexService";
 import { convertCurrencyLabel } from "../../utils/common";
 
 interface INotificationContent extends IModalProps {
@@ -30,7 +29,6 @@ const NotificationContent: React.FC<INotificationContent> = ({ data, closeModal,
   const handleDeleteNotifications = async (index: number) => {
     try {
       setEnableOptions(null);
-      console.log(index);
       //await deleteNotificationAsync([filteredNotifications[index].id])
       console.log("deleted");
       trigger();
@@ -142,7 +140,7 @@ const NotificationContent: React.FC<INotificationContent> = ({ data, closeModal,
                   </span>
                   </p>
                   <div className="flex items-center ml-2">
-                    <ShowStatus status={notification.status.toLowerCase()} type="request" />
+                    <ShowStatus status={notification.status.toLowerCase()} type="rfps" />
                     <div className="ml-2 dropdown relative">
                       <button
                         className="text-gray-500 hover:text-gray-700"
