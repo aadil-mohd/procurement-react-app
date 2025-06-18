@@ -1,139 +1,129 @@
 // ApprovalWorkflow.tsx
 import React, { SetStateAction, useEffect, useState } from 'react';
-import { getAllUsersByFilterAsync } from '../../../services/userService';
-import PageLoader from '../../basic_components/PageLoader';
-import { notification } from 'antd';
-import { IRfp } from '../../../types/rfpTypes';
-import { GeneralDetailIcon } from '../../../utils/Icons';
-import Table from '../../basic_components/Table';
-import { IFilterDto } from '../../../types/commonTypes';
-import Modal from '../../basic_components/Modal';
-import { getAllProposalsByFilterAsync } from '../../../services/rfpService';
+import StepIndicator from './vendor_detail_right_component/StepIndicator';
+import StepCard from './vendor_detail_right_component/StepCard';
+// import { getApprovalFlowById } from '../../services/flowService';
+// import { getAllUsersByFilterAsync } from '../../services/userService';
+// import { ApprovalStep } from '../../types/approvalTypes';
+import Cookies from 'js-cookie';
+// import { handleFile } from '../../utils/common';
+import userPhoto from "../../../assets/profile_photo/userPhoto.png"
+import { IStep } from '../../../types/approvalflowTypes';
+import { getVendorApprovalFlowsByVendorIdAsync } from '../../../services/flowService';
 
-interface User {
-    name: string;
-    image?: string;
-    email: string;
-    role: string;
-    id?: string;
-}
 
-interface IOwnerDetails {
-    ownerName: string,
-    ownerId: string,
-    ownerEmail: string
+interface IVendorDetailRight {
+    vendorDetails: any
+    trigger: ()=> void
 }
 
 
+// const flows: IStep[] = [{
+//     id: 0,
+//     photo: userPhoto,
+//     approvalRequestId: 0,
+//     approverId: 1,
+//     approverRole: "admin",
+//     approverEmail: "admin@123",
+//     approverName: "Akkib",
+//     current: true,
+//     stepOrder: 1,
+//     status: "pending",
+//     actionDate: "2025-05-01",
+//     comments: ""
+// },
+// {
+//     id: 0,
+//     photo: userPhoto,
+//     approvalRequestId: 0,
+//     approverId: 1,
+//     approverRole: "admin",
+//     approverEmail: "admin@123",
+//     approverName: "Akkib",
+//     current: false,
+//     stepOrder: 2,
+//     status: "pending",
+//     actionDate: "2025-05-01",
+//     comments: ""
+// }, {
+//     id: 0,
+//     approvalRequestId: 0,
+//     photo: userPhoto,
+//     approverRole: "admin",
+//     approverName: "Akkib",
+//     approverId: 1,
+//     approverEmail: "admin@123",
+//     stepOrder: 3,
+//     current: false,
+//     status: "pending",
+//     actionDate: "2025-05-01",
+//     comments: ""
+// }, {
+//     id: 0,
+//     approvalRequestId: 0,
+//     photo: userPhoto,
+//     approverRole: "admin",
+//     approverEmail: "admin@123",
+//     approverName: "Akkib",
+//     approverId: 1,
+//     stepOrder: 4,
+//     current: false,
+//     status: "pending",
+//     actionDate: "2025-05-01",
+//     comments: ""
+// }]
 
-interface IRfpDetailRight {
-    rfp: IRfp
-    trigger: () => void
-}
+const RequestDetailRight: React.FC<IVendorDetailRight> = ({ vendorDetails, trigger }) => {
+    const [stepsList,setStepsList] = useState<any[]>([])
 
-const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
-
-    const [isModalOpenItem, setIsModalOpenItem] = useState<any>(null);
-    const [vendorProposals, setVendorProposals] = useState<any[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [activeTab, setActiveTab] = useState("Proposals");
-    const tabs = ["Proposals", "Clarifications"];
-
-    const setupTabsAsync = async () => {
-        try {
-            if (activeTab == "Proposals") {
-                const filtered_proposals = await getAllProposalsByFilterAsync(filter);
-                setVendorProposals(filtered_proposals);
-            }else if(activeTab == "Clarifications"){
-
-            }
-        } catch (err) {
-
-        }
+    const setupRequestDetailRight = async()=>{
+        const response = await getVendorApprovalFlowsByVendorIdAsync(vendorDetails?.id);
+        setStepsList(response);
     }
 
     useEffect(() => {
-setupTabsAsync();
-    }, [activeTab])
-
-    const [filter, setFilter] = useState<IFilterDto>({
-        fields: [{columnName:"RfpId", value:rfp?.id ?? 0}],
-        globalSearch: "",
-        sortColumn: "CreatedAt",
-        sortDirection: "DESC"
-    })
-    const proposalTableColumns = ["vendorCode", "vendorName", "bidAmount", "bidValidity"]
-    const columnLabels = { vendorCode: "ID", vendorName: "Vendor Name", bidAmount: "Bid Amount", bidValidity: "Bid Validity" }
-
+        setupRequestDetailRight()
+    }, [vendorDetails])
 
     return (
-        <>
-            <div className="w-full bg-white">
-                <div className="w-full space-y-2 desktop:max-w-[700px] mx-auto rounded-lg h-full px-6 max-h-[900px] overflow-y-auto scrollbar">
-                    <div className="relative flex items-center sticky top-0 bg-white z-10">
-                        <div className="overflow-x-auto py-4 flex-1 scroll-smooth no-scrollbar border-b">
-                            <div className="pt-[24px] flex justify-start mb-[16px]">
-                                {tabs.map((tab, index) => (
-                                    <div className="flex items-center h-[37px]" key={tab}>
-                                        <div
-                                            onClick={() => setActiveTab(tab)}
-                                            className={`relative h-full w-full text-sm text-start cursor-pointer ${activeTab === tab
-                                                ? "text-customBlue"
-                                                : "text-black hover:text-customBlue"
-                                                }`}
-                                        >
-                                            <span
-                                                onClick={() => setActiveTab(tab)}
-                                                className={`cursor-pointer font-bold text-[16px] flex items-center ${activeTab === "proposals" ? "border-black" : "text-gray-500"}`}
-                                            >
-                                                <GeneralDetailIcon className="size-5" />
-                                                <span className={`pl-[8px] ${activeTab === tab ? "text-customBlue"
-                                                    : "text-black hover:text-customBlue"
-                                                    }`}>{tab}</span>
-                                                <span
-                                                    className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${activeTab === "proposals"
-                                                        ? "bg-customBlue"
-                                                        : "bg-transparent group-hover:bg-customBlue"
-                                                        }`}
-                                                ></span></span>
-                                            <span
-                                                className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${activeTab === tab
-                                                    ? "bg-customBlue"
-                                                    : "bg-transparent group-hover:bg-customBlue"
-                                                    }`}
-                                            ></span>
-                                        </div>
-                                        {index !== tabs.length - 1 && (
-                                            <span className="mx-[12px] h-[37px] text-gray-400">|</span>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+        <div className="w-full space-y-2 desktop:max-w-[580px] mx-auto rounded-lg h-full px-6 max-h-[900px] overflow-y-auto scrollbar">
+            <StepIndicator steps={stepsList} />
 
-                    <div className="w-full">
-                        {activeTab === "Proposals" && (
-                            <Table
-                                columnLabels={columnLabels}
-                                items={vendorProposals}
-                                columns={proposalTableColumns}
-                                title="Proposals"
-                                type="proposal"
-                                setIsModalOpenItem={setIsModalOpenItem}
-                                filter={filter}
-                                setFilter={setFilter}
-                                setSearchQuery={setSearchQuery}
-                                totalCount={10}
+            <div className="w-full">
+                {stepsList.map((step, index) => {
+                    // Find the index of the current step
+
+                    // Find the latest step with currentUser that comes after stepCurrent
+                    let currentIndex = -1;
+                    for (let i = 0; i < stepsList.length; i++) {
+                        if (stepsList[i].current) {
+                            currentIndex = i;
+                        }
+                    }
+
+                    // Show all steps up to (and including) the currentIndex in StepCard
+                    if (index <= currentIndex) {
+                        return (
+                            <StepCard
+                                key={index}
+                                step={step || []}
+                                trigger={() => {
+                                    // GetStepsData();
+                                }}
                             />
-                        )}
-                        {activeTab === "Clarifications" && (
-                            <div></div>
-                        )}
-                    </div>
-                </div>
+                        );
+                    }
+
+                    // Show future steps in a plain div
+                    return (
+                        <div key={index} className="text-gray-500 mb-4 bg-white px-2 py-2 rounded-md flex-col items-center justify-center">
+                            {step.approverRole} <p className='text-xs'>{step.approverName} | {step.approverEmail}</p>
+                        </div>
+                    );
+                })}
             </div>
-        </>)
+        </div>
+    );
 };
 
-export default RfpDetailRight;
+export default RequestDetailRight;

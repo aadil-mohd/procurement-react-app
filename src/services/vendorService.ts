@@ -14,3 +14,16 @@ export const getAllVendorsAsync = async (data: any) => {
 
     }
 }
+
+export const getVendorsDetailsByIdAsync = async (id:number) => {
+    try {
+        const response = await axios.get(`${Urls.defaultUrl}/api/Vendor/${id}`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    } catch (err) {
+
+    }
+}

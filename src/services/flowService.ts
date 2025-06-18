@@ -72,6 +72,19 @@ export const deleteWorkFlowAsync= async (id:string ) => {
     }
 }
 
+export const getVendorApprovalFlowsByVendorIdAsync = async (id:string)=>{
+    try{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/ApproveStepByVendorIdAsync?vendorId=${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err:any){
+        throw err.response.data;
+        
+    }
+}
 
 
 
