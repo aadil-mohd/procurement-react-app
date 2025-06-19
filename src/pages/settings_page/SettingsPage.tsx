@@ -28,7 +28,7 @@ const SettingsPage = () => {
     { name: 'Manage department', path: '/settings/department-managment' },
     { name: 'Roles & permissions', path: '/settings/roles-managment' },
     { name: 'Approval workflow', path: '/settings/workflow-managment' },
-    { name: 'Budget allocation', path: '/settings/budget-management' },
+    // { name: 'Budget allocation', path: '/settings/budget-management' },
   ];
 
   // Set active section based on current URL path
