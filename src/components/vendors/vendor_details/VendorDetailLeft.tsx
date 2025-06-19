@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
-import { convertCurrencyLabel, convertToAmPm } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
-import { getAllUsersByFilterAsync } from "../../../services/userService";
+import { Vendor } from "../../../types/vendorTypes";
+import ViewTable from "../../basic_components/ViewTable";
+import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
 
 interface VendorDetailLeftProp {
-    requestData: any | undefined
+    vendorDetails: Vendor
 }
-
 
 const CommonCard = ({ data, className }: { data: Record<string, any>, className?: string }) => {
     return (
@@ -85,131 +84,167 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     );
 };
 
-const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ requestData }: VendorDetailLeftProp) => {
-    const [VendorDocuments, setVendorDocuments] = useState<any[]>([]);
-    const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
+const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: VendorDetailLeftProp) => {
 
-    const setupQuotes = async () => {
-        try {
-            if (requestData) {
-                const users = await getAllUsersByFilterAsync();
-                const tempOwners: { technical: any[], commercial: any[] } = { technical: [], commercial: [] }
-                requestData?.VendorOwners.forEach((ow: any) => {
-                    const userExist: any = users.find((u: any) => u.id == ow.ownerId);
-                    if (userExist) {
-                        switch (ow.ownerType) {
-                            case 1: {
-                                tempOwners.technical.push({
-                                    name: userExist.name,
-                                    avatarUrl: userExist?.photo ?? userPhoto,
-                                });
-                            }
-                            case 2: {
-                                tempOwners.commercial.push({
-                                    name: userExist.name,
-                                    avatarUrl: userExist?.photo ?? userPhoto,
-                                });
-                            } default: { }
-                        }
-                    }
-                })
-                setOwners(tempOwners)
-            }
-        } catch (err) { }
-    }
-
-    const setDocuments = async () => {
-        try {
-            if (requestData) {
-                const documents_to_display = requestData.VendorDocumentsPath.map((d:any)=> 
-                    ({ ...d, attachmentComponent: <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
-                )
-                setVendorDocuments(documents_to_display);
-            }
-        } catch (err) { }
-    }
-
-    useEffect(() => {
-        setupQuotes();
-        setDocuments();
-    }, [requestData])
 
     return (
         <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200">
-            {requestData && <>
+            {vendorDetails && <>
                 {/* Project Name,ID */}
                 <div className="mb-[16px]" style={{ width: "504px" }}>
-                    <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.VendorTitle}</span>
-                    <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {requestData?.tenderNumber || "-"}</span>
+                    <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{vendorDetails.organisationName}</span>
+                    <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {vendorDetails?.vendorCode || "-"}</span>
                 </div>
-                {/* Description */}
-                <div className="mb-[24px]" style={{ width: "504px" }}>
-                    <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Description</span>
-                    <p style={{ fontSize: "14px" }}>{requestData.VendorDescription}</p>
-                </div>
-                {/* General Details */}
-                <div className="h-full" style={{ width: "504px" }}>
+
+                <div className="h-full mb-[16px]" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">General Details</span></span>
-                    <CommonCard data={{
-                        "Category": requestData?.categoryName ?? "-" as string,
-                        "Purchase\u00A0Requisition\u00A0ID": requestData?.purchaseRequisitionId as string,
-                        "Vendor Status": <ShowStatus type="vendors" status={requestData?.isOpen ? "open" : "closed"} />
-                    }} className="mb-[16px]" />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Closed / Open", value: requestData?.isOpen ? "Open" : "Closed" },
-                            { label: "Serial / Parallel", value: requestData?.isSerial ? "Serial" : "Parallel" },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Estimated Contract Value", value: `${convertCurrencyLabel(requestData?.VendorCurrency)}${requestData?.estimatedContractValue}` },
-                            { label: "Contract Value Hidden From Vendor", value: requestData?.hideContractValueFromVendor ? "Yes" : "No" },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Bid Value", value: `${convertCurrencyLabel(requestData?.VendorCurrency)}${requestData?.bidValue}` },
-                            { label: "Tender Fee", value: `${convertCurrencyLabel(requestData?.VendorCurrency)}${requestData?.tenderFee}` },
-                        ]}
-                    />
+                    <div className="grid grid-cols-2 gap-6 p-4 rounded-md bg-bgBlue">
+                        <div>
+                            <p className="text-sm text-gray-500">Location</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.cityName}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">State</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.stateName}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Country</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.countryName}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">PO Box / Postal Code</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.postalCode}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Phone</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.phone}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Fax</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.fax}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Email</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.vendorEmail}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Website</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.website}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Business Grade</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.businessGrade}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Commercial Reg No.</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.commercialRegNo}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Way No.</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.wayNo}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Building No.</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.buildingNo}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Organisation Legal Structure</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.organisationLegalStructure}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Other Organisation Legal Structure</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.otherOrganisationLegalStructure}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Related to Our Stakeholders</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.relatedToStakeholders ? "Yes" : "No"}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Principle Activity of the Company</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.principleActivities}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Date added</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.createdAt}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Last active</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.updatedAt}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mb-[24px]" style={{ width: "504px" }}>
+                    <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Categories</span>
+                    <ViewTable columnLabels={{ index: "No.", categoryName: "Category" }} columns={["index", "categoryName"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
                 </div>
 
                 {/* Vendor Details */}
                 <div className="h-full" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Vendor Details</span></span>
                     <CommonCard data={{
-                        "Buyer Name": requestData?.buyerName as string,
-                        "Department": requestData?.departmentName ?? "-" as string,
-                        "Organization": requestData?.buyerOrganizationName as string
+                        "Owner name": `${vendorDetails?.firstName} ${vendorDetails?.lastName}` as string,
+                        "Email": vendorDetails?.vendorEmail ?? "-" as string,
+                        "Phone": vendorDetails?.phone as string
                     }} className="mb-[16px]" />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Express Interest Last Date", value: dayjs(requestData?.expressInterestLastDate).format("DD-MM-YYYY") },
-                            { label: "Response Due Date", value: dayjs(requestData?.responseDueDate).format("DD-MM-YYYY") },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Buyer Reply End Date", value: dayjs(requestData?.buyerReplyEndDate).format("DD-MM-YYYY") },
-                            { label: "Clarification Date", value: dayjs(requestData?.clarificationDate).format("DD-MM-YYYY") },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Closing Date", value: dayjs(requestData?.closingDate).format("DD-MM-YYYY") },
-                            { label: "Closing Time", value: convertToAmPm(requestData?.closingTime) },
-                        ]}
-                    />
+                    <div className="mb-[24px]" style={{ width: "504px" }}>
+                        <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Users</span>
+                        <ViewTable columnLabels={{ name: "Name", email: "Email", phone: "Phone" }} columns={["name", "email", "phone"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
+                    </div>
+                    <div className="mb-[24px]" style={{ width: "504px" }}>
+                        <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Divissions</span>
+                        <ViewTable columnLabels={{ divissionName: "Divission", location: "Location" }} columns={["divissionName", "location"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
+                    </div>
                 </div>
-
-                {/* Ownership Details */}
-                <div className="h-full" style={{ width: "504px" }}>
-                    <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Ownership</span></span>
-                    <UserBadges title="Technical Owners" users={owners.technical} />
-                    <UserBadges title="Commercial Owners" users={owners.commercial} />
+                <div className="h-full mb-[16px]" style={{ width: "504px" }}>
+                    <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Bank Details</span></span>
+                    <div className="grid grid-cols-2 gap-6 p-4 rounded-md bg-bgBlue">
+                        <div>
+                            <p className="text-sm text-gray-500">Bank Name</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.bankName}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Branch</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.bankBranch}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">IFSC Code</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.ifscCode}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Account Number</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.accountNumber}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Beneficiary Name</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.accountBeneficiaryName}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="h-full mb-[16px]" style={{ width: "504px" }}>
+                    <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Certificate of Merit / Customer Profile</span></span>
+                    <div className="grid grid-cols-2 gap-6 p-4 rounded-md bg-bgBlue mb-[18px]">
+                        <div>
+                            <p className="text-sm text-gray-500">Major Clients</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.majorClients}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Awards & Recognitions</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.awardsAndRecognitions}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">{`Experience (in Years)`}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{`${vendorDetails?.experienceYear} Years`}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Specializations</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.specializations}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="h-full mb-[16px]" style={{ width: "504px" }}>
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                {VendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{VendorDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
+                    {vendorDetails?.vendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{vendorDetails?.vendorDocuments.map(d => <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a>)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
         </div>

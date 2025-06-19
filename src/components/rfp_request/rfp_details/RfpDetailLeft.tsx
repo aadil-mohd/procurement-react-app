@@ -89,7 +89,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
 
-    const setupQuotes = async () => {
+    const setupOwners= async () => {
         try {
             if (requestData) {
                 const users = await getAllUsersByFilterAsync();
@@ -130,7 +130,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
     }
 
     useEffect(() => {
-        setupQuotes();
+        setupOwners();
         setDocuments();
     }, [requestData])
 
