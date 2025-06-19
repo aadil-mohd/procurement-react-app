@@ -39,8 +39,6 @@ function VendorPage() {
 
   const [showLoader] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>("All requests");
-  const navigate = useNavigate();
-
   // const requestStatuses = [
   //   { label: "Approved", value: "approved" },
   //   { label: "Rejected", value: "rejected" },
@@ -163,7 +161,7 @@ function VendorPage() {
 
 
           <div className="ml-[10px]">
-            <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={vendors} columnLabels={vendor_column_labels} setIsFilterModalOpen={()=>{}} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
+            <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setIsFilterModalOpen={()=>{}} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
             {isSortModalOpen && <SortModal filter={filter} columns={capex_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
           </div></> : <PageLoader />}
       </div>

@@ -37,7 +37,7 @@ const RolesPermissions: React.FC = () => {
     const [selectedRole, setSelectedRole] = useState<RoleData | null>();
     const [editData, setEditData] = useState<{ roleId: string, roleName: string }>();
     const [roles, setRoles] = useState<RoleData[]>([]);
-    const [rolesPermissions, setRolesPermissions] = useState<number[]>();
+    const [rolesPermissions, setRolesPermissions] = useState<number[]>([]);
     const [changesDone, setChangesDone] = useState(false);
     const [permissions, setPermissions] = useState<any[]>([]);
     const userId = Cookies.get("userId");
@@ -346,7 +346,7 @@ const RolesPermissions: React.FC = () => {
 
                     <div className="flex justify-start items-to mb-4">
                         <div className="flex gap-2 overflow-x-auto w-full scrollbar">
-                            {roles.map(role => {
+                            {roles?.map(role => {
                                 const isSelected = role.roleid === selectedRole.roleid;
                                 return (
                                     <div

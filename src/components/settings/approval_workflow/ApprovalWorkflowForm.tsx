@@ -13,6 +13,8 @@ interface ApprovalflowUsers {
     approvalFlowMasterId: number;
     defaultApproverEmail: string;
     approverRole: string;
+    approverId: number;
+    approverName:string;
 }
 
 interface ApprovalFlowData {
@@ -164,7 +166,9 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                     approvalFlowMasterId: 0,
                     approverRole: "",
                     defaultApproverEmail: "",
-                    stepOrder: prev.steps.length + 1
+                    stepOrder: prev.steps.length + 1,
+                    approverId:0,
+                    approverName:""
                 }
             ]
         }));

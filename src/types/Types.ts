@@ -58,9 +58,9 @@ export interface IUser {
     phone: string;
     password: string; // Encrypted password string
     roleId: string;
-    role?: string;
+    roleName?: string;
     departmentId: string;
-    department?: string;
+    departmentName?: string;
     gender: "male" | "female" | "other"; // Can add more options if applicable
     place: string;
     isActive: boolean;

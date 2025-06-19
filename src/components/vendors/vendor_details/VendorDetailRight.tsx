@@ -5,7 +5,6 @@ import StepCard from './vendor_detail_right_component/StepCard';
 // import { getApprovalFlowById } from '../../services/flowService';
 // import { getAllUsersByFilterAsync } from '../../services/userService';
 // import { ApprovalStep } from '../../types/approvalTypes';
-import Cookies from 'js-cookie';
 // import { handleFile } from '../../utils/common';
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { IStep } from '../../../types/approvalflowTypes';
@@ -18,72 +17,73 @@ interface IVendorDetailRight {
 }
 
 
-// const flows: IStep[] = [{
-//     id: 0,
-//     photo: userPhoto,
-//     approvalRequestId: 0,
-//     approverId: 1,
-//     approverRole: "admin",
-//     approverEmail: "admin@123",
-//     approverName: "Akkib",
-//     current: true,
-//     stepOrder: 1,
-//     status: "pending",
-//     actionDate: "2025-05-01",
-//     comments: ""
-// },
-// {
-//     id: 0,
-//     photo: userPhoto,
-//     approvalRequestId: 0,
-//     approverId: 1,
-//     approverRole: "admin",
-//     approverEmail: "admin@123",
-//     approverName: "Akkib",
-//     current: false,
-//     stepOrder: 2,
-//     status: "pending",
-//     actionDate: "2025-05-01",
-//     comments: ""
-// }, {
-//     id: 0,
-//     approvalRequestId: 0,
-//     photo: userPhoto,
-//     approverRole: "admin",
-//     approverName: "Akkib",
-//     approverId: 1,
-//     approverEmail: "admin@123",
-//     stepOrder: 3,
-//     current: false,
-//     status: "pending",
-//     actionDate: "2025-05-01",
-//     comments: ""
-// }, {
-//     id: 0,
-//     approvalRequestId: 0,
-//     photo: userPhoto,
-//     approverRole: "admin",
-//     approverEmail: "admin@123",
-//     approverName: "Akkib",
-//     approverId: 1,
-//     stepOrder: 4,
-//     current: false,
-//     status: "pending",
-//     actionDate: "2025-05-01",
-//     comments: ""
-// }]
+const tempflows: IStep[] = [{
+    id: 0,
+    photo: userPhoto,
+    approvalRequestId: 0,
+    approverId: 1,
+    approverRole: "admin",
+    approverEmail: "admin@123",
+    approverName: "Akkib",
+    current: true,
+    stepOrder: 1,
+    status: "pending",
+    actionDate: "2025-05-01",
+    comments: ""
+},
+{
+    id: 0,
+    photo: userPhoto,
+    approvalRequestId: 0,
+    approverId: 1,
+    approverRole: "admin",
+    approverEmail: "admin@123",
+    approverName: "Akkib",
+    current: false,
+    stepOrder: 2,
+    status: "pending",
+    actionDate: "2025-05-01",
+    comments: ""
+}, {
+    id: 0,
+    approvalRequestId: 0,
+    photo: userPhoto,
+    approverRole: "admin",
+    approverName: "Akkib",
+    approverId: 1,
+    approverEmail: "admin@123",
+    stepOrder: 3,
+    current: false,
+    status: "pending",
+    actionDate: "2025-05-01",
+    comments: ""
+}, {
+    id: 0,
+    approvalRequestId: 0,
+    photo: userPhoto,
+    approverRole: "admin",
+    approverEmail: "admin@123",
+    approverName: "Akkib",
+    approverId: 1,
+    stepOrder: 4,
+    current: false,
+    status: "pending",
+    actionDate: "2025-05-01",
+    comments: ""
+}]
 
 const RequestDetailRight: React.FC<IVendorDetailRight> = ({ vendorDetails, trigger }) => {
-    const [stepsList,setStepsList] = useState<any[]>([])
+    const [stepsList,setStepsList] = useState<any[]>(tempflows)
 
-    const setupRequestDetailRight = async()=>{
-        const response = await getVendorApprovalFlowsByVendorIdAsync(vendorDetails?.id);
-        setStepsList(response);
-    }
+    // const setupRequestDetailRight = async()=>{
+    //     const response:any[] = await getVendorApprovalFlowsByVendorIdAsync(vendorDetails?.id);
+    //     const formatedSteps = response.map((item:any,i)=>({...item,current:(item.status == "Pending" && (i == 0 || item[i-1] == "Approved"))}));
+    //     setStepsList(formatedSteps);
+    // }
 
-    useEffect(() => {
-        setupRequestDetailRight()
-    }, [vendorDetails])
+    // useEffect(() => {
+    //     setupRequestDetailRight()
+    // }, [vendorDetails])
 
     return (
         <div className="w-full space-y-2 desktop:max-w-[580px] mx-auto rounded-lg h-full px-6 max-h-[900px] overflow-y-auto scrollbar">

@@ -2,6 +2,7 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { IUserDetails } from "../../../types/userTypes";
 import userPhoto from '../../../assets/profile_photo/userPhoto.png';
+import { IUser } from "../../../types/Types";
 
 interface ApprovalflowUsers {
     id: number;
@@ -9,6 +10,8 @@ interface ApprovalflowUsers {
     approvalFlowMasterId: number;
     defaultApproverEmail: string;
     approverRole: string;
+    approverId: number;
+    approverName:string;
 }
 
 interface ApprovalFlowData {
@@ -51,19 +54,19 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
         setIsDropdownOpen(isDropdownOpen === index ? null : index);
     };
 
-    const updateApprover = (index: number, email: string) => {
+    const updateApprover = (index: number, user: IUser) => {
         setFormData((prev: ApprovalFlowData) => ({
             ...prev,
             steps: prev.steps.map((approver, i) =>
-                i === index ? { ...approver, defaultApproverEmail:email } : approver
+                i === index ? { ...approver, defaultApproverEmail:user.email, approverRole:user.roleName as string,approverId:Number(user.id), approverName:user.name} : approver
             ),
         }));
         setIsDropdownOpen(null);
         setSearchQuery("");
     };
 
-    const handleApproverSelect = (email: string) => {
-        updateApprover(index, email);
+    const handleApproverSelect = (approver: IUser) => {
+        updateApprover(index, approver);
         setSearchQuery("");
         setApproverSelected(true);
         setIsDropdownOpen(null);
@@ -140,7 +143,7 @@ const ApproverSearchDropdown: React.FC<ApproverSearchDropdownProps> = ({
                                 <div
                                     key={approver.id}
                                     className="p-2 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => handleApproverSelect(approver.email)}
+                                    onClick={() => handleApproverSelect(approver as any)}
                                 >
                                     <div className="flex items-center">
                                         <div className="w-8 h-8 bg-gray-300 rounded-full mr-3">
