@@ -189,7 +189,7 @@ const Table: React.FC<TableProps> = ({
                   >
                     {columns.map((col) => (
                       <td key={col} className="px-4 py-2 border-b text-sm">
-                        {col === 'isOpen' ? <ShowStatus status={item[col] ? "open" : "closed"} type={type} /> : item[col]}
+                        {col === 'isOpen' ? <ShowStatus status={item[col] ? "open" : "closed"} type={type} /> : col === 'status' ? <ShowStatus status={item[col]} type={type} /> : item[col]}
                       </td>
                     ))}
                     {dots && (

@@ -11,6 +11,19 @@ export const convertCurrencyLabel = (currencyType: string) => {
     return type?.label;
 }
 
+export function vendorStatusConverter(code: 0 | 1 | 2): string {
+    switch (code) {
+        case 0:
+            return "pending";
+        case 1:
+            return "approved";
+        case 2:
+            return "rejected";
+        default:
+            return "unknown"; // fallback for unexpected codes
+    }
+}
+
 export const formatDate = (date: string): string => {
     const d = new Date(date);
     if (isNaN(d.getTime())) return ''; // Handle invalid dates
@@ -33,14 +46,14 @@ export const parseJwt = (token: string) => {
     return JSON.parse(jsonPayload);
 }
 
-export const convertToAmPm = (timeString:string) => {
-  const [hours, minutes, seconds] = timeString.split(':').map(Number);
-  const date = new Date();
-  date.setHours(hours, minutes, seconds);
+export const convertToAmPm = (timeString: string) => {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, seconds);
 
-  // Options for formatting time to 12-hour format with AM/PM
-  const options:any = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-  return date.toLocaleTimeString([], options);
+    // Options for formatting time to 12-hour format with AM/PM
+    const options: any = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    return date.toLocaleTimeString([], options);
 };
 
 export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string } => {
@@ -50,7 +63,7 @@ export const getUserCredentials = (): { userId: string, roleId: string, name: st
 
 
 export const fetchAndConvertToFile = async (fileUrl: string): Promise<{ document: File, documentName: string }> => {
-    console.log(fileUrl,"fileUrl")
+    console.log(fileUrl, "fileUrl")
     const response = await fetch(fileUrl);
     const blob = await response.blob();
 

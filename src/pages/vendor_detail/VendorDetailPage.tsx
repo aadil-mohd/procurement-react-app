@@ -45,7 +45,7 @@ const VendorDetailPage: React.FC = () => {
         website: "aufait.in",       // string | null
         organisationLegalStructure: "sadsadasdsa",
         otherOrganisationLegalStructure: "ajgajsd", // string | null
-        status: 1, // 1=Accepted, 2=Rejected, 3=Blocked
+        status: 1,
         isActive: true, // boolean
         vendorCode: "VD-0001", // string | null
         bankName: "HDFC",

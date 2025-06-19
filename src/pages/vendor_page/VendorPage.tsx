@@ -11,18 +11,19 @@ import PageLoader from "../../components/basic_components/PageLoader";
 import { useNavigate } from "react-router-dom";
 import { getAllRfpsByFilterAsync } from "../../services/rfpService";
 import { getAllVendorsAsync } from "../../services/vendorService";
+import { vendorStatusConverter } from "../../utils/common";
 
 const tempfilter = {
   nameFilter:""
 }
 
 function VendorPage() {
-  const commonColumns=['vendorCode', 'organisationName', 'ownerName', "statusName"]
+  const commonColumns=['vendorCode', 'organisationName', 'ownerName', "status"]
   const vendor_column_labels = {
     vendorCode: 'ID',
     organisationName: 'Vendor Name',
     ownerName: 'Owner Name',
-    statusName: 'Status',
+    status: 'Status',
 };
   const [columns,setColumns] = useState(commonColumns);
   const [trigger, setTrigger] = useState(false);
@@ -64,7 +65,7 @@ function VendorPage() {
       let vendors_list:any = await getAllVendorsAsync(filterDto)
       //setShowLoader(false);
       setTotalCount(0)
-      const modified_vendor_list = vendors_list.map((item:any)=>({...item,ownerName:`${item?.firstName} ${item?.lastName}`}))
+      const modified_vendor_list = vendors_list.map((item:any)=>({...item,ownerName:`${item?.firstName} ${item?.lastName}`,status:vendorStatusConverter(item?.status) as any}))
       setVendors(modified_vendor_list);
       setTrigger(false);
     } catch (err) {
