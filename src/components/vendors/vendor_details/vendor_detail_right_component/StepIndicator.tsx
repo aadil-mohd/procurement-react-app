@@ -10,6 +10,7 @@ const StepIndicator: React.FC<{ steps: IStep[] }> = ({ steps }) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
 
+    console.log(steps, "steps")
     const updateScrollButtons = () => {
         if (scrollContainerRef.current) {
             setCanScrollLeft(scrollContainerRef.current.scrollLeft > 0);
@@ -63,20 +64,18 @@ const StepIndicator: React.FC<{ steps: IStep[] }> = ({ steps }) => {
                             <div className="flex items-center justify-center space-x-3">
                                 <div
                                     className={`w-7 h-7 rounded-full flex items-center justify-center border-2 z-1
-                                        ${step.current ? `ring-2 ${step.status === "approved" ? "bg-blue-500 border-white ring-blue-500"
-                                            : step.status === "rejected" ? "bg-red-500 border-white ring-red-500"
-                                                : "bg-blue-500 border-white ring-blue-500"}`
-                                            : step.status === "approved"
-                                                ? "bg-blue-500 border-white"
-                                                : "bg-white border-gray-200"}`}
+                                        ${`${step.status === "approved" || ((step.status === "pending" && (index == 0 || steps[index - 1].status == "approved"))) ? "bg-blue-500 border-white ring-blue-500 ring-2"
+                                            : step.status === "rejected" ? "bg-red-500 border-white ring-red-500 ring-2"
+                                                : "bg-white border-gray-200"}`
+                                        }`}
 
                                 >
                                     {step.status === "rejected" ? (
                                         <XIcon className="w-4 h-4 text-white" />
-                                    ) : (step.status === "approved" || step.status==="initiated") ? (
+                                    ) : (step.status === "approved") ? (
                                         <Check className="w-4 h-4 text-white" />
                                     ) : (
-                                        <span className={`text-[26px] ${step.current ? "text-white" : "text-gray-400"}`}>
+                                        <span className={`text-[26px] ${((step.status === "pending" && (index == 0 || steps[index - 1].status == "approved"))) ? "text-white" : "text-gray-400"}`}>
                                             •
                                         </span>
                                     )}
@@ -84,7 +83,7 @@ const StepIndicator: React.FC<{ steps: IStep[] }> = ({ steps }) => {
                                 </div>
 
                                 <div className="mt-2 mb-1">
-                                    <span className={`text-sm font-medium flex items-center ${step.current ? step.status=="rejected"?"text-red-500":"text-blue-500" : "text-gray-500"
+                                    <span className={`text-sm font-medium flex items-center ${step.current ? step.status == "rejected" ? "text-red-500" : "text-blue-500" : "text-gray-500"
                                         }`}>
                                         {step.approverRole}
                                     </span>

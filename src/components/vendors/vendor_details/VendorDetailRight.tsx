@@ -9,6 +9,7 @@ import StepCard from './vendor_detail_right_component/StepCard';
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { IStep } from '../../../types/approvalflowTypes';
 import { getVendorApprovalFlowsByVendorIdAsync } from '../../../services/flowService';
+import { getUserCredentials } from '../../../utils/common';
 
 
 interface IVendorDetailRight {
@@ -77,7 +78,7 @@ const RequestDetailRight: React.FC<IVendorDetailRight> = ({ vendorDetails, trigg
 
     const setupRequestDetailRight = async()=>{
         const response:any[] = await getVendorApprovalFlowsByVendorIdAsync(vendorDetails?.id);
-        const formatedSteps = response.map((item:any,i)=>({...item,current:(item.status == "Pending" && (i == 0 || item[i-1] == "Approved"))}));
+        const formatedSteps = response.map((item:any,i)=>({...item,current:(item.status == 0 && getUserCredentials().userId == item.approverId && (i == 0 || item[i-1] == 1)),status:item.status == 0 ? "pending" : item.status == 1 ? "approved" : "rejected"  }));
         setStepsList(formatedSteps);
     }
 

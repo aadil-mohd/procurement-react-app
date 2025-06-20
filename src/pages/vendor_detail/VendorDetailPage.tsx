@@ -13,7 +13,7 @@ const VendorDetailPage: React.FC = () => {
     const { id } = useParams();
 
     const [vendorData, setVendorData] = useState<Vendor>({
-        id: 0,
+        id: Number(id) || 0,
         createdAt: "2025-05-02",
         createdBy: 0,
         updatedAt: "2025-05-02",
