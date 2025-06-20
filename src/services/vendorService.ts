@@ -27,3 +27,17 @@ export const getVendorsDetailsByIdAsync = async (id:number) => {
 
     }
 }
+
+
+export const getVendorCriteriasAsync = async (vendorId:number) => {
+    try {
+        const response = await axios.get(`${Urls.defaultUrl}/api/Vendor/GetAllVendorCriterias?vendorId=${vendorId}`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    } catch (err) {
+
+    }
+}

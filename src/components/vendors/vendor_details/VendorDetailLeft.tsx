@@ -189,11 +189,11 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                     }} className="mb-[16px]" />
                     <div className="mb-[24px]" style={{ width: "504px" }}>
                         <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Users</span>
-                        <ViewTable columnLabels={{ name: "Name", email: "Email", phone: "Phone" }} columns={["name", "email", "phone"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
+                        <ViewTable columnLabels={{ name: "Name", email: "Email", phone: "Phone" }} columns={["name", "email", "phone"]} items={vendorDetails?.usersDetails.map((x, i) => ({ ...x, index: i })) || []} />
                     </div>
                     <div className="mb-[24px]" style={{ width: "504px" }}>
                         <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Divissions</span>
-                        <ViewTable columnLabels={{ divissionName: "Divission", location: "Location" }} columns={["divissionName", "location"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
+                        <ViewTable columnLabels={{ divisionName: "Division", location: "Location" }} columns={["divisionName", "location"]} items={vendorDetails?.divissions.map((x, i) => ({ ...x, index: i })) || []} />
                     </div>
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>

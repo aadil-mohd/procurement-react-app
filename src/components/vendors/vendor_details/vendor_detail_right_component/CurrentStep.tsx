@@ -1,23 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectField from "../../../basic_components/SelectField";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { notification, Spin } from "antd";
 import { IStep } from "../../../../types/approvalflowTypes";
-
-interface IApproverResponse {
-  capexRequestId: string;
-  status: "approved" | "rejected" | "under_clarification";
-  comments: string;
-  clarificationUserId?: string;
-  clarification?: string;
-}
-
-interface IOwnerDetails {
-  ownerName: string;
-  ownerId: string;
-  ownerEmail: string;
-}
+import { approveVendorAsync } from "../../../../services/flowService";
+import { getVendorCriteriasAsync } from "../../../../services/vendorService";
 
 interface ChecklistItem {
   id: number;
@@ -25,19 +13,19 @@ interface ChecklistItem {
   isChecked: boolean;
 }
 
-const checklistData: ChecklistItem[] = [
-  { id: 0, criteria: "Company Profile", isChecked: true },
-  { id: 1, criteria: "Quality Management System", isChecked: true },
-  { id: 2, criteria: "Health & Safety Management System Certification", isChecked: true },
-  { id: 3, criteria: "System to ensure that Oman Air quality requirements are considered during project phases", isChecked: true },
-  { id: 4, criteria: "Process control throughout the operation. This includes tracking system to identify the source of product/service non conformities (NCR).", isChecked: true },
-  { id: 5, criteria: "Customer Profile", isChecked: true },
-  { id: 6, criteria: "International Experience", isChecked: true },
-  { id: 7, criteria: "Continuous Improvement", isChecked: true },
-  { id: 8, criteria: "Cost Innovation", isChecked: true },
-  { id: 9, criteria: "Site visit", isChecked: true },
-  { id: 10, criteria: "Factory inspection", isChecked: true },
-];
+// const checklistData: ChecklistItem[] = [
+//   { id: 0, criteria: "Company Profile", isChecked: true },
+//   { id: 1, criteria: "Quality Management System", isChecked: true },
+//   { id: 2, criteria: "Health & Safety Management System Certification", isChecked: true },
+//   { id: 3, criteria: "System to ensure that Oman Air quality requirements are considered during project phases", isChecked: true },
+//   { id: 4, criteria: "Process control throughout the operation. This includes tracking system to identify the source of product/service non conformities (NCR).", isChecked: true },
+//   { id: 5, criteria: "Customer Profile", isChecked: true },
+//   { id: 6, criteria: "International Experience", isChecked: true },
+//   { id: 7, criteria: "Continuous Improvement", isChecked: true },
+//   { id: 8, criteria: "Cost Innovation", isChecked: true },
+//   { id: 9, criteria: "Site visit", isChecked: true },
+//   { id: 10, criteria: "Factory inspection", isChecked: true },
+// ];
 const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
   step,
   trigger
@@ -46,6 +34,8 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
   const [selectedAction, setSelectedAction] = useState<"approved" | "rejected">("approved");
   const [approveComment, setApproveComment] = useState("");
   const [showLoaderOnButton, setShowLoaderOnButton] = useState<boolean>(false);
+  const [checklistData, setChecklistData] = useState<any[]>([])
+  const { id } = useParams();
 
   const [errors, setErrors] = useState({
     approveComment: ""
@@ -64,7 +54,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
     //   return;
     // }
 
-    const newErrors = { approveComment: ""};
+    const newErrors = { approveComment: "" };
     let hasError = false;
 
     if (selectedAction === "approved" && !approveComment.trim()) {
@@ -88,13 +78,24 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
     };
 
     if (selectedAction === "approved") {
+      await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: [] })
 
     } else if (selectedAction === "rejected") {
 
     }
-
-
   };
+
+  const setupCurrentStepsData = async () => {
+    try {
+      const criterias_list = await getVendorCriteriasAsync(Number(id));
+      setChecklistData(criterias_list);
+    } catch (err) {
+
+    }
+  }
+  useEffect(() => {
+    setupCurrentStepsData();
+  }, [])
 
   return (
     <>

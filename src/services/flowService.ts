@@ -86,5 +86,31 @@ export const getVendorApprovalFlowsByVendorIdAsync = async (id:string)=>{
     }
 }
 
+export const approveVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number} ) => {
+    try{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/ApproveStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments}`,data.criteriasCheckChanges,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data
+    }catch(err:any){
+        throw err.response.data
+    }
+}
+
+export const rejectVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number} ) => {
+    try{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/RejectStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments}`,data.criteriasCheckChanges,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data
+    }catch(err:any){
+        throw err.response.data
+    }
+}
+
 
 
