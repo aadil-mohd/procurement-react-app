@@ -59,17 +59,17 @@ const RouteComponent: React.FC = () => {
   }
 
   useEffect(() => {
-    let isTokenExist = Cookies.get("token");
-    if (isTokenExist) {
-      setUserLoggedIn(true)
-      let user_name = Cookies.get("name");
-      let clientId = Cookies.get("clientId") ?? "no client id"
-      setUserInfo((u) => ({ ...u, name: user_name }));
-      setupCommonDatas(clientId);
-    } else {
-      setUserLoggedIn(false);
-      navigate("/login");
-    }
+    // let isTokenExist = Cookies.get("token");
+    // if (isTokenExist) {
+    //   setUserLoggedIn(true)
+    //   let user_name = Cookies.get("name");
+    //   let clientId = Cookies.get("clientId") ?? "no client id"
+    //   setUserInfo((u) => ({ ...u, name: user_name }));
+    //   setupCommonDatas(clientId);
+    // } else {
+    //   setUserLoggedIn(false);
+    //   navigate("/login");
+    // }
   }, [])
 
   return (

@@ -69,11 +69,11 @@ function RfpRequestFormComponent() {
         try {
           console.log(id)
           const rfpRequest = await getRfpByIdAsync(Number(id));
-          setRequestData({...rfpRequest,rfpDocuments:[]});
+          setRequestData({ ...rfpRequest, rfpDocuments: [] });
           console.log(rfpRequest);
-          const ownersTemp:any = { technical: [], commercial: [] }
+          const ownersTemp: any = { technical: [], commercial: [] }
           rfpRequest.rfpOwners.forEach((item: any) => {
-            const user:any = users.find((u: any) => u.id == item.ownerId);
+            const user: any = users.find((u: any) => u.id == item.ownerId);
             console.log(user);
             if (user) {
               if (item.ownerType == 1) ownersTemp.technical.push(user);
@@ -81,11 +81,11 @@ function RfpRequestFormComponent() {
             }
           });
           setOwners(ownersTemp)
-          const filesArray:any = []
-          for(let filedetail of rfpRequest.rfpDocumentsPath){
+          const filesArray: any = []
+          for (let filedetail of rfpRequest.rfpDocumentsPath) {
             const file = await fetchAndConvertToFile(filedetail?.filePath);
             console.log(file)
-            filesArray.push({...file,documentName:filedetail?.fileTitle});
+            filesArray.push({ ...file, documentName: filedetail?.fileTitle });
           }
           setAttachments(filesArray);
         } catch (err) {
@@ -125,7 +125,7 @@ function RfpRequestFormComponent() {
           const value = formDataTemp[key];
           if (value != null) {
             if (key == "rfpDocuments") {
-              console.log(attachments,"attachments")
+              console.log(attachments, "attachments")
               attachments.forEach((item: any) => {
                 formData.append(key, item.document);
               })
@@ -255,24 +255,26 @@ function RfpRequestFormComponent() {
 
 
           {/* Cancel and Save Buttons */}
-          <div className="mt-10 flex flex-col sm:flex-row justify-start">
+          <div className="mt-10 flex justify-end space-x-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                handleCancel(); // Ensure it's a function call
+              }}
+              className="bg-white text-black text-md border border-gray-300 rounded px-4 py-2 shadow hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+
             <button
               type="submit"
               className="bg-blue-500 text-md text-white rounded px-4 py-2 shadow hover:bg-blue-400"
             >
               Save
             </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault()
-                handleCancel
-              }}
-              className="bg-white text-black text-md border mt-3 sm:mt-0 sm:ml-3 border-gray-300 rounded px-4 py-2 shadow hover:bg-gray-100"
-            >
-              Cancel
-            </button>
           </div>
+
         </div>
       </form>
     </div>
