@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, JSX } from "react";
 import { ArrowDownIcon, ArrowUpIcon } from "../../utils/Icons";
 
 interface Option {

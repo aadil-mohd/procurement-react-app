@@ -95,7 +95,30 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
     <>
       {step?.approverId.toString() === currentUserId && (
         <div className="mb-4 bg-[#EBEEF480] p-4 rounded-lg">
-          <div className="max-w-3xl mx-auto mb-6 rounded-lg border border-gray-300 bg-white overflow-hidden">
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 mb-4">
+            {step.status === "pending" && (
+              <>
+                <button
+                  type="button"
+                  disabled={showLoaderOnButton}
+                  className={`px-4 py-1.5 text-sm rounded ${selectedAction === "approved" ? "text-white bg-[#0F9670]" : "bg-[#0F96701A]"}`}
+                  onClick={() => handleActionClick("approved")}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  disabled={showLoaderOnButton}
+                  className={`px-4 py-1.5 text-sm rounded hover:bg-red-00 ${selectedAction === "rejected" ? "text-white bg-[#DB5A63]" : "bg-[#DB5A631A]"}`}
+                  onClick={() => handleActionClick("rejected")}
+                >
+                  Reject
+                </button>
+              </>
+            )}
+          </div>
+          <div className="max-w-3xl mx-auto mb-4 rounded-lg border border-gray-300 bg-white overflow-hidden">
             {/* headline row */}
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-[18px] font-semibold text-gray-900">
@@ -135,29 +158,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
               </table>
             </div>
           </div>
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 mb-4">
-            {step.status === "pending" && (
-              <>
-                <button
-                  type="button"
-                  disabled={showLoaderOnButton}
-                  className={`px-4 py-1.5 text-sm rounded ${selectedAction === "approved" ? "text-white bg-[#0F9670]" : "bg-[#0F96701A]"}`}
-                  onClick={() => handleActionClick("approved")}
-                >
-                  Approve
-                </button>
-                <button
-                  type="button"
-                  disabled={showLoaderOnButton}
-                  className={`px-4 py-1.5 text-sm rounded hover:bg-red-00 ${selectedAction === "rejected" ? "text-white bg-[#DB5A63]" : "bg-[#DB5A631A]"}`}
-                  onClick={() => handleActionClick("rejected")}
-                >
-                  Reject
-                </button>
-              </>
-            )}
-          </div>
+
 
           {selectedAction === "approved" && (
             <div className="mb-2">

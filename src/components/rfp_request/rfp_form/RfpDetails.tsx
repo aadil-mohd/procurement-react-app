@@ -14,7 +14,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
   requestData,
   setRequestData,
 }) => {
-  const yesNoOptions = [
+  const yesNoOptions: { label: string, value: any }[] = [
     { label: "Yes", value: true },
     { label: "No", value: false },
   ];
@@ -136,9 +136,9 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             id="hideContractValueFromVendor"
             label=""
             style="w-full"
-            value={yesNoOptions.find((x) => x.value === requestData?.hideContractValueFromVendor)?.label}
+            value={yesNoOptions.find((x) => x.value === requestData?.hideContractValueFromVendor)?.label as string}
             options={yesNoOptions.map((x) => ({
-              label: <span className="text-md font-medium">{x.label}</span>,
+              label: x.label,
               value: x.value,
             }))}
             onChange={(selectedValue) =>
@@ -188,7 +188,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             id="isTenderFeeApplicable"
             label=""
             style="w-full"
-            value={yesNoOptions.find((x) => x.value === requestData?.isTenderFeeApplicable)?.label}
+            value={yesNoOptions.find((x) => x.value === requestData?.isTenderFeeApplicable)?.label as string}
             options={yesNoOptions.map((x) => ({
               label: <span className="text-md font-medium">{x.label}</span>,
               value: x.value,

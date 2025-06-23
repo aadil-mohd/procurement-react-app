@@ -95,19 +95,19 @@ Embedded Systems`,
     }
     );
 
-    // const getVendorDetailData = async () => {
-    //     if (id) {
-    //         console.log(id, "requestId")
-    //         const response = await getVendorsDetailsByIdAsync(Number(id));
-    //         setVendorData(response);
-    //         // setRfpData(response);
-    //     }
-    // }
+    const getVendorDetailData = async () => {
+        if (id) {
+            console.log(id, "requestId")
+            const response = await getVendorsDetailsByIdAsync(Number(id));
+            setVendorData((prev)=>({...prev,...response}));
+            // setRfpData(response);
+        }
+    }
 
 
-    // useEffect(() => {
-    //     getVendorDetailData();
-    // }, [id])
+    useEffect(() => {
+        getVendorDetailData();
+    }, [id])
 
     return (
         <div className="desktop-wide:flex desktop-wide:justify-center">
