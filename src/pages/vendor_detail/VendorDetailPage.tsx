@@ -73,7 +73,7 @@ Embedded Systems`,
                 divissionId: 0
             }
         ],
-        divissions: [
+        vendorDivissions: [
             {
                 id: 0,
                 divisionName: "DGD",

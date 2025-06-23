@@ -83,6 +83,6 @@ export interface Vendor {
 
   vendorCategories: VendorCategory[];
   usersDetails: UserDetail[];
-  divissions: Division[];
+  vendorDivissions: Division[];
   vendorDocuments: VendorDocument[];
 }

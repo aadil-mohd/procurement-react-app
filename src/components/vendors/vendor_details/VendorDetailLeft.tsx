@@ -193,7 +193,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                     </div>
                     <div className="mb-[24px]" style={{ width: "504px" }}>
                         <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Divissions</span>
-                        <ViewTable columnLabels={{ divisionName: "Division", location: "Location" }} columns={["divisionName", "location"]} items={vendorDetails?.divissions.map((x, i) => ({ ...x, index: i })) || []} />
+                        <ViewTable columnLabels={{ divisionName: "Division", location: "Location" }} columns={["divisionName", "location"]} items={vendorDetails?.vendorDivissions.map((x, i) => ({ ...x, index: i })) || []} />
                     </div>
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>

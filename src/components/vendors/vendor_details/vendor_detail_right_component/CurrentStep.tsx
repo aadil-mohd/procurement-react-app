@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { notification, Spin } from "antd";
 import { IStep } from "../../../../types/approvalflowTypes";
-import { approveVendorAsync } from "../../../../services/flowService";
+import { approveVendorAsync, rejectVendorAsync } from "../../../../services/flowService";
 import { getVendorCriteriasAsync } from "../../../../services/vendorService";
 
 interface ChecklistItem {
@@ -43,45 +43,39 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
 
   const handleActionClick = (action: "approved" | "rejected") => {
     setSelectedAction(action);
+    setApproveComment("");
     setErrors({
       approveComment: ""
     });
   };
 
   const handleSubmit = async () => {
-    // if (!requestId || !selectedAction) {
-    //   console.error("Missing required data");
-    //   return;
-    // }
+    try {
+      const newErrors = { approveComment: "" };
+      let hasError = false;
+      if (selectedAction === "approved" && !approveComment.trim()) {
+        newErrors.approveComment = "Comments are required for approval.";
+        hasError = true;
+      }
 
-    const newErrors = { approveComment: "" };
-    let hasError = false;
+      if (selectedAction === "rejected" && !approveComment.trim()) {
+        newErrors.approveComment = "Comments are required for rejection.";
+        hasError = true;
+      }
 
-    if (selectedAction === "approved" && !approveComment.trim()) {
-      newErrors.approveComment = "Comments are required for approval.";
-      hasError = true;
-    }
+      setErrors(newErrors);
 
-    if (selectedAction === "rejected" && !approveComment.trim()) {
-      newErrors.approveComment = "Comments are required for rejection.";
-      hasError = true;
-    }
+      if (hasError) return;
+      setShowLoaderOnButton(true)
+      if (selectedAction === "approved") {
+        await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData })
 
-    setErrors(newErrors);
-
-    if (hasError) return;
-
-    let responseBody = {
-      // capexRequestId: requestId,
-      status: selectedAction,
-      comments: "", // Default empty comment
-    };
-
-    if (selectedAction === "approved") {
-      await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: [] })
-
-    } else if (selectedAction === "rejected") {
-
+      } else if (selectedAction === "rejected") {
+        await rejectVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData })
+      }
+      setShowLoaderOnButton(false)
+    } catch (err) {
+      setShowLoaderOnButton(false)
     }
   };
 
@@ -123,14 +117,17 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                         <input
                           type="checkbox"
                           checked={item.isChecked}
-                          readOnly
+                          onChange={(e) => {
+                            const updated_Checklist = checklistData.map(i => (item.id == i.id ? ({ ...i, isChecked: !i.isChecked }) : i));
+                            setChecklistData(updated_Checklist);
+                          }}
                           className="h-4 w-4 rounded accent-blue-600 cursor-default"
                         />
                       </td>
 
                       {/* text column */}
                       <td className="px-0 py-4 pr-6">
-                        <span className="text-sm text-gray-800">{item.criteria}</span>
+                        <span className="text-sm text-gray-800">{item.criteriaName}</span>
                       </td>
                     </tr>
                   ))}
