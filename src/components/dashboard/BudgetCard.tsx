@@ -20,7 +20,7 @@ interface BudgetCardProps {
   budgetDetails?: any;
 }
 
-const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budgetDetails,heading= "Budget Utilization" }) => {
+const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budgetDetails,heading= "Yearly Spend" }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstanceRef = useRef<ChartJS | null>(null);
 
@@ -124,10 +124,10 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budg
         <h2 className="text-lg font-semibold text-gray-600">{heading}</h2>
         <div className="flex text-sm">
           <span className="flex items-center mr-2">
-            <div className="p-1.5 bg-[#1A73E8] rounded-full mr-[4px]"></div> Budget
+            <div className="p-1.5 bg-[#1A73E8] rounded-full mr-[4px]"></div> Estimated
           </span>
           <span className="flex items-center">
-            <div className="p-1.5 bg-[#00C3D1] rounded-full mr-[4px]"></div> Spend
+            <div className="p-1.5 bg-[#00C3D1] rounded-full mr-[4px]"></div> Spend Amount
           </span>
         </div>
       </div>

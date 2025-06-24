@@ -19,7 +19,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
 
         {/* RFP Title */}
         <div>
-          <label className="block text-sm font-medium mb-2">RFP Title</label>
+          <label className="block text-sm font-medium mb-2">RFP Title <span className="text-red-500">*</span></label>
           <TextField
             id="rfpTitle"
             field="rfpTitle"
@@ -36,7 +36,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
 
         {/* RFP Description (SIDE-BY-SIDE) */}
         <div>
-          <label className="block text-sm font-medium mb-2">RFP Description</label>
+          <label className="block text-sm font-medium mb-2">RFP Description <span className="text-red-500">*</span></label>
           <TextField
             id="rfpDescription"
             field="rfpDescription"

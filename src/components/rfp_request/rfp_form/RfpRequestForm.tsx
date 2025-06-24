@@ -45,10 +45,10 @@ function RfpRequestFormComponent() {
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
   const [tabs, setTabs] = useState(
     [
-      { tab: "General Information", isOpen: true },
-      { tab: "RFP Details", isOpen: false },
-      { tab: "Timeline & Ownership", isOpen: false },
-      { tab: "Attachments", isOpen: false }
+      { tab: "General Information", isOpen: true, validateFields:["rfpTitle","rfpDescription","buyerName","buyerOrganizationName","departmentId","categoryId","purchaseRequisitionId"] },
+      { tab: "RFP Details", isOpen: false ,validateFields:[]},
+      { tab: "Timeline & Ownership", isOpen: false,validateFields:[] },
+      { tab: "Attachments", isOpen: false,validateFields:[] }
     ]
   )
 
@@ -267,12 +267,33 @@ function RfpRequestFormComponent() {
               Cancel
             </button>
 
-            <button
+            {activeSections != "Attachments" ? <><button
+              type="button"
+              className="bg-blue-500 text-md text-white rounded px-4 py-2 shadow hover:bg-blue-400"
+              onClick={(e) => {
+                e.preventDefault();
+                let openFlagIndex = 0;
+
+                const updatedTab = tabs.map((item, index) => {
+                  if (item.tab == activeSections) {
+                    setActiveSections(tabs[index + 1].tab);
+                    openFlagIndex = index + 1;
+                    return ({ ...item, isOpen: false })
+                  } else if (openFlagIndex && openFlagIndex == index) {
+                    return ({ ...item, isOpen: true })
+                  }
+                  else return item;
+                })
+                setTabs(updatedTab);
+              }}
+            >
+              Next
+            </button></> : <><button
               type="submit"
               className="bg-blue-500 text-md text-white rounded px-4 py-2 shadow hover:bg-blue-400"
             >
               Save
-            </button>
+            </button></>}
           </div>
 
         </div>

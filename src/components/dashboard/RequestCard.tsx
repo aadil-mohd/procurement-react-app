@@ -128,7 +128,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ labels, data, colors }: Reque
               {/* Label and Value */}
               <div className="ml-2 text-gray-800">
                 <span className='text-xs'>{label}</span>
-                <span className="block text-md font-semibold">{`${data[index].toLocaleString()}`}</span>
+                <span className="block text-md font-semibold">{`${data[index]?.toLocaleString()}` || ""}</span>
               </div>
             </div>
           ))}

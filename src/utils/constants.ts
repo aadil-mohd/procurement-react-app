@@ -5,14 +5,21 @@ export const currencies = [
     { label: "₹", value: "INR" },
 ]
 
-// capex related constants
+export const defaultFilter = {
+    fields: [],
+    pageNo: 0,
+    pageSize: 0,
+    sortColumn: "CreatedAt",
+    sortDirection: "DESC"
+}
 
-// capex column labels for table
+
+// rfp column labels for table
 export const rfp_column_labels = {
     tenderNumber: 'ID',
     rfpTitle: 'Request Name',
     buyerName: 'Buyer',
-    bidValue: 'Bid Value',
+    bidValueLabel: 'Bid Value',
     isOpen: 'Status',
 };
 

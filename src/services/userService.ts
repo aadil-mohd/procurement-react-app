@@ -53,7 +53,7 @@ const defaultFilter = {
     pageNo: 0,
     pageSize: 0,
     sortColumn: "CreatedAt",
-    sortOrder: "DESC"
+    sortDirection: "DESC"
 }
 
 // Shared error handling function

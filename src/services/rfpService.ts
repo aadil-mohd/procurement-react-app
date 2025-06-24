@@ -2,6 +2,7 @@ import axios from "axios"
 import { Urls } from "./ApiConfig"
 import { getUserToken } from "../utils/common"
 import { IFilterDto } from "../types/commonTypes"
+import { defaultFilter } from "../utils/constants"
 
 export const createOrUpdateRfpAsync = async(data:any)=>{
     try{
@@ -29,7 +30,7 @@ export const getRfpByIdAsync = async(id:number)=>{
     }
 }
 
-export const getAllRfpsByFilterAsync = async(filterDto:IFilterDto)=>{
+export const getAllRfpsByFilterAsync = async(filterDto:IFilterDto = defaultFilter)=>{
     try{
         const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/filter`,filterDto,{
             headers:{
