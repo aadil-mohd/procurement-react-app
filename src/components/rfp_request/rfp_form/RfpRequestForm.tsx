@@ -46,7 +46,7 @@ function RfpRequestFormComponent() {
   const [tabs, setTabs] = useState(
     [
       { tab: "General Information", isOpen: true, validateFields:["rfpTitle","rfpDescription","buyerName","buyerOrganizationName","departmentId","categoryId","purchaseRequisitionId"] },
-      { tab: "RFP Details", isOpen: false ,validateFields:[]},
+      { tab: "RFP Details", isOpen: false ,validateFields:["isOpen","isSerial","estimatedContractValue","isTenderFeeApplicable"]},
       { tab: "Timeline & Ownership", isOpen: false,validateFields:[] },
       { tab: "Attachments", isOpen: false,validateFields:[] }
     ]
@@ -154,6 +154,7 @@ function RfpRequestFormComponent() {
       }
 
       createOrUpdateRfpAsync(formData);
+      navigate("/rfps");
     } catch (err) {
 
     }

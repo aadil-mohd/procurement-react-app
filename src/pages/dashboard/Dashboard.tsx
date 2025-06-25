@@ -62,13 +62,6 @@ function Dashboard() {
       color: "bg-green-500/30",
       textColor: "text-green-900",
     },
-    // {
-    //   icon: <CrossIcon className="w-5 h-5" />,
-    //   label: "Closed RFPS",
-    //   value: 0,
-    //   color: "bg-red-500/30",
-    //   textColor: "text-red-900",
-    // },
     {
       icon: "!",
       label: "Open RFPs",

@@ -74,6 +74,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
         await rejectVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData })
       }
       setShowLoaderOnButton(false)
+      trigger();
     } catch (err) {
       setShowLoaderOnButton(false)
     }

@@ -109,7 +109,7 @@ const RequestDetailRight: React.FC<IVendorDetailRight> = ({ vendorDetails, trigg
                                 key={index}
                                 step={step || []}
                                 trigger={() => {
-                                    // GetStepsData();
+                                    setupRequestDetailRight();
                                 }}
                             />
                         );
