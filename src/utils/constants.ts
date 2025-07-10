@@ -19,7 +19,7 @@ export const rfp_column_labels = {
     tenderNumber: 'ID',
     rfpTitle: 'Request Name',
     buyerName: 'Buyer',
-    bidValueLabel: 'Bid Value',
+    estimatedContractValueLabel: 'Estd. Con Value',
     isOpen: 'Status',
 };
 

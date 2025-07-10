@@ -26,7 +26,7 @@ const defaultFilter: IFilterDto = {
 }
 
 function Dashboard() {
-  const commonColumns = ['tenderNumber', 'rfpTitle', 'buyerName', 'bidValueLabel', 'isOpen']
+  const commonColumns = ['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'isOpen']
 
   const [requestStatus, setRequestStatus] = useState([0, 0, 0]);
 
@@ -169,7 +169,7 @@ function Dashboard() {
   const getRfpRequestFilter = useCallback(async (filterData = filter) => {
     try {
       const response: any[] = await getAllRfpsByFilterAsync(filterData);
-      const filtered_requests = response.map(r => ({ ...r, bidValueLabel: `${convertCurrencyLabel(r.rfpCurrency as string)}${r.bidValue?.toFixed(2)}` }))
+      const filtered_requests = response.map(r => ({ ...r, estimatedContractValueLabel: `${convertCurrencyLabel(r.rfpCurrency as string)}${r.estimatedContractValue?.toFixed(2)}` }))
       setDashboardData(prev => ({
         ...prev,
         totalCount: 20,

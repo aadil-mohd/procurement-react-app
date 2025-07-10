@@ -10,6 +10,7 @@ import PageLoader from "../../components/basic_components/PageLoader";
 // import { convertCurrencyLabel } from "../../utils/common";
 import { useNavigate } from "react-router-dom";
 import { getAllRfpsByFilterAsync } from "../../services/rfpService";
+import { convertCurrencyLabel, getUserCredentials } from "../../utils/common";
 
 const tempfilter = {
   fields: [],
@@ -20,7 +21,7 @@ const tempfilter = {
 }
 
 function RequestPage() {
-  const commonColumns=['tenderNumber', 'rfpTitle', 'buyerName', 'bidValue', 'isOpen']
+  const commonColumns=['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'isOpen']
   const [columns,setColumns] = useState(commonColumns);
   const [trigger, setTrigger] = useState(false);
   // const [hideDepartment,setHideDepartment]= useState(true);
@@ -58,16 +59,17 @@ function RequestPage() {
     navigate("/rfps/create-rfp")
   }
 
-  const getCapexRequestFilter = async (filterDto: IFilterDto = filter) => {
+  const getRfpRequestFilter = async (filterDto: IFilterDto = filter) => {
     try {
       //setShowLoader(true);
       let capex_request_responese:any = await getAllRfpsByFilterAsync(filterDto)
       //setShowLoader(false);
       setTotalCount(0)
-      // let data:any = capex_request_responese.data.map((r:any)=>({...r,estimatedBudgetLabel:`${convertCurrencyLabel(r.currency as string)}${r.estimatedBudget?.toFixed(2)}`}));;
-      setRfpRequests(capex_request_responese);
+      let data:any = capex_request_responese.map((r:any)=>({...r,estimatedContractValueLabel:`${convertCurrencyLabel(r.rfpCurrency as string)}${r.estimatedContractValue?.toFixed(2)}`}));;
+      setRfpRequests(data);
       setTrigger(false);
     } catch (err) {
+      console.log(err)
     }
   };
 
@@ -84,22 +86,22 @@ function RequestPage() {
         setColumns(commonColumns);
         // setHideDepartment(false);
         // setHideStatus(false)
-        // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "createdBy", value: Cookies.get("userId") as string }] }
+        filterdata = { ...filterdata, fields: [{ columnName: "CreatedBy", value: Number(getUserCredentials().userId) }] }
       } else if (tab == "Assigned") {
         setColumns(commonColumns);
         // setHideDepartment(false);
         // setHideStatus(false)
         // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "assigned_capex", value: true }] }
       } else {
-        setColumns(columns.filter(x=>x!="capexId"));
+        //setColumns(columns.filter(x=>x!="capexId"));
         // setHideDepartment(false);
         // setHideStatus(true)
-        // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "=", value: "draft" }, { columnName: "createdBy", value: Cookies.get("userId") as string }] }
+        filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "=", value: "draft" }, { columnName: "CreatedBy", value: Number(getUserCredentials().userId) }] }
       }
       setDefaultFilter(filterdata);
       setTableName(tab);
       setFilter(filterdata);
-      getCapexRequestFilter(filterdata);
+      getRfpRequestFilter(filterdata);
       setStatusFilter(tab);
     }
   }
@@ -113,12 +115,12 @@ function RequestPage() {
       ...filter,
       globalSearch: searchQuery
     };
-    await getCapexRequestFilter(updatedFilter);
+    await getRfpRequestFilter(updatedFilter);
     console.log(searchQuery, "searchquery after fetch")
   };
 
   useEffect(() => {
-    getCapexRequestFilter();
+    getRfpRequestFilter();
   }, [filter, trigger]);
 
   const tabs = ["All requests", "My requests", "Draft requests"];
