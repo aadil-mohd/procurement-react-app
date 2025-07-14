@@ -37,33 +37,31 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
   const [checklistData, setChecklistData] = useState<any[]>([])
   const { id } = useParams();
 
-  const [errors, setErrors] = useState({
-    approveComment: ""
-  });
+  
 
   const handleActionClick = (action: "approved" | "rejected") => {
     setSelectedAction(action);
     setApproveComment("");
-    setErrors({
-      approveComment: ""
-    });
+    // setErrors({
+    //   approveComment: ""
+    // });
   };
 
   const handleSubmit = async () => {
     try {
-      const newErrors = { approveComment: "" };
+      //const newErrors = { approveComment: "" };
       let hasError = false;
-      if (selectedAction === "approved" && !approveComment.trim()) {
-        newErrors.approveComment = "Comments are required for approval.";
-        hasError = true;
-      }
+      // if (selectedAction === "approved" && !approveComment.trim()) {
+      //   newErrors.approveComment = "Comments are required for approval.";
+      //   hasError = true;
+      // }
 
-      if (selectedAction === "rejected" && !approveComment.trim()) {
-        newErrors.approveComment = "Comments are required for rejection.";
-        hasError = true;
-      }
+      // if (selectedAction === "rejected" && !approveComment.trim()) {
+      //   newErrors.approveComment = "Comments are required for rejection.";
+      //   hasError = true;
+      // }
 
-      setErrors(newErrors);
+      // setErrors(newErrors);
 
       if (hasError) return;
       setShowLoaderOnButton(true)
@@ -173,7 +171,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                 className="w-full border border-gray-200 rounded p-3 text-sm h-24 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Enter your comments for approval"
               />
-              {errors.approveComment && <p className="text-red-500 text-xs mb-1">{errors.approveComment}</p>}
+              {/* {errors.approveComment && <p className="text-red-500 text-xs mb-1">{errors.approveComment}</p>} */}
             </div>
           )}
 
@@ -189,7 +187,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                 className="w-full border border-gray-200 rounded p-3 text-sm h-24 resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Enter your comments for rejection"
               />
-              {errors.approveComment && <p className="text-red-500 text-xs mt-1">{errors.approveComment}</p>}
+              {/* {errors.approveComment && <p className="text-red-500 text-xs mt-1">{errors.approveComment}</p>} */}
             </div>
           )}
 

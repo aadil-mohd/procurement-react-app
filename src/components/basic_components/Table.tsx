@@ -19,11 +19,11 @@ interface TableProps extends Partial<IDot> {
   dots?: boolean;
   trigger?: () => void;
   columnLabels: Record<string, string>;
-  filter: IFilterDto;
-  setFilter: React.Dispatch<React.SetStateAction<IFilterDto>>;
+  filter?: IFilterDto;
+  setFilter?: React.Dispatch<React.SetStateAction<IFilterDto>>;
   setIsFilterModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSortModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setSearchQuery?: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpenItem?: React.Dispatch<React.SetStateAction<any>>;
   totalCount: number;
   rowNavigationPath?: string;
@@ -50,25 +50,29 @@ const Table: React.FC<TableProps> = ({
   trigger,
   type,
 }) => {
-  const [pages, setPages] = useState<number[]>([]);
+  const [pages, _] = useState<number[]>([]);
   const navigate = useNavigate();
-  const currentPage = filter.pageNo ?? 1;
-  const pageSize = filter.pageSize ?? 10;
+  const currentPage = filter?.pageNo ?? 1;
+  //const pageSize = filter?.pageSize ?? 10;
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (totalCount > 0) {
-      const pagesNeeded = Math.ceil(totalCount / pageSize);
-      setPages(Array.from({ length: pagesNeeded }, (_, i) => i + 1));
-    } else {
-      setPages([]);
-    }
-  }, [totalCount, pageSize]);
+  // useEffect(() => {
+  //   if (totalCount > 0) {
+  //     const pagesNeeded = Math.ceil(totalCount / pageSize);
+  //     setPages(Array.from({ length: pagesNeeded }, (_, i) => i + 1));
+  //   } else {
+  //     setPages([]);
+  //   }
+  // }, [totalCount, pageSize]);
+  useEffect(()=>{
+
+  },[totalCount])
 
   const handlePageChange = (page: number) => {
-    if (page > 0 && page !== currentPage) {
+    if (page > 0 && page !== currentPage && setFilter) {
       setFilter((prev) => ({ ...prev, pageNo: page }));
     }
+    trigger && trigger(); 
   };
 
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
@@ -132,7 +136,7 @@ const Table: React.FC<TableProps> = ({
     } else if (type === "proposal") {
       //navigate(`/${rowNavigationPath}/${item.id}`);
       setIsModalOpenItem && setIsModalOpenItem(item);
-    } else if(type == "vendors"){
+    } else if (type == "vendors") {
       navigate(`/${rowNavigationPath}/${item.id}`);
     }
   };
@@ -143,7 +147,7 @@ const Table: React.FC<TableProps> = ({
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">{title}</h2>
           <div className="flex space-x-2">
-            <div className="relative w-[219px] h-[32px]">
+        {setSearchQuery && <div className="relative w-[219px] h-[32px]">
               <MagnifyingGlass className="absolute w-6 h-6 left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -151,19 +155,19 @@ const Table: React.FC<TableProps> = ({
                 className="w-full pl-10 pr-3 py-[5px] border rounded bg-[#EFF4F9] text-sm focus:outline-none"
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>
-            <button
+            </div>}
+            {filter &&  <button
               className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
               onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
             >
               <FilterIcon className="size-6 mr-2" /> Filter
-            </button>
-            <button
+            </button>} 
+            {setIsSortModalOpen && <button
               className="px-3 py-2 w-[75px] h-[32px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
               onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
             >
               <SortIcon className="size-6 mr-2" /> Sort
-            </button>
+            </button>}       
           </div>
         </div>
 

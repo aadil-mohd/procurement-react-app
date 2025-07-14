@@ -74,7 +74,21 @@ export const deleteWorkFlowAsync= async (id:string ) => {
 
 export const getVendorApprovalFlowsByVendorIdAsync = async (id:string)=>{
     try{
-        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/ApproveStepByVendorIdAsync?vendorId=${id}`,{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/ApprovelStepsByVendorIdAsync?vendorId=${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err:any){
+        throw err.response.data;
+        
+    }
+}
+
+export const getUserPendingApprovalsAsync = async ()=>{
+    try{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/GetUserPendingApprovals`,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }
@@ -88,7 +102,7 @@ export const getVendorApprovalFlowsByVendorIdAsync = async (id:string)=>{
 
 export const approveVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number} ) => {
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/ApproveStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments}`,data.criteriasCheckChanges,{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/ApproveStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments?? null}`,data.criteriasCheckChanges,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }
@@ -101,7 +115,7 @@ export const approveVendorAsync= async (data:{stepId:number,approverEmail:string
 
 export const rejectVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number} ) => {
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/RejectStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments}`,data.criteriasCheckChanges,{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/RejectStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments ?? null}`,data.criteriasCheckChanges,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }

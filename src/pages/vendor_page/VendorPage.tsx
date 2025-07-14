@@ -1,45 +1,37 @@
 import { useEffect, useState } from "react";
 import Table from "../../components/basic_components/Table";
-import { IFilterDto } from "../../types/commonTypes";
 // import Cookies from "js-cookie";
-import SortModal from "../../components/basic_components/SortModal";
-import { rfp_column_labels, capex_sorting_fields } from "../../utils/constants";
 import "./vendorPage.css";
-import CreateButton from "../../components/buttons/CreateButton";
 import PageLoader from "../../components/basic_components/PageLoader";
 // import { convertCurrencyLabel } from "../../utils/common";
-import { useNavigate } from "react-router-dom";
-import { getAllRfpsByFilterAsync } from "../../services/rfpService";
 import { getAllVendorsAsync } from "../../services/vendorService";
 import { vendorStatusConverter } from "../../utils/common";
+import { getUserPendingApprovalsAsync } from "../../services/flowService";
 
 const tempfilter = {
-  nameFilter:""
+  nameFilter: ""
 }
 
 function VendorPage() {
-  const commonColumns=['vendorCode', 'organisationName', 'ownerName', "status"]
+  const commonColumns = ['vendorCode', 'organisationName', 'ownerName', "status"]
   const vendor_column_labels = {
     vendorCode: 'ID',
     organisationName: 'Vendor Name',
     ownerName: 'Owner Name',
     status: 'Status',
-};
-  const [columns,setColumns] = useState(commonColumns);
+  };
+  const [columns, setColumns] = useState(commonColumns);
   const [trigger, setTrigger] = useState(false);
   // const [hideDepartment,setHideDepartment]= useState(true);
   // const [hideStatus,setHideStatus]= useState(false);
   const [vendors, setVendors] = useState<any[]>([]);
   // const [filterModalOpen, setFilterModal] = useState<boolean>(false);
-  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableName, setTableName] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-
   const [filter, setFilter] = useState<any>(tempfilter);
-
   const [showLoader] = useState<boolean>(false);
-  const [statusFilter, setStatusFilter] = useState<string>("All requests");
+  const [statusFilter, setStatusFilter] = useState<string>("All vendors");
   // const requestStatuses = [
   //   { label: "Approved", value: "approved" },
   //   { label: "Rejected", value: "rejected" },
@@ -57,17 +49,23 @@ function VendorPage() {
   //   };
   // }, [isModalOpen]);
 
- 
-
-  const getAllVendors = async (filterDto = filter) => {
+  const getAllVendors = async (filterDto = filter, set: Set<number> | undefined = undefined) => {
     try {
       //setShowLoader(true);
-      let vendors_list:any = await getAllVendorsAsync(filterDto)
+      let vendors_list: any = await getAllVendorsAsync(filterDto)
       //setShowLoader(false);
       setTotalCount(0)
-      const modified_vendor_list = vendors_list.map((item:any)=>({...item,ownerName:`${item?.firstName} ${item?.lastName}`,status:vendorStatusConverter(item?.status) as any}))
+      const modified_vendor_list: any[] = []
+      vendors_list.forEach((item: any) => {
+        const tempItem = { ...item, ownerName: `${item?.firstName} ${item?.lastName}`, status: vendorStatusConverter(item?.status) as any };
+        if (item.status != 3) {
+          if (set && set?.has(item.id)) modified_vendor_list.push(tempItem)
+          else if (!set) modified_vendor_list.push(tempItem)
+        }
+      })
       setVendors(modified_vendor_list);
       setTrigger(false);
+      return modified_vendor_list;
     } catch (err) {
     }
   };
@@ -76,23 +74,23 @@ function VendorPage() {
     if (statusFilter != tab) {
       let filterdata = filter;
 
-      if (tab == "All requests") {
+      if (tab == "All vendors") {
         setColumns(commonColumns);
         // setHideDepartment(true);
         // setHideStatus(false)
-        //filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "requestingDepartmentId", value: Cookies.get("departmentId") as string }] }
-      } else if (tab == "My requests") {
-        setColumns(commonColumns);
-        // setHideDepartment(false);
-        // setHideStatus(false)
-        // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "createdBy", value: Cookies.get("userId") as string }] }
+        // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: 3 }] }
       } else if (tab == "Assigned") {
         setColumns(commonColumns);
-        // setHideDepartment(false);
-        // setHideStatus(false)
-        // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "assigned_capex", value: true }] }
+        const vendorIds: Set<number> = new Set();
+        const all_pendig_with_user: any[] = await getUserPendingApprovalsAsync();
+        all_pendig_with_user.forEach(item => { item.vendorId && vendorIds.add(item.vendorId) });
+        //filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "assigned_capex", value: true }] }
+        await getAllVendors(filterdata, vendorIds);
+        setTableName(tab);
+        setStatusFilter(tab);
+        return;
       } else {
-        setColumns(columns.filter(x=>x!="capexId"));
+        //setColumns(columns.filter(x=>x!="capexId"));
         // setHideDepartment(false);
         // setHideStatus(true)
         // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "=", value: "draft" }, { columnName: "createdBy", value: Cookies.get("userId") as string }] }
@@ -121,17 +119,17 @@ function VendorPage() {
     getAllVendors();
   }, [filter, trigger]);
 
-  const tabs = ["All requests", "My requests", "Draft requests"];
+  const tabs = ["All vendors", "Assigned"];
 
   return (
     <div className="desktop-wide:flex desktop-wide:justify-center">
       <div className="pt-[24px] px-[32px] h-full">
         {!showLoader ? <>
           <div className="flex items-center justify-between">
-            <div className="mb-2 text-xl font-bold">Requests</div>
+            <div className="mb-2 text-xl font-bold">Vendors</div>
             <div>
               {/* <CreateButton name="Create request" onClick={onCreateRequest} /> */}
-              
+
             </div>
 
           </div>
@@ -162,8 +160,7 @@ function VendorPage() {
 
 
           <div className="ml-[10px]">
-            <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setIsFilterModalOpen={()=>{}} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
-            {isSortModalOpen && <SortModal filter={filter} columns={capex_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+            <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
           </div></> : <PageLoader />}
       </div>
     </div>

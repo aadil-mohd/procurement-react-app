@@ -46,13 +46,12 @@ export const project_column_labels = {
     status: 'Status',
 };
 // for sorting table
-export const capex_sorting_fields = {
-    capexId: 'ID',
-    projectName: 'Request Name',
-    expenditureTypeId: 'Expenditure Type',
-    estimatedBudget: 'Estimated Budget',
-    requestingDepartmentId: 'Department',
-    status: 'Status',
+export const rfp_sorting_fields = {
+    tenderNumber: 'ID',
+    rfpTitle: 'Request Name',
+    buyerName: 'Buyer',
+    bidValue: 'Bid Value',
+    isOpen: 'Status',
 }
 
 export const project_sorting_fields = {

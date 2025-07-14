@@ -3,7 +3,7 @@ import Table from "../../components/basic_components/Table";
 import { IFilterDto } from "../../types/commonTypes";
 // import Cookies from "js-cookie";
 import SortModal from "../../components/basic_components/SortModal";
-import { rfp_column_labels, capex_sorting_fields } from "../../utils/constants";
+import { rfp_column_labels, rfp_sorting_fields } from "../../utils/constants";
 import "./requestPage.css";
 import CreateButton from "../../components/buttons/CreateButton";
 import PageLoader from "../../components/basic_components/PageLoader";
@@ -81,7 +81,7 @@ function RequestPage() {
         setColumns(commonColumns);
         // setHideDepartment(true);
         // setHideStatus(false)
-        //filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "requestingDepartmentId", value: Cookies.get("departmentId") as string }] }
+        filterdata = { ...filterdata, fields: [] }
       } else if (tab == "My requests") {
         setColumns(commonColumns);
         // setHideDepartment(false);
@@ -93,6 +93,7 @@ function RequestPage() {
         // setHideStatus(false)
         // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "assigned_capex", value: true }] }
       } else {
+        return;
         //setColumns(columns.filter(x=>x!="capexId"));
         // setHideDepartment(false);
         // setHideStatus(true)
@@ -165,7 +166,7 @@ function RequestPage() {
 
           <div className="ml-[10px]">
             <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={()=>{}} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} />
-            {isSortModalOpen && <SortModal filter={filter} columns={capex_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+            {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
           </div></> : <PageLoader />}
       </div>
     </div>
