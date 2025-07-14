@@ -27,7 +27,7 @@ const SortModal: React.FC<SortModalProp> = ({ columns, setFilter, setIsSortModal
                 <div className="space-y-3">
                     {Object.keys(columns).map((column) => {
                         const isSelected = sortOptions.field === column;
-                        const direction = isSelected ? sortOptions.direction : 'ASC'; // Show current direction for the selected column
+                        //const direction = isSelected ? sortOptions.direction : 'ASC'; // Show current direction for the selected column
 
                         return (
                             <button

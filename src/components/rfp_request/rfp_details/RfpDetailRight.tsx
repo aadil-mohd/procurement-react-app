@@ -1,8 +1,8 @@
 // ApprovalWorkflow.tsx
-import React, { SetStateAction, useEffect, useState } from 'react';
-import { getAllUsersByFilterAsync } from '../../../services/userService';
-import PageLoader from '../../basic_components/PageLoader';
-import { notification } from 'antd';
+import React, { useEffect, useState } from 'react';
+// import { getAllUsersByFilterAsync } from '../../../services/userService';
+// import PageLoader from '../../basic_components/PageLoader';
+// import { notification } from 'antd';
 import { IRfp } from '../../../types/rfpTypes';
 import { GeneralDetailIcon } from '../../../utils/Icons';
 import Table from '../../basic_components/Table';
@@ -11,19 +11,19 @@ import Modal from '../../basic_components/Modal';
 import ProposalSubmissionModal from './ProposalSubmissionModal';
 import { getAllProposalsByFilterAsync } from '../../../services/rfpService';
 
-interface User {
-    name: string;
-    image?: string;
-    email: string;
-    role: string;
-    id?: string;
-}
+// interface User {
+//     name: string;
+//     image?: string;
+//     email: string;
+//     role: string;
+//     id?: string;
+// }
 
-interface IOwnerDetails {
-    ownerName: string,
-    ownerId: string,
-    ownerEmail: string
-}
+// interface IOwnerDetails {
+//     ownerName: string,
+//     ownerId: string,
+//     ownerEmail: string
+// }
 
 
 
@@ -45,20 +45,22 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
             if (activeTab == "Proposals") {
                 const filtered_proposals = await getAllProposalsByFilterAsync(filter);
                 setVendorProposals(filtered_proposals);
-            }else if(activeTab == "Clarifications"){
+            } else if (activeTab == "Clarifications") {
 
             }
+            trigger && trigger()
         } catch (err) {
 
         }
     }
 
     useEffect(() => {
-setupTabsAsync();
+        setupTabsAsync();
+        console.log(searchQuery)
     }, [activeTab])
 
     const [filter, setFilter] = useState<IFilterDto>({
-        fields: [{columnName:"RfpId", value:rfp?.id ?? 0}],
+        fields: [{ columnName: "RfpId", value: rfp?.id ?? 0 }],
         globalSearch: "",
         sortColumn: "CreatedAt",
         sortDirection: "DESC"
@@ -134,7 +136,7 @@ setupTabsAsync();
                     </div>
                 </div>
             </div>
-            <Modal content={<ProposalSubmissionModal proposal={isModalOpenItem} trigger={() => {setIsModalOpenItem(null) }} />} isOpen={isModalOpenItem} onClose={() => setIsModalOpenItem(null)} modalPosition='end' width="w-full md:w-2/5" />
+            <Modal content={<ProposalSubmissionModal proposal={isModalOpenItem} trigger={() => { setIsModalOpenItem(null) }} />} isOpen={isModalOpenItem} onClose={() => setIsModalOpenItem(null)} modalPosition='end' width="w-full md:w-2/5" />
         </>)
 };
 

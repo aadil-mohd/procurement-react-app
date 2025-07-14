@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useEffect } from "react";
 import TextField from "../../basic_components/TextField";
 import { formatDate } from "../../../utils/common";
 import { IRfp } from "../../../types/rfpTypes";

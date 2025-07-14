@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React from "react";
 import CompletedStep from "./CompletedStep";
 import CurrentStep from "./CurrentStep";
 import userPhoto from "../../../../assets/profile_photo/userPhoto.png"

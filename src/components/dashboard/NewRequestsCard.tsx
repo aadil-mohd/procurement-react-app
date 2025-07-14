@@ -10,8 +10,8 @@ interface NewRequestsCardProp {
 const NewRequestsCard: React.FC<NewRequestsCardProp> = ({ requests,trigger }: NewRequestsCardProp) => {
   // Example data
   const navigate = useNavigate();
-  const [selectedRequest, setSelectedRequest] = useState<IRfp>()
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setSelectedRequest] = useState<IRfp>()
+  const [, setIsModalOpen] = useState(false);
   const handleRowClick = (request: any) => {
     if (request.status == "approved") {
       navigate(`/spend_analysys/${request.id}`)
@@ -21,6 +21,7 @@ const NewRequestsCard: React.FC<NewRequestsCardProp> = ({ requests,trigger }: Ne
     } else {
       navigate(`/request/${request.id}`)
     }
+    trigger && trigger();
   }
 
   return (

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import TextField from "../../basic_components/TextField";
+import React from "react";
 import { KeyValueGrid } from "./RfpDetailLeft";
 import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
 import { updateProposalStatusAsync } from "../../../services/rfpService";
@@ -25,7 +24,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ trigg
     <div className="w-full h-full flex flex-col" >
       {/* Left Section */}
       <form
-        onSubmit={(e) => { }}
+        onSubmit={() => { }}
         className="flex flex-col w-full h-full bg-white rounded overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-rounded scrollbar-track-blue-100"
       >
         <div className="bg-white w-full pt-3 pl-3 mb-[8px]">

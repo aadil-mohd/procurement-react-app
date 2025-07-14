@@ -5,9 +5,8 @@ import NewRequestsCard from "../../components/dashboard/NewRequestsCard";
 import StatusBar from "../../components/dashboard/StatusBar";
 import TitleCard from "../../components/dashboard/TitleCard";
 import { IFilterDto, statusDataProp } from "../../types/commonTypes";
-import SortModal from "../../components/basic_components/SortModal";
 import RequestCard from "../../components/dashboard/RequestCard";
-import { CrossIcon, TickIcon } from "../../utils/Icons";
+import { TickIcon } from "../../utils/Icons";
 import PageLoader from "../../components/basic_components/PageLoader";
 import { notification } from "antd";
 import { convertCurrencyLabel } from "../../utils/common";
@@ -46,8 +45,8 @@ function Dashboard() {
 
   const [trigger, setTrigger] = useState(false);
 
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  //const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [_, setIsSortModalOpen] = useState(false);
   const [showLoader, setShowLoader] = useState(false)
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -138,12 +137,12 @@ function Dashboard() {
 
       setRequestStatus(statusCounts);
 
-      const statusOrder: Record<string, number> = {
-        under_clarification: 1,
-        pending: 2,
-        approved: 3,
-        rejected: 4
-      };
+      // const statusOrder: Record<string, number> = {
+      //   under_clarification: 1,
+      //   pending: 2,
+      //   approved: 3,
+      //   rejected: 4
+      // };
 
       // Update dashboard data
       setDashboardData({

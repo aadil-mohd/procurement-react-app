@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import ShowStatus from "../../buttons/ShowStatus";
-import dayjs from "dayjs";
+import React from "react";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { Vendor } from "../../../types/vendorTypes";
 import ViewTable from "../../basic_components/ViewTable";

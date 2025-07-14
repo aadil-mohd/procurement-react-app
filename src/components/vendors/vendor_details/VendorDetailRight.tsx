@@ -1,13 +1,13 @@
 // ApprovalWorkflow.tsx
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StepIndicator from './vendor_detail_right_component/StepIndicator';
 import StepCard from './vendor_detail_right_component/StepCard';
 // import { getApprovalFlowById } from '../../services/flowService';
 // import { getAllUsersByFilterAsync } from '../../services/userService';
 // import { ApprovalStep } from '../../types/approvalTypes';
 // import { handleFile } from '../../utils/common';
-import userPhoto from "../../../assets/profile_photo/userPhoto.png"
-import { IStep } from '../../../types/approvalflowTypes';
+// import userPhoto from "../../../assets/profile_photo/userPhoto.png"
+// import { IStep } from '../../../types/approvalflowTypes';
 import { getVendorApprovalFlowsByVendorIdAsync } from '../../../services/flowService';
 import { getUserCredentials } from '../../../utils/common';
 
@@ -84,6 +84,7 @@ const RequestDetailRight: React.FC<IVendorDetailRight> = ({ vendorDetails, trigg
 
     useEffect(() => {
         setupRequestDetailRight()
+        trigger && trigger()
     }, [vendorDetails])
 
     return (

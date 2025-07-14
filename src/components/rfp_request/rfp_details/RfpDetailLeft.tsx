@@ -89,7 +89,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
 
-    const setupOwners= async () => {
+    const setupOwners = async () => {
         try {
             if (requestData) {
                 const users = await getAllUsersByFilterAsync();
@@ -103,15 +103,21 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                                     name: userExist.name,
                                     avatarUrl: userExist?.photo ?? userPhoto,
                                 });
+                                break; // Add break to prevent fallthrough
                             }
                             case 2: {
                                 tempOwners.commercial.push({
                                     name: userExist.name,
                                     avatarUrl: userExist?.photo ?? userPhoto,
                                 });
-                            } default: { }
+                                break; // Add break to prevent fallthrough
+                            }
+                            default: {
+                                // No action needed, or handle default case if necessary
+                            }
                         }
                     }
+
                 })
                 setOwners(tempOwners)
             }
@@ -121,7 +127,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
     const setDocuments = async () => {
         try {
             if (requestData) {
-                const documents_to_display = requestData.rfpDocumentsPath.map((d:any)=> 
+                const documents_to_display = requestData.rfpDocumentsPath.map((d: any) =>
                     ({ ...d, attachmentComponent: <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
                 )
                 setRfpDocuments(documents_to_display);
@@ -209,7 +215,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <UserBadges title="Technical Owners" users={owners.technical} />
                     <UserBadges title="Commercial Owners" users={owners.commercial} />
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                {rfpDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
+                    {rfpDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
         </div>

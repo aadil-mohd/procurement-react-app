@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { IFilterDto } from "../../../types/commonTypes";
-import { IExpenditureType } from "../../../types/capexTypes";
 import { IDepartment } from "../../../types/departmentTypes";
 import { IRole } from "../../../types/roleTypes";
 
 interface SettingsFilterModalProp {
   setFilter: React.Dispatch<React.SetStateAction<IFilterDto>>;
-  expenditureTypes?: IExpenditureType[];
+  expenditureTypes?: any[];
   departments?: IDepartment[];
   filter: IFilterDto;
   defaultFilter: IFilterDto;

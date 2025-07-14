@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import CreateButton from '../../buttons/CreateButton';
-import { ArrowLeft, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import Modal from '../../basic_components/Modal';
 import CreateRoleForm from './CreateRoleForm';
 import { getAllUsersByFilterAsync } from '../../../services/userService';
-import { assignPermissionsToRoleAsync, deleteRoleAsync, getAllPermissionsAsync, getAllRolesFilterAsync, getPermissionsByRoleIdAsync, updatePermissionsByRoleIdAsync } from '../../../services/roleService';
-import { Permission } from '../../../types/roleTypes';
+import { assignPermissionsToRoleAsync, deleteRoleAsync, getAllRolesFilterAsync, getPermissionsByRoleIdAsync } from '../../../services/roleService';
 import { Button, notification } from 'antd';
-import SettingsTable from '../settings_components/SettingsTable';
 import { IFilterDto } from '../../../types/commonTypes';
 import { formatDate } from '../../../utils/common';
 import { Modal as AntdModal } from 'antd';
@@ -34,10 +32,10 @@ const defaultFilter = {
 const RolesPermissions: React.FC = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
     const [trigger, setTrigger] = useState<boolean>(false);
-    const [selectedRole, setSelectedRole] = useState<RoleData | null>();
-    const [editData, setEditData] = useState<{ roleId: string, roleName: string }>();
+    const [selectedRole, setSelectedRole] = useState<any>();
+    const [editData, ] = useState<{ roleId: string, roleName: string }>();
     const [roles, setRoles] = useState<RoleData[]>([]);
-    const [rolesPermissions, setRolesPermissions] = useState<number[]>([]);
+    const [rolesPermissions, ] = useState<number[]>([]);
     const [changesDone, setChangesDone] = useState(false);
     const [permissions, setPermissions] = useState<any[]>([]);
     const userId = Cookies.get("userId");
@@ -123,7 +121,7 @@ const RolesPermissions: React.FC = () => {
             const currentUser: IUserDetails | undefined = users.find(user => user.id === userId);
             const currentUserRole = currentUser?.roleName; // assuming role is a string like "Manager"
 
-            const roleData: RoleData[] = allRoles.map(role => {
+            const roleData: any[] = allRoles.map(role => {
                 const userCount = users.filter(user => user.roleId === role.id).length;
 
                 console.log({
@@ -160,11 +158,11 @@ const RolesPermissions: React.FC = () => {
     };
 
 
-    const handlePermissionToggle = (permission: object) => {
+    const handlePermissionToggle = (permission: any) => {
 
-        const exists = selectedRole?.permissions?.some(p => p.permissionId === permission.permissionId);
+        const exists = selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId);
         const updatedPermissions = exists
-            ? selectedRole?.permissions?.filter(p => p.permissionId !== permission.permissionId) // remove
+            ? selectedRole?.permissions?.filter((p:any) => p.permissionId !== permission.permissionId) // remove
             : [...selectedRole?.permissions, permission]; // add
 
         // setRolesPermissions((prevPermissions) =>
@@ -190,7 +188,7 @@ const RolesPermissions: React.FC = () => {
         //         return permission;
         //     })
         // );
-        setSelectedRole(prev => ({
+        setSelectedRole((prev:any) => ({
             ...prev!,
             permissions: updatedPermissions,
         }));
@@ -203,30 +201,30 @@ const RolesPermissions: React.FC = () => {
 
     //table
 
-    const columns = [
-        { key: 'roleName', label: 'Role' },
-        { key: 'users', label: 'Users' },
-        { key: 'createdAt', label: 'Created On' },
-    ];
+    // const columns = [
+    //     { key: 'roleName', label: 'Role' },
+    //     { key: 'users', label: 'Users' },
+    //     { key: 'createdAt', label: 'Created On' },
+    // ];
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "block", role: RoleData } | null>(null);
+    const [confirmAction, ] = useState<{ type: "delete" | "block", role: RoleData } | null>(null);
     // const [_, setFilterModalOpen] = useState(false);
     const [sortModalOpen, setSortModalOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, ] = useState("");
     const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
 
-    const handleThreeDots = (type: "edit" | "delete", role: RoleData) => {
-        console.log(role)
-        setEditData({ roleId: role.roleid, roleName: role.roleName })
-        if (type === "edit") {
-            setIsEditModalOpen(true);
-        } else {
-            setConfirmAction({ type, role });
-            setIsConfirmModalOpen(true);
-        }
-    };
+    // const handleThreeDots = (type: "edit" | "delete", role: RoleData) => {
+    //     console.log(role)
+    //     setEditData({ roleId: role.roleid, roleName: role.roleName })
+    //     if (type === "edit") {
+    //         setIsEditModalOpen(true);
+    //     } else {
+    //         setConfirmAction({ type, role });
+    //         setIsConfirmModalOpen(true);
+    //     }
+    // };
 
     const handleRoleSelect = (role: RoleData) => {
         console.log(role, "123");
@@ -260,7 +258,7 @@ const RolesPermissions: React.FC = () => {
         // if (!roleId) return;
 
         try {
-            const response = await assignPermissionsToRoleAsync({roleId:roleId,permissionIds:selectedRole?.permissions.map(p => p.permissionId)});
+            const response = await assignPermissionsToRoleAsync({roleId:roleId,permissionIds:selectedRole?.permissions.map((p:any) => p.permissionId)});
                 console.log(response);
                 
             setChangesDone(false)
@@ -382,10 +380,10 @@ const RolesPermissions: React.FC = () => {
                                         <td className="py-3 text-center">
                                             <div className="flex justify-center">
                                                 <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some(p => p.permissionId === permission.permissionId) ? 'bg-blue-600' : 'border border-gray-300'}`}
+                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId) ? 'bg-blue-600' : 'border border-gray-300'}`}
                                                     onClick={() => handlePermissionToggle(permission)}
                                                 >
-                                                    {selectedRole?.permissions?.some(p => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
+                                                    {selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
                                                 </div>
                                             </div>
                                         </td>

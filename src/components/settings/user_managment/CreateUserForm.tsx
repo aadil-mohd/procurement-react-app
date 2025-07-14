@@ -129,7 +129,7 @@ const CreateUserForm: React.FC<ICreateUserForm> = ({
             password.trim().length >= 6 && !/\s/.test(password);
 
         if (type === "create") {
-            if (!passwordValidation(userDetail.password)) {
+            if (!passwordValidation(userDetail.password as string)) {
                 errors.password = "Password must be at least 6 characters long and cannot contain spaces.";
             }
         } else if (userDetail.password) {

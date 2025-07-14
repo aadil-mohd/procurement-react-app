@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BriefCase, CostSumm, PaperClip, QuotesIcon, TableCloseIcon } from "../../../utils/Icons";
+import { BriefCase, CostSumm, PaperClip, QuotesIcon } from "../../../utils/Icons";
 import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
 import { getAllUsersByFilterAsync } from "../../../services/userService";

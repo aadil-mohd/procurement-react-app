@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Layout, Card, Typography, Divider, message } from 'antd';
+import { Form, Input, Button, Layout, Card, Typography, message } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import { resetPasswordAsync } from '../../services/userService';
 
 const { Content } = Layout;
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
 // Define interface for form values
 interface ResetPassFormValues {

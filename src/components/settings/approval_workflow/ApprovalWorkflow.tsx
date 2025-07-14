@@ -1,17 +1,14 @@
-import { Button, notification } from 'antd';
+import { notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 // import SettingsTable from '../settings_components/SettingsTable';
 // import SettingsFilterModal from '../settings_components/SettingsFilterModal';
 // import SettingsSortModal from '../settings_components/SettingsSortModal';
 import { IFilterDto } from '../../../types/commonTypes';
-import CreateButton from '../../buttons/CreateButton';
-import Modal from '../../basic_components/Modal';
 // import { Modal as AntdModal } from 'antd';
 import ApprovalWorkflowForm from './ApprovalWorkflowForm';
 //import { IFlow } from '../../../types/approvalTypes';
 import { getApprovalFlowAsync } from '../../../services/flowService';
 //import { IFlowDetails } from '../../../types/capexTypes';
-import ViewApprovalFlowCard from './ViewApprovalFlowCard';
 //import { getAllUsersByFilterAsync } from '../../../services/userService';
 import { IUserDetails } from '../../../types/userTypes';
 import ViewApprovalFlow from './ViewApprovalFlowCard';
@@ -27,14 +24,14 @@ const defaultFilterData = {
 
 const ApprovalWorkflow: React.FC = () => {
   const [trigger, setTrigger] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [, setIsCreateModalOpen] = useState(false);
+  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [usersData, setUsersData] = useState<IUserDetails[] | null>(null);
   const [workflow, setWorkflow] = useState<any>();
   const [viewType, seViewType] = useState<"view" | "edit" | "create">("view");
 
-  const [filter, setFilter] = useState<IFilterDto>(defaultFilterData);
+  const [filter, ] = useState<IFilterDto>(defaultFilterData);
 
 
   const setWorkflowsData = async () => {

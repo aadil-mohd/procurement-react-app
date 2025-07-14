@@ -9,7 +9,6 @@ import ResetPassPage from '../pages/forgot_pass_page/ResetPass';
 import { Login } from '../pages/login_page/Login';
 import Navbar from '../components/basic_components/Navbar';
 import SettingsPage from '../pages/settings_page/SettingsPage';
-import { getUserToken } from '../utils/common';
 import RfpRequestFormComponent from '../components/rfp_request/rfp_form/RfpRequestForm';
 import { ICountryCode } from "../types/commonTypes";
 import { getAllCountryCodes } from "../services/commonService";
@@ -49,7 +48,7 @@ const RouteComponent: React.FC = () => {
     // setup common datas like expendituretypes, departments
   async function setupCommonDatas(clientId: string) {
     try {
-
+      console.log(clientId,"clientId");
       let countryCodesData = await getAllCountryCodes();
       setCountryCodes(countryCodesData.sort((a: any, b: any) => (a.countryCode ?? "").localeCompare(b.countryCode ?? "")));
 

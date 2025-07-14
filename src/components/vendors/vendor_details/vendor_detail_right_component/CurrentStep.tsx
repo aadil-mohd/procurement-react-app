@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import SelectField from "../../../basic_components/SelectField";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-import { notification, Spin } from "antd";
+import { Spin } from "antd";
 import { IStep } from "../../../../types/approvalflowTypes";
 import { approveVendorAsync, rejectVendorAsync } from "../../../../services/flowService";
 import { getVendorCriteriasAsync } from "../../../../services/vendorService";
 
-interface ChecklistItem {
-  id: number;
-  criteria: string;
-  isChecked: boolean;
-}
 
 // const checklistData: ChecklistItem[] = [
 //   { id: 0, criteria: "Company Profile", isChecked: true },
@@ -139,7 +133,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                         <input
                           type="checkbox"
                           checked={item.isChecked}
-                          onChange={(e) => {
+                          onChange={() => {
                             const updated_Checklist = checklistData.map(i => (item.id == i.id ? ({ ...i, isChecked: !i.isChecked }) : i));
                             setChecklistData(updated_Checklist);
                           }}

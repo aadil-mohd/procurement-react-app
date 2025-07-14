@@ -6,6 +6,7 @@ import { IRole } from "../types/roleTypes";
 
 export const getAllRolesFilterAsync = async (filter: IFilterDto = { fields: [], sortColumn: "createdAt" }): Promise<{ data: IRole[]; count: number }> => {
     try {
+        console.log(filter);
         const response = await axios.get(`${Urls.defaultUrl}/api/Roles`, {
             headers: {
                 Authorization: `Bearer ${getUserToken()}`

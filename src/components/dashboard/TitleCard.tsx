@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import CreateButton from "../buttons/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { getUserCredentials } from "../../utils/common";
+import { useEffect } from "react";
 // import RequestForm from "../requests/RequestForm";
 // import { capexContext } from "../../routes/Route";
 
@@ -20,6 +20,10 @@ const TitleCard = ({ trigger }: { trigger: () => void }) => {
     //         document.body.classList.remove("modal-open"); // Cleanup when modal closes
     //     };
     // }, [isModalOpen]);
+
+    useEffect(()=>{
+        trigger && trigger();
+    },[])
 
 
     return (

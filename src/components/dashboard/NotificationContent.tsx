@@ -28,6 +28,7 @@ const NotificationContent: React.FC<INotificationContent> = ({ data, closeModal,
 
   const handleDeleteNotifications = async (index: number) => {
     try {
+      console.log(index);
       setEnableOptions(null);
       //await deleteNotificationAsync([filteredNotifications[index].id])
       console.log("deleted");

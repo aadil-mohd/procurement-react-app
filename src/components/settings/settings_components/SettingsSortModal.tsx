@@ -48,7 +48,7 @@ const SettingsSortModal: React.FC<SettingsSortModalProps> = ({
 }) => {
   const [sortOptions, setSortOptions] = useState({
     field: filter.sortColumn,
-    direction: filter.sortOrder,
+    direction: filter.sortDirection,
   });
 
   const applySorting = (column: string) => {

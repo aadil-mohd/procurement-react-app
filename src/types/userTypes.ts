@@ -34,7 +34,7 @@ export interface User {
     email?: string
     countryCode?:string;
     phone?: string
-    password: string
+    password?: string
     roleId?: string
     roleName?: string
     departmentId?: string
