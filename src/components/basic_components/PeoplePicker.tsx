@@ -12,6 +12,7 @@ interface PeoplePickerProps {
   setValue: (updated: Person[]) => void;
   placeholder?: string;
   label?: string;
+  height?:string
 }
 
 const PeoplePicker: React.FC<PeoplePickerProps> = ({
@@ -20,6 +21,7 @@ const PeoplePicker: React.FC<PeoplePickerProps> = ({
   setValue,
   placeholder = "Search people...",
   label = "",
+  height
 }) => {
   const [search, setSearch] = useState("");
   const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
@@ -57,7 +59,7 @@ const PeoplePicker: React.FC<PeoplePickerProps> = ({
     <div className="w-full">
       {label && <label className="block text-sm font-medium mb-2">{label}</label>}
 
-      <div className="flex flex-wrap items-center border border-gray-300 rounded-md p-2 gap-2 min-h-[48px]">
+      <div className={`flex flex-wrap items-center border border-gray-300 rounded-md p-2 gap-2 ${ height ? `min-h-[${height}]` : "min-h-[48px]"}`}>
         {value.map((person) => (
           <div
             key={person.id}

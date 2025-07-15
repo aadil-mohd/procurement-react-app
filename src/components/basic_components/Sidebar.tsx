@@ -68,13 +68,13 @@ const Sidebar = ({ notifications,trigger }: SidebarProp) => {
       }
 
       // Special case for spend_analysys - check if path starts with '/spend_analysys'
-      if (item.title === "spend analysys" && currentPath.startsWith("/spend_analysys")) {
-        setActiveIcon("spend analysys");
+      if (item.title === "Vendors" && currentPath.startsWith("/vendors")) {
+        setActiveIcon("Vendors");
         return;
       }
 
       // Special case for requests - check if path starts with '/requests' or '/request'
-      if (item.title === "Requests" && (currentPath.startsWith("/requests") || currentPath.startsWith("/request"))) {
+      if (item.title === "Requests" && (currentPath.startsWith("/rfps") || currentPath.startsWith("/request"))) {
         setActiveIcon("Requests");
         return;
       }

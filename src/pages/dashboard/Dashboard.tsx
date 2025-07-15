@@ -183,7 +183,7 @@ function Dashboard() {
   useEffect(() => {
     console.log("reloaded")
     fetchDashboardData();
-  }, [fetchDashboardData, trigger]);
+  }, [fetchDashboardData]);
 
   useEffect(() => {
     const updatedFilter = {

@@ -17,7 +17,7 @@ export const defaultFilter = {
 // rfp column labels for table
 export const rfp_column_labels = {
     tenderNumber: 'ID',
-    rfpTitle: 'Request Name',
+    rfpTitle: 'RFP Title',
     buyerName: 'Buyer',
     estimatedContractValueLabel: 'Estd. Con Value',
     isOpen: 'Status',
@@ -48,7 +48,7 @@ export const project_column_labels = {
 // for sorting table
 export const rfp_sorting_fields = {
     tenderNumber: 'ID',
-    rfpTitle: 'Request Name',
+    rfpTitle: 'RFP Title',
     buyerName: 'Buyer',
     bidValue: 'Bid Value',
     isOpen: 'Status',

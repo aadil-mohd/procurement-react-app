@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { Steps, Button } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BriefCase, CostSumm, PaperClip, QuotesIcon } from "../../../utils/Icons";
 import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
 import { getAllUsersByFilterAsync } from "../../../services/userService";
@@ -39,24 +39,23 @@ const defaultRfpState: IRfp = {
   rfpOwners: []
 }
 
+
+
+const { Step } = Steps;
+
+
+
 function RfpRequestFormComponent() {
+  const [current, setCurrent] = useState(0);
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
-  const [tabs, setTabs] = useState(
-    [
-      { tab: "General Information", isOpen: true, validateFields:["rfpTitle","rfpDescription","buyerName","buyerOrganizationName","departmentId","categoryId","purchaseRequisitionId"] },
-      { tab: "RFP Details", isOpen: false ,validateFields:["isOpen","isSerial","estimatedContractValue","isTenderFeeApplicable"]},
-      { tab: "Timeline & Ownership", isOpen: false,validateFields:[] },
-      { tab: "Attachments", isOpen: false,validateFields:[] }
-    ]
-  )
 
   const [attachments, setAttachments] = useState<any[]>([]);
 
   const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
-  const [activeSections, setActiveSections] = useState<string>("General Information");
   const setupRfpFormAsync = async () => {
     try {
       const users = await getAllUsersByFilterAsync();
@@ -97,18 +96,43 @@ function RfpRequestFormComponent() {
     }
   }
 
+  const steps = [
+    {
+      title: "General Information",
+      content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
+    },
+    {
+      title: "RFP Details",
+      content: <RfpDetails
+        masterData={masterData} setRequestData={setRequestData} requestData={requestData}
+      />,
+    },
+    {
+      title: "Timeline & Ownership",
+      content: <TimeLineOwnership
+        masterData={masterData} setRequestData={setRequestData} requestData={requestData}
+        owners={owners} setOwners={setOwners}
+      />,
+    },
+    {
+      title: "Attachments",
+      content: <AddAttachment
+        attachments={attachments} setAttachments={setAttachments}
+      />,
+    }
+  ];
+
   useEffect(() => {
     setupRfpFormAsync();
   }, [])
 
-  useEffect(() => {
-    renderDynamicContent("General Information");
-  }, [activeSections])
 
-  const handleSectionToggle = (section: string) => {
-    const tempTabs = tabs.map(t => t.tab == section ? { ...t, isOpen: true } : { ...t, isOpen: false });
-    setTabs(tempTabs);
-    setActiveSections(section);
+  const next = () => {
+    setCurrent((prev) => Math.min(prev + 1, steps.length - 1));
+  };
+
+  const prev = () => {
+    setCurrent((prev) => Math.max(prev - 1, 0));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -153,154 +177,51 @@ function RfpRequestFormComponent() {
         }
       }
 
-      createOrUpdateRfpAsync(formData);
+      await createOrUpdateRfpAsync(formData);
       navigate("/rfps");
     } catch (err) {
 
     }
   };
 
-  const handleCancel = () => {
-    setRequestData(defaultRfpState);
-    // setActiveSections([]);
-    navigate("/"); // Redirect to another page, e.g., home page
-  };
 
-  const icons: any = {
-    "Attachments": <PaperClip className="w-4 h-4 stroke-customBlue" />,
-    "Attachments-dark": <PaperClip className="w-4 h-4 stroke-customBlue stroke-white" />,
-    "RFP Details": <CostSumm className="w-4 h-4 stroke-customBlue" />,
-    "RFP Details-dark": <CostSumm className="w-4 h-4 stroke-customBlue stroke-white" />,
-    "Timeline & Ownership": <BriefCase className="w-4 h-4 stroke-customBlue" />,
-    "Timeline & Ownership-dark": <BriefCase className="w-4 h-4 stroke-customBlue stroke-white" />,
-    "General Information": <QuotesIcon className="w-4 h-4 stroke-customBlue" />,
-    "General Information-dark": <QuotesIcon className="w-4 h-4 stroke-customBlue stroke-white" />,
-  };
-
-  const renderDynamicContent = (section: string) => {
-    switch (section) {
-      case "General Information":
-        return (
-          <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />
-        );
-      case "Attachments":
-        return (
-          <AddAttachment
-            attachments={attachments} setAttachments={setAttachments}
-          />
-        );
-      case "Timeline & Ownership":
-        return (
-          <TimeLineOwnership
-            masterData={masterData} setRequestData={setRequestData} requestData={requestData}
-            owners={owners} setOwners={setOwners}
-          />
-        );
-      case "RFP Details":
-        return (
-          <RfpDetails
-            masterData={masterData} setRequestData={setRequestData} requestData={requestData}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  useEffect(() => {
+    setCurrent(0);
+  }, [])
 
   return (
-    <div className="w-full h-full flex flex-col md:flex-row">
-      {/* Right Section: Toggle buttons */}
-      <div
-        className="w-full md:w-1/5 h-full flex flex-col justify-start items-start p-8"
-        style={{ backgroundColor: "#F4F5F7" }}
-      >
-        {/* <p className="text-sm font-bold mb-4">Options</p> */}
-        <div className="flex flex-col space-y-5 w-full">
-          {tabs.map((doc, index) => (
-            <button
-              key={index}
-              className={`w-full pl-4 py-2 flex items-center text-left text-sm font-medium rounded border ${doc.isOpen ? "bg-customBlue text-white" : "bg-white text-black"} ${!doc.isOpen && "hover:bg-blue-100"}`}
-              onClick={() => handleSectionToggle(doc.tab)}
-            >
-              {/* Icon */}
-              <span className="mr-2">{icons[doc.isOpen ? (doc.tab + "-dark") : doc.tab]}</span>
-
-              {/* Text */}
-              {doc.tab}
-            </button>
+    <div className="w-full mx-auto p-6 bg-white shadow rounded-lg">
+      <h1 className="text-2xl font-bold mb-6">Vendor Registration</h1>
+      <div className="max-w-4xl">
+        <Steps current={current} size="small" className="mb-8">
+          {steps.map((item) => (
+            <Step key={item.title} title={item.title} />
           ))}
-        </div>
+        </Steps>
       </div>
-      {/* Left Section */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-full md:w-4/5 h-full bg-white rounded overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-rounded scrollbar-track-blue-100"
-      >
-        <div className="mt-6 p-3 rounded">
-          <p className="text-xl font-bold mb-4">Create Request</p>
-          {/* Dynamically Added Sections */}
-          <div className="mt-6 p-3 rounded shadow relative">
-            <div className="flex justify-between items-center mb-2">
-              <p className="font-medium text-sm">{activeSections}</p>
-              {/* <button
-                className="cursor-pointer p-1"
-                onClick={(e) => {
-                  e.preventDefault();
-                }} // Show warning on close
-              >
-                <TableCloseIcon className="w-5 h-5 text-gray-500 hover:text-red-500" />
-              </button> */}
-            </div>
-            {renderDynamicContent(activeSections)}
-          </div>
 
+      <div className="rounded-lg p-6 min-h-[200px] mb-6">
+        <p className="text-gray-700">{steps[current].content}</p>
+      </div>
 
-          {/* Cancel and Save Buttons */}
-          <div className="mt-10 flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                handleCancel(); // Ensure it's a function call
-              }}
-              className="bg-white text-black text-md border border-gray-300 rounded px-4 py-2 shadow hover:bg-gray-100"
-            >
-              Cancel
-            </button>
-
-            {activeSections != "Attachments" ? <><button
-              type="button"
-              className="bg-blue-500 text-md text-white rounded px-4 py-2 shadow hover:bg-blue-400"
-              onClick={(e) => {
-                e.preventDefault();
-                let openFlagIndex = 0;
-
-                const updatedTab = tabs.map((item, index) => {
-                  if (item.tab == activeSections) {
-                    setActiveSections(tabs[index + 1].tab);
-                    openFlagIndex = index + 1;
-                    return ({ ...item, isOpen: false })
-                  } else if (openFlagIndex && openFlagIndex == index) {
-                    return ({ ...item, isOpen: true })
-                  }
-                  else return item;
-                })
-                setTabs(updatedTab);
-              }}
-            >
-              Next
-            </button></> : <><button
-              type="submit"
-              className="bg-blue-500 text-md text-white rounded px-4 py-2 shadow hover:bg-blue-400"
-            >
-              Save
-            </button></>}
-          </div>
-
-        </div>
-      </form>
+      <div className="flex justify-end space-x-4">
+        {current > 0 && (
+          <Button onClick={prev} className="bg-gray-100">
+            Previous
+          </Button>
+        )}
+        {current < steps.length - 1 ? (
+          <Button type="primary" onClick={next}>
+            Next
+          </Button>
+        ) : (
+          <Button type="primary" onClick={(e) => handleSubmit(e)}>
+            Submit
+          </Button>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default RfpRequestFormComponent;

@@ -133,7 +133,7 @@ function RequestPage() {
           <div className="flex items-center justify-between">
             <div className="mb-2 text-xl font-bold">Requests</div>
             <div>
-              <CreateButton name="Create request" onClick={onCreateRequest} />
+              <CreateButton name="Create RFP" onClick={onCreateRequest} />
               
             </div>
 

@@ -35,7 +35,7 @@ const TitleCard = ({ trigger }: { trigger: () => void }) => {
                 <span className="text-gray-400 text-[14px]">Welcome, Let's get back to work.</span>
             </div>
             <div>
-                <CreateButton name="Create request" onClick={onCreateRequest} />
+                <CreateButton name="Create RFP" onClick={onCreateRequest} />
                 
             </div>
         </div>
