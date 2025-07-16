@@ -187,7 +187,7 @@ function RfpRequestFormComponent() {
       await createOrUpdateRfpAsync(formData);
       navigate("/rfps");
     } catch (err) {
-
+      console.log(err)
     }
   };
 
