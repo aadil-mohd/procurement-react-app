@@ -2,6 +2,7 @@ import React, { SetStateAction } from "react";
 import TextField from "../../basic_components/TextField";
 import SelectField from "../../basic_components/SelectField";
 import PeoplePicker from "../../basic_components/PeoplePicker";
+import { getUserCredentials } from "../../../utils/common";
 
 interface GeneralInformationProps {
   requestData: any;
@@ -126,18 +127,20 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 label=""
                 style="w-full"
                 value={
-                  masterData?.departments?.find(
-                    (x: any) => x?.id === requestData?.departmentId
-                  )?.departmentName || "Buyer department"
+                  masterData?.companies?.find(
+                    (x: any) => x?.companyName === requestData?.buyerOrganizationName
+                  )?.companyName || masterData?.companies?.find(
+                    (x: any) => x?.id.toString() === getUserCredentials().companyId
+                  )?.companyName
                 }
-                options={(masterData?.departments || []).map((x: any) => ({
-                  label: <span className="text-md font-medium">{x.departmentName}</span>,
+                options={(masterData?.companies || []).map((x: any) => ({
+                  label: <span className="text-md font-medium">{x.companyName}</span>,
                   value: x.id,
                 }))}
                 onChange={(selectedValue) => {
                   setRequestData((prev: any) => ({
                     ...prev,
-                    departmentId: selectedValue,
+                    buyerOrganizationName: selectedValue,
                   }));
                 }}
               />
@@ -154,7 +157,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 style="w-full"
                 value={
                   masterData?.departments?.find(
-                    (x: any) => x?.id === requestData?.departmentId
+                    (x: any) => x?.id.toString() === requestData?.departmentId
                   )?.departmentName || "Buyer department"
                 }
                 options={(masterData?.departments || []).map((x: any) => ({
@@ -164,7 +167,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 onChange={(selectedValue) => {
                   setRequestData((prev: any) => ({
                     ...prev,
-                    departmentId: selectedValue,
+                    departmentId: selectedValue.toString(),
                   }));
                 }}
               />
@@ -172,9 +175,9 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
 
             {/* Buyer Name */}
             <PeoplePicker
-              users={[]}
-              setValue={(val) => { }}
-              value={[]}
+              users={masterData?.users}
+              setValue={(val) => { setRequestData((prev:any)=>({...prev,buyer:val,buyerName:val.length ? val[0].name : ""}))}}
+              value={requestData && requestData?.buyer ? requestData?.buyer : []}
               label="Buyer"
               height={"41px"}
             />

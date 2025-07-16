@@ -10,15 +10,17 @@ import RfpDetails from "./RfpDetails";
 import { getAllCategoriesAsync } from "../../../services/categoryService";
 import TimeLineOwnership from "./TimeLineOwnership";
 import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpService";
-import { fetchAndConvertToFile } from "../../../utils/common";
+import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common";
+import { getAllCompaniesAsync } from "../../../services/companyService";
 
 const defaultRfpState: IRfp = {
   id: 0,
   rfpTitle: "",
   rfpDescription: "",
   buyerName: "",
+  buyer:[{name:getUserCredentials().name,id:getUserCredentials().userId}],
   buyerOrganizationName: "",
-  departmentId: "",
+  departmentId: getUserCredentials().departmentId ? getUserCredentials().departmentId : "0",
   isOpen: false,
   isSerial: false,
   rfpCurrency: "USD",
@@ -54,15 +56,20 @@ function RfpRequestFormComponent() {
 
   const [attachments, setAttachments] = useState<any[]>([]);
 
-  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [] });
+  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies:[] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
+  
+  useEffect(()=>{
+    console.log(requestData,"requestData")
+  },[requestData])
   const setupRfpFormAsync = async () => {
     try {
       const users = await getAllUsersByFilterAsync();
       const departments = await getAllDepartmentsAsync();
       const categories = await getAllCategoriesAsync()
+      const companies = await getAllCompaniesAsync();
       setMasterData({
-        users: users, departments: departments.data, categories
+        users: users, departments: departments.data, categories,companies
       })
       if (id && !isNaN(Number(id))) {
         try {
@@ -99,7 +106,7 @@ function RfpRequestFormComponent() {
   const steps = [
     {
       title: "General Information",
-      content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
+      content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData}/>,
     },
     {
       title: "RFP Details",
@@ -169,7 +176,7 @@ function RfpRequestFormComponent() {
                 i++;
                 console.log(item, i, "commercial")
               })
-            }
+            }else if(key == "buyer") continue;
             else {
               formData.append(key, value);
             }
@@ -190,8 +197,8 @@ function RfpRequestFormComponent() {
   }, [])
 
   return (
-    <div className="w-full mx-auto p-6 bg-white shadow rounded-lg">
-      <h1 className="text-2xl font-bold mb-6">Vendor Registration</h1>
+    <div className="w-full h-full mx-auto p-6 bg-white shadow relative">
+      <h1 className="text-2xl font-bold mb-6">Create RFP</h1>
       <div className="max-w-4xl">
         <Steps current={current} size="small" className="mb-8">
           {steps.map((item) => (
@@ -200,11 +207,11 @@ function RfpRequestFormComponent() {
         </Steps>
       </div>
 
-      <div className="rounded-lg p-6 min-h-[200px] mb-6">
+      <div className="p-6 mb-6">
         <p className="text-gray-700">{steps[current].content}</p>
       </div>
 
-      <div className="flex justify-end space-x-4">
+      <div className="absolute right-5 bottom-5 flex justify-end space-x-4">
         {current > 0 && (
           <Button onClick={prev} className="bg-gray-100">
             Previous

@@ -45,6 +45,7 @@ export const LoginComponent: React.FC<LoginComponentProps> = ({setUserLoggedIn})
       Cookies.set("tenantId", decoded_data["tenantId"]);
       Cookies.set("companyId", decoded_data["companyId"]);
       Cookies.set("branchId", decoded_data["branchId"]);
+      Cookies.set("departmentId", decoded_data["departmentId"]);
       Cookies.set("exp", decoded_data["exp"]);
 
       notification.success({

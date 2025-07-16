@@ -20,8 +20,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({setAttachments,attachments
   };
 
   return (
-    <div className="w-full rounded-md ">
-
+    <div className="p-4">
       {/* Display uploaded files */}
       <div className="flex flex-wrap gap-2 mb-4">
         {attachments.map((file, index) => (

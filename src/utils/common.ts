@@ -56,9 +56,9 @@ export const convertToAmPm = (timeString: string) => {
     return date.toLocaleTimeString([], options);
 };
 
-export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string } => {
-    const [userId, roleId, name, departmentId] = [Cookies.get("userId") as string, Cookies.get("roleId") as string, Cookies.get("name") as string, Cookies.get("departmentId") as string]
-    return { userId, roleId, name, departmentId }
+export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string ,companyId:string} => {
+    const [userId, roleId, name, departmentId,companyId] = [Cookies.get("userId") as string, Cookies.get("roleId") as string, Cookies.get("name") as string, Cookies.get("departmentId") as string, Cookies.get("companyId") as string]
+    return { userId, roleId, name, departmentId ,companyId}
 }
 
 

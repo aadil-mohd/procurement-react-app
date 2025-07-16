@@ -3,6 +3,7 @@ export interface IRfp {
     rfpTitle?: string
     rfpDescription?: string
     buyerName?: string
+    buyer?: any
     buyerOrganizationName?: string
     departmentId?: string
     isOpen?: false
