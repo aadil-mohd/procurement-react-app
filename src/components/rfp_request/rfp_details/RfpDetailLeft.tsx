@@ -22,7 +22,7 @@ const CommonCard = ({ data, className }: { data: Record<string, any>, className?
                     <span className="block truncate">{data[k]}</span>
 
                     {/* Tooltip on Hover */}
-                    {data[k].length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
+                    {data[k] && data[k]?.length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
                         {data[k]}
                     </div>}
                 </div>
@@ -204,7 +204,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <KeyValueGrid className="mb-[16px]"
                         data={[
                             { label: "Closing Date", value: dayjs(requestData?.closingDate).format("DD-MM-YYYY") },
-                            { label: "Closing Time", value: convertToAmPm(requestData?.closingTime) },
+                            { label: "Closing Time", value:dayjs(requestData?.closingDate).format("hh:mm A") },
                         ]}
                     />
                 </div>
