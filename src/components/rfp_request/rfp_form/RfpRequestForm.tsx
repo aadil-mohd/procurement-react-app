@@ -12,7 +12,6 @@ import TimeLineOwnership from "./TimeLineOwnership";
 import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpService";
 import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common";
 import { getAllCompaniesAsync } from "../../../services/companyService";
-import { Form, Input } from "antd";
 
 
 const defaultRfpState: IRfp = {
@@ -47,7 +46,6 @@ const { Step } = Steps;
 
 function RfpRequestFormComponent() {
   const [current, setCurrent] = useState(0);
-  const [form] = Form.useForm();
 
   const navigate = useNavigate();
   const { id } = useParams();
