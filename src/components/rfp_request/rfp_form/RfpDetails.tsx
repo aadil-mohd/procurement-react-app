@@ -14,17 +14,24 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
   requestData,
   setRequestData,
 }) => {
-  const yesNoOptions: { label: string, value: any }[] = [
+  const yesNoOptions: { label: string; value: any }[] = [
     { label: "Yes", value: true },
     { label: "No", value: false },
   ];
 
   return (
-    <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Column 1 */}
-        <div className="flex justify-center">
-          <div className="flex flex-col items-start w-[300px]">
+    <div className="p-6">
+      {/* Left Title + Right Form */}
+      <div className="flex items-start gap-4">
+        {/* Section Label */}
+        <div className="w-[300px]">
+          <h2 className="text-lg font-semibold">RFP Details</h2>
+        </div>
+
+        {/* Form Fields */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Column 1 */}
+          <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Serial or Parallel */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">Serial or Parallel</label>
@@ -76,7 +83,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
               />
             </div>
 
-            {/* Tender Fee - moved here */}
+            {/* Tender Fee */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
                 Tender Fee <span className="text-red-500">*</span>
@@ -105,12 +112,9 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Column 2 */}
-        <div className="flex justify-center">
-          <div className="flex flex-col items-start w-[300px]">
-
+          {/* Column 2 */}
+          <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Bid Amount */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -169,12 +173,9 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Column 3 */}
-        <div className="flex justify-center">
-          <div className="flex flex-col items-start w-[300px]">
-
+          {/* Column 3 */}
+          <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Hide Contract Value From Vendor */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -184,7 +185,10 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 id="hideContractValueFromVendor"
                 label=""
                 style="w-full"
-                value={yesNoOptions.find((x) => x.value === requestData?.hideContractValueFromVendor)?.label as string}
+                value={
+                  yesNoOptions.find((x) => x.value === requestData?.hideContractValueFromVendor)
+                    ?.label as string
+                }
                 options={yesNoOptions.map((x) => ({
                   label: x.label,
                   value: x.value,
@@ -207,7 +211,10 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 id="isTenderFeeApplicable"
                 label=""
                 style="w-full"
-                value={yesNoOptions.find((x) => x.value === requestData?.isTenderFeeApplicable)?.label as string}
+                value={
+                  yesNoOptions.find((x) => x.value === requestData?.isTenderFeeApplicable)
+                    ?.label as string
+                }
                 options={yesNoOptions.map((x) => ({
                   label: <span className="text-md font-medium">{x.label}</span>,
                   value: x.value,

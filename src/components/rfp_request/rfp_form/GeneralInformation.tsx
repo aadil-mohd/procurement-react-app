@@ -16,11 +16,17 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
   masterData,
 }) => {
   return (
-    <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Column 1 */}
-        {/* Column 1 */}
-        <div className="flex justify-center">
+    <div className="p-6">
+      {/* Left label + Form side by side */}
+      <div className="flex items-start gap-4">
+        {/* Section Label */}
+        <div className="w-[300px]">
+          <h2 className="text-lg font-semibold">General Information</h2>
+        </div>
+
+        {/* Form Fields */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Column 1 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* RFP Title */}
             <div className="w-full mb-4">
@@ -68,7 +74,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               />
             </div>
 
-            {/* Buyer (Moved under Category) */}
+            {/* Buyer */}
             <div className="w-full mb-4">
               <PeoplePicker
                 users={masterData?.users}
@@ -85,11 +91,8 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               />
             </div>
           </div>
-        </div>
 
-
-        {/* Column 2 */}
-        <div className="flex justify-center">
+          {/* Column 2 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Organization */}
             <div className="w-full mb-4">
@@ -154,10 +157,8 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               />
             </div>
           </div>
-        </div>
 
-        {/* Column 3 */}
-        <div className="flex justify-center">
+          {/* Column 3 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Purchase Requisition ID */}
             <div className="w-full mb-4">
