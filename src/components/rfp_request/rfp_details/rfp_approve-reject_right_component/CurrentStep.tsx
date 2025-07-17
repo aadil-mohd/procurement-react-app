@@ -60,10 +60,10 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
       if (hasError) return;
       setShowLoaderOnButton(true)
       if (selectedAction === "approved") {
-        await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData })
+        await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData },'rfp')
 
       } else if (selectedAction === "rejected") {
-        await rejectVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData })
+        await rejectVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData },'rfp')
       }
       setShowLoaderOnButton(false)
       trigger();
@@ -110,46 +110,6 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                 </button>
               </>
             )}
-          </div>
-          <div className="max-w-3xl mx-auto mb-4 rounded-lg border border-gray-300 bg-white overflow-hidden">
-            {/* headline row */}
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-[18px] font-semibold text-gray-900">
-                Criteria or Checklist for Approval
-              </h2>
-            </div>
-
-            {/* Scrollable checklist rows */}
-            <div className="max-h-80 overflow-y-auto">
-              <table className="w-full">
-                <tbody>
-                  {checklistData.map((item) => (
-                    <tr
-                      key={item.id}
-                      className="border-b last:border-b-0 border-gray-200"
-                    >
-                      {/* checkbox column */}
-                      <td className="w-12 px-6 py-4 align-top">
-                        <input
-                          type="checkbox"
-                          checked={item.isChecked}
-                          onChange={() => {
-                            const updated_Checklist = checklistData.map(i => (item.id == i.id ? ({ ...i, isChecked: !i.isChecked }) : i));
-                            setChecklistData(updated_Checklist);
-                          }}
-                          className="h-4 w-4 rounded accent-blue-600 cursor-default"
-                        />
-                      </td>
-
-                      {/* text column */}
-                      <td className="px-0 py-4 pr-6">
-                        <span className="text-sm text-gray-800">{item.criteriaName}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
 
 
