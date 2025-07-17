@@ -17,6 +17,19 @@ export const createOrUpdateRfpAsync = async(data:any)=>{
     }
 }
 
+export const publishRfpAsync = async(rfpId:number)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/RfpPublish?rfpId=${rfpId}`,null,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
 export const getRfpByIdAsync = async(id:number)=>{
     try{
         const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/${id}`,{

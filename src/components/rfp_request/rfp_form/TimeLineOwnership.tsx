@@ -37,6 +37,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               Express Interest LastDate <span className="text-red-500">*</span>
             </label>
             <TextField
+            required={true}
               id="expressInterestLastDate"
               value={formatDate(requestData.expressInterestLastDate ?? "")}
               setValue={(value: string) =>
@@ -57,6 +58,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               Response Due Date <span className="text-red-500">*</span>
             </label>
             <TextField
+            required={true}
               id="responseDueDate"
               value={formatDate(requestData.responseDueDate ?? "")}
               setValue={(value: string) =>
@@ -93,6 +95,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               Buyer Reply End Date <span className="text-red-500">*</span>
             </label>
             <TextField
+            required={true}
               id="buyerReplyEndDate"
               value={formatDate(requestData.buyerReplyEndDate ?? "")}
               setValue={(value: string) =>
@@ -113,6 +116,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               Clarification End Date <span className="text-red-500">*</span>
             </label>
             <TextField
+            required={true}
               id="clarificationDate"
               value={formatDate(requestData.clarificationDate ?? "")}
               setValue={(value: string) =>
@@ -133,6 +137,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
           {/* Closing Time & Date */}
           <div>
             <DateTimePicker
+              required={true}
               label="Closing Time & Date"
               value={requestData.closingDate}
               setValue={(val) =>

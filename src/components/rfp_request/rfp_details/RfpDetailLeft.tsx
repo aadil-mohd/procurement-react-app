@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
-import { convertCurrencyLabel, convertToAmPm } from "../../../utils/common";
+import { convertCurrencyLabel, convertToAmPm, getUserCredentials } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
+import { publishRfpAsync } from "../../../services/rfpService";
 
 interface RfpDetailLeftProp {
     requestData: any | undefined
+    trigger: () => void
 }
 
 
@@ -22,7 +24,7 @@ const CommonCard = ({ data, className }: { data: Record<string, any>, className?
                     <span className="block truncate">{data[k]}</span>
 
                     {/* Tooltip on Hover */}
-                    {data[k].length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
+                    {data[k] && data[k]?.length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
                         {data[k]}
                     </div>}
                 </div>
@@ -85,7 +87,7 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     );
 };
 
-const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLeftProp) => {
+const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: RfpDetailLeftProp) => {
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
 
@@ -141,7 +143,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
     }, [requestData])
 
     return (
-        <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200">
+        <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200 relative">
             {requestData && <>
                 {/* Project Name,ID */}
                 <div className="mb-[16px]" style={{ width: "504px" }}>
@@ -204,7 +206,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <KeyValueGrid className="mb-[16px]"
                         data={[
                             { label: "Closing Date", value: dayjs(requestData?.closingDate).format("DD-MM-YYYY") },
-                            { label: "Closing Time", value: convertToAmPm(requestData?.closingTime) },
+                            { label: "Closing Time", value: dayjs(requestData?.closingDate).format("hh:mm A") },
                         ]}
                     />
                 </div>
@@ -218,6 +220,12 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     {rfpDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
+            {requestData?.status == 1 && getUserCredentials().userId == requestData?.createdBy.toString() && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">
+                <button className="bg-customBlue h-[36px] hover:bg-blue-400 text-sm text-white rounded px-1 py-1  w-[200px]" onClick={() => {
+                    publishRfpAsync(requestData?.id)
+                    trigger();
+                }}>Publish now</button>
+            </div>}
         </div>
     )
 }

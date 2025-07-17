@@ -34,6 +34,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 RFP Title <span className="text-red-500">*</span>
               </label>
               <TextField
+                required={true}
                 id="rfpTitle"
                 field="rfpTitle"
                 value={requestData.rfpTitle || ""}
@@ -78,14 +79,8 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             <div className="w-full mb-4">
               <PeoplePicker
                 users={masterData?.users}
-                setValue={(val) => {
-                  setRequestData((prev: any) => ({
-                    ...prev,
-                    buyer: val,
-                    buyerName: val.length ? val[0].name : "",
-                  }));
-                }}
-                value={requestData?.buyer || []}
+                setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val, buyerName: val.length ? val[0].name : "" })) }}
+                value={requestData && requestData?.buyer ? requestData?.buyer : []}
                 label="Buyer"
                 height={"41px"}
               />
@@ -166,6 +161,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 Purchase Requisition ID
               </label>
               <TextField
+                required={true}
                 id="purchaseRequisitionId"
                 field="purchaseRequisitionId"
                 value={requestData.purchaseRequisitionId || ""}
