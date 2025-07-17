@@ -5,12 +5,12 @@ interface AddAttachmentProps {
   attachments: any[];
 }
 
-const AddAttachment: React.FC<AddAttachmentProps> = ({setAttachments,attachments }) => {
+const AddAttachment: React.FC<AddAttachmentProps> = ({ setAttachments, attachments }) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files ? event.target.files[0] : null;
     if (selectedFiles) {
-      setAttachments((prevFiles) => [...prevFiles,{document:selectedFiles,documentName:selectedFiles.name} as any]); // Add new files to the current list
+      setAttachments((prevFiles) => [...prevFiles, { document: selectedFiles, documentName: selectedFiles.name } as any]); // Add new files to the current list
     }
   };
 
@@ -21,47 +21,47 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({setAttachments,attachments
 
   return (
     <div className="p-4">
-      {/* Display uploaded files */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {attachments.map((file, index) => (
-          <div
-            key={index}
-            className="flex items-center border rounded-lg px-3 py-2 bg-gray-50 shadow-sm relative"
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-gray-600 text-sm">
-                {file.documentName}
-              </span>
+      {/* Uploaded File Previews */}
+      {attachments.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {attachments.map((file, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-2 bg-white border border-gray-200 rounded-md px-3 py-2 shadow-sm text-sm text-gray-700"
+            >
+              <span>{file.documentName}</span>
               <button
                 type="button"
                 onClick={() => removeFile(index)}
-                className="text-red-500 hover:text-red-600 text-xs font-bold"
+                className="text-red-500 hover:text-red-600"
+                title="Remove file"
               >
                 ✕
               </button>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* File input section */}
-      <div className="flex flex-col items-center justify-center border" style={{ border: "1px dotted black", height: "100px" }}>
+      {/* File Upload Dropzone */}
+      <div className="relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100 transition cursor-pointer">
         <label
           htmlFor="file-upload"
-          className="text-blue-600 hover:underline cursor-pointer text-sm font-medium mb-1"
+          className="absolute inset-0 flex flex-col items-center justify-center text-center text-blue-600 hover:underline"
         >
-          Add more files browse
+          <span className="font-medium">Click to upload the file</span>
+          <span className="text-xs text-gray-500 mt-1">Max. file size: 20MB</span>
         </label>
         <input
-          type="file"
           id="file-upload"
+          type="file"
           accept=".pdf,.docx,.jpg,.png"
           onChange={handleFileChange}
           className="hidden"
         />
-        <span className="text-xs text-gray-500">Max. file size : 20MB</span>
       </div>
     </div>
+
   );
 };
 

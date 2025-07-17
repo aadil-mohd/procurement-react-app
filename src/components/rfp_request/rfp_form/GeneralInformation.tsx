@@ -17,10 +17,11 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
 }) => {
   return (
     <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Column 1 */}
-        <div className="flex justify-center md:border-r md:border-gray-300">
-          <div className="flex flex-col items-start  w-[400px]">
+        {/* Column 1 */}
+        <div className="flex justify-center">
+          <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* RFP Title */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -36,27 +37,6 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 placeholder="Enter RFP Title"
                 style=""
                 type="text"
-                width="w-full"
-              />
-            </div>
-            {/* RFP Description */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                RFP Description <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="rfpDescription"
-                field="rfpDescription"
-                value={requestData.rfpDescription || ""}
-                setValue={(value) =>
-                  setRequestData((prev: any) => ({
-                    ...prev,
-                    rfpDescription: value,
-                  }))
-                }
-                placeholder="Enter RFP description"
-                style="min-h-[50px]"
-                type="textarea"
                 width="w-full"
               />
             </div>
@@ -88,36 +68,30 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               />
             </div>
 
-            {/* Purchase Requisition ID */}
+            {/* Buyer (Moved under Category) */}
             <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Purchase Requisition ID
-              </label>
-              <TextField
-                id="purchaseRequisitionId"
-                field="purchaseRequisitionId"
-                value={requestData.purchaseRequisitionId || ""}
-                setValue={(value) =>
+              <PeoplePicker
+                users={masterData?.users}
+                setValue={(val) => {
                   setRequestData((prev: any) => ({
                     ...prev,
-                    purchaseRequisitionId: value,
-                  }))
-                }
-                placeholder="Purchase Requisition ID"
-                style=""
-                type="text"
-                width="w-full"
+                    buyer: val,
+                    buyerName: val.length ? val[0].name : "",
+                  }));
+                }}
+                value={requestData?.buyer || []}
+                label="Buyer"
+                height={"41px"}
               />
             </div>
           </div>
-
         </div>
+
 
         {/* Column 2 */}
         <div className="flex justify-center">
-          <div className="flex flex-col items-start w-[400px]">
-
-            {/* Buyer Organization */}
+          <div className="flex flex-col items-start w-full max-w-[400px]">
+            {/* Organization */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
                 Organization <span className="text-red-500">*</span>
@@ -128,13 +102,18 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 style="w-full"
                 value={
                   masterData?.companies?.find(
-                    (x: any) => x?.companyName === requestData?.buyerOrganizationName
-                  )?.companyName || masterData?.companies?.find(
-                    (x: any) => x?.id.toString() === getUserCredentials().companyId
+                    (x: any) =>
+                      x?.companyName === requestData?.buyerOrganizationName
+                  )?.companyName ||
+                  masterData?.companies?.find(
+                    (x: any) =>
+                      x?.id.toString() === getUserCredentials().companyId
                   )?.companyName
                 }
                 options={(masterData?.companies || []).map((x: any) => ({
-                  label: <span className="text-md font-medium">{x.companyName}</span>,
+                  label: (
+                    <span className="text-md font-medium">{x.companyName}</span>
+                  ),
                   value: x.id,
                 }))}
                 onChange={(selectedValue) => {
@@ -161,7 +140,9 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                   )?.departmentName || "Buyer department"
                 }
                 options={(masterData?.departments || []).map((x: any) => ({
-                  label: <span className="text-md font-medium">{x.departmentName}</span>,
+                  label: (
+                    <span className="text-md font-medium">{x.departmentName}</span>
+                  ),
                   value: x.id,
                 }))}
                 onChange={(selectedValue) => {
@@ -172,20 +153,59 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 }}
               />
             </div>
+          </div>
+        </div>
 
-            {/* Buyer Name */}
-            <PeoplePicker
-              users={masterData?.users}
-              setValue={(val) => { setRequestData((prev:any)=>({...prev,buyer:val,buyerName:val.length ? val[0].name : ""}))}}
-              value={requestData && requestData?.buyer ? requestData?.buyer : []}
-              label="Buyer"
-              height={"41px"}
-            />
+        {/* Column 3 */}
+        <div className="flex justify-center">
+          <div className="flex flex-col items-start w-full max-w-[400px]">
+            {/* Purchase Requisition ID */}
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Purchase Requisition ID
+              </label>
+              <TextField
+                id="purchaseRequisitionId"
+                field="purchaseRequisitionId"
+                value={requestData.purchaseRequisitionId || ""}
+                setValue={(value) =>
+                  setRequestData((prev: any) => ({
+                    ...prev,
+                    purchaseRequisitionId: value,
+                  }))
+                }
+                placeholder="Purchase Requisition ID"
+                style=""
+                type="text"
+                width="w-full"
+              />
+            </div>
+
+            {/* RFP Description */}
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-2">
+                RFP Description <span className="text-red-500">*</span>
+              </label>
+              <TextField
+                id="rfpDescription"
+                field="rfpDescription"
+                value={requestData.rfpDescription || ""}
+                setValue={(value) =>
+                  setRequestData((prev: any) => ({
+                    ...prev,
+                    rfpDescription: value,
+                  }))
+                }
+                placeholder="Enter RFP description"
+                style="min-h-[50px]"
+                type="textarea"
+                width="w-full"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   );
 };
 
