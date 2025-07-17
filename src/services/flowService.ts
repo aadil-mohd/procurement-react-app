@@ -86,6 +86,20 @@ export const getVendorApprovalFlowsByVendorIdAsync = async (id:string)=>{
     }
 }
 
+export const getRpfApprovalFlowsByIdAsync = async (id:string)=>{
+    try{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/ApprovelStepsByRfpIdAsync?rfpId=${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err:any){
+        throw err.response.data;
+        
+    }
+}
+
 export const getUserPendingApprovalsAsync = async ()=>{
     try{
         let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/GetUserPendingApprovals`,{
