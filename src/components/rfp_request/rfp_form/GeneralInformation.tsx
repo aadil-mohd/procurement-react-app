@@ -79,7 +79,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             <div className="w-full mb-4">
               <PeoplePicker
                 users={masterData?.users}
-                setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val, buyerName: val.length ? val[0].name : "" })) }}
+                setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val.length ? [val[val.length - 1]] : [], buyerName: val.length ? val[val.length - 1].name : "" })) }}
                 value={requestData && requestData?.buyer ? requestData?.buyer : []}
                 label="Buyer"
                 height={"41px"}
