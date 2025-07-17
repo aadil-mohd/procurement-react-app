@@ -12,13 +12,15 @@ import TimeLineOwnership from "./TimeLineOwnership";
 import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpService";
 import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common";
 import { getAllCompaniesAsync } from "../../../services/companyService";
+import { Form, Input } from "antd";
+
 
 const defaultRfpState: IRfp = {
   id: 0,
   rfpTitle: "",
   rfpDescription: "",
   buyerName: "",
-  buyer:[{name:getUserCredentials().name,id:getUserCredentials().userId}],
+  buyer: [{ name: getUserCredentials().name, id: getUserCredentials().userId }],
   buyerOrganizationName: "",
   departmentId: getUserCredentials().departmentId ? getUserCredentials().departmentId : "0",
   isOpen: false,
@@ -41,14 +43,12 @@ const defaultRfpState: IRfp = {
   rfpOwners: []
 }
 
-
-
 const { Step } = Steps;
-
-
 
 function RfpRequestFormComponent() {
   const [current, setCurrent] = useState(0);
+  const [form] = Form.useForm();
+
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -56,12 +56,13 @@ function RfpRequestFormComponent() {
 
   const [attachments, setAttachments] = useState<any[]>([]);
 
-  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies:[] });
+  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
-  
-  useEffect(()=>{
-    console.log(requestData,"requestData")
-  },[requestData])
+
+  useEffect(() => {
+    console.log(requestData, "requestData")
+  }, [requestData])
+
   const setupRfpFormAsync = async () => {
     try {
       const users = await getAllUsersByFilterAsync();
@@ -69,7 +70,7 @@ function RfpRequestFormComponent() {
       const categories = await getAllCategoriesAsync()
       const companies = await getAllCompaniesAsync();
       setMasterData({
-        users: users, departments: departments.data, categories,companies
+        users: users, departments: departments.data, categories, companies
       })
       if (id && !isNaN(Number(id))) {
         try {
@@ -106,7 +107,7 @@ function RfpRequestFormComponent() {
   const steps = [
     {
       title: "General Information",
-      content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData}/>,
+      content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
     },
     {
       title: "RFP Details",
@@ -142,8 +143,20 @@ function RfpRequestFormComponent() {
     setCurrent((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const action = formData.get("action");
+    if (action === "next") {
+      // Validate current step
+      const errors = validateStep(current, requestData);
+      if (errors.length > 0) {
+        message.error(errors[0]); // or loop through all
+        return;
+      }
+      next();
+    }
+
     try {
       console.log("Request Data:", requestData);
       console.log("attachments:", attachments);
@@ -176,7 +189,7 @@ function RfpRequestFormComponent() {
                 i++;
                 console.log(item, i, "commercial")
               })
-            }else if(key == "buyer") continue;
+            } else if (key == "buyer") continue;
             else {
               formData.append(key, value);
             }
@@ -184,8 +197,8 @@ function RfpRequestFormComponent() {
         }
       }
 
-      await createOrUpdateRfpAsync(formData);
-      navigate("/rfps");
+      const isCreated = await createOrUpdateRfpAsync(formData);
+      if (isCreated) navigate("/rfps");
     } catch (err) {
       console.log(err)
     }
@@ -197,7 +210,7 @@ function RfpRequestFormComponent() {
   }, [])
 
   return (
-    <div className="w-full h-full mx-auto p-6 bg-white shadow relative">
+    <form onSubmit={handleSubmit} className="w-full h-full mx-auto p-6 bg-white shadow relative">
       <h1 className="text-2xl font-bold mb-6">Create RFP</h1>
       <div className="max-w-4xl">
         <Steps current={current} size="small" className="mb-8">
@@ -218,16 +231,16 @@ function RfpRequestFormComponent() {
           </Button>
         )}
         {current < steps.length - 1 ? (
-          <Button type="primary" onClick={next}>
+          <Button type="primary" name="action" value="next" htmlType="submit">
             Next
           </Button>
         ) : (
-          <Button type="primary" onClick={(e) => handleSubmit(e)}>
+          <Button type="primary" name="action" value="submit" htmlType="submit">
             Submit
           </Button>
         )}
       </div>
-    </div>
+    </form>
   );
 };
 

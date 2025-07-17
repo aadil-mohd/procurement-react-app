@@ -16,7 +16,8 @@ export interface ITextFieldProp {
     disabled?: boolean;
     maxLength?: number;
     onKeyDown?: () => void
-    step?: boolean
+    step?: boolean,
+    required?:boolean
 }
 
 export interface ILogin {
