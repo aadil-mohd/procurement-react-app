@@ -218,7 +218,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     {rfpDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
-            {requestData?.status != 1 && getUserCredentials().userId == requestData?.CreatedBy && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">
+            {requestData?.status == 1 && getUserCredentials().userId == requestData?.createdBy.toString() && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">
                 <button className="bg-customBlue h-[36px] hover:bg-blue-400 text-sm text-white rounded px-1 py-1  w-[200px]" onClick={() => {}}>Publish now</button>
             </div>}
         </div>
