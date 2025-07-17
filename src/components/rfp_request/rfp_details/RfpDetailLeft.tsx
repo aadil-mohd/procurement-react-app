@@ -5,12 +5,12 @@ import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
-
+ 
 interface RfpDetailLeftProp {
     requestData: any | undefined
 }
-
-
+ 
+ 
 const CommonCard = ({ data, className }: { data: Record<string, any>, className?: string }) => {
     return (
         <div
@@ -20,9 +20,9 @@ const CommonCard = ({ data, className }: { data: Record<string, any>, className?
                 <div key={k} className="pr-[55px] group relative">
                     <p className="mb-1 text-gray-500">{k}</p>
                     <span className="block truncate">{data[k]}</span>
-
+ 
                     {/* Tooltip on Hover */}
-                    {data[k].length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
+                    {data[k] && data[k]?.length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
                         {data[k]}
                     </div>}
                 </div>
@@ -30,7 +30,7 @@ const CommonCard = ({ data, className }: { data: Record<string, any>, className?
         </div>
     )
 }
-
+ 
 type KeyValueProps = {
     data: {
         label: string;
@@ -38,7 +38,7 @@ type KeyValueProps = {
     }[];
     className: string;
 };
-
+ 
 export const KeyValueGrid: React.FC<KeyValueProps> = ({ data, className }) => {
     return (
         <div className={`grid grid-cols-2 gap-y-[16px] ${className}`}>
@@ -51,17 +51,17 @@ export const KeyValueGrid: React.FC<KeyValueProps> = ({ data, className }) => {
         </div>
     );
 };
-
+ 
 type UserBadge = {
     name: string;
     avatarUrl: string;
 };
-
+ 
 type UserBadgesProps = {
     title: string;
     users: UserBadge[];
 };
-
+ 
 export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     return (
         <div className="flex flex-col mb-[16px]">
@@ -84,11 +84,11 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
         </div>
     );
 };
-
+ 
 const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLeftProp) => {
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
-
+ 
     const setupOwners = async () => {
         try {
             if (requestData) {
@@ -117,13 +117,13 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                             }
                         }
                     }
-
+ 
                 })
                 setOwners(tempOwners)
             }
         } catch (err) { }
     }
-
+ 
     const setDocuments = async () => {
         try {
             if (requestData) {
@@ -134,12 +134,12 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
             }
         } catch (err) { }
     }
-
+ 
     useEffect(() => {
         setupOwners();
         setDocuments();
     }, [requestData])
-
+ 
     return (
         <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200">
             {requestData && <>
@@ -180,7 +180,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                         ]}
                     />
                 </div>
-
+ 
                 {/* Rfp Details */}
                 <div className="h-full" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Rfp Details</span></span>
@@ -204,11 +204,11 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                     <KeyValueGrid className="mb-[16px]"
                         data={[
                             { label: "Closing Date", value: dayjs(requestData?.closingDate).format("DD-MM-YYYY") },
-                            { label: "Closing Time", value: convertToAmPm(requestData?.closingTime) },
+                            { label: "Closing Time", value:dayjs(requestData?.closingDate).format("hh:mm A") },
                         ]}
                     />
                 </div>
-
+ 
                 {/* Ownership Details */}
                 <div className="h-full" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Ownership</span></span>
@@ -221,5 +221,5 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
         </div>
     )
 }
-
+ 
 export default RfpDetailLeft;

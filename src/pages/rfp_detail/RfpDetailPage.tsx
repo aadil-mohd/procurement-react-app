@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { getRfpByIdAsync } from "../../services/rfpService";
 import PageLoader from "../../components/basic_components/PageLoader";
 import RfpDetailRight from "../../components/rfp_request/rfp_details/RfpDetailRight";
+import RfpApproveReject from "../../components/rfp_request/rfp_details/RfpApproveReject";
 
 
 const RequestDetailPage: React.FC = () => {
@@ -19,6 +20,7 @@ const RequestDetailPage: React.FC = () => {
             console.log(id,"requestId")
             setUpdateRfpTrigger(false);
             const response = await getRfpByIdAsync(Number(id));
+            console.log(response);
             setRfpData(response);
         }
     }
@@ -31,7 +33,9 @@ const RequestDetailPage: React.FC = () => {
         <div className="desktop-wide:flex desktop-wide:justify-center">
             <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
                 {rfpData ? <><RfpDetailLeft requestData={rfpData} />
-                    <RfpDetailRight rfp={rfpData} trigger={()=>{}}/></> : <PageLoader />}
+                    {rfpData.isPublished ?<RfpDetailRight rfp={rfpData} trigger={()=>{}}/>:
+                    <RfpApproveReject rfpDetails={rfpData} trigger={()=>{}}/>}
+                        </> : <PageLoader />}
             </div>
         </div>
     )
