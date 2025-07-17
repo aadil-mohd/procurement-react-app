@@ -89,6 +89,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
+                  required={true}
                     id="tenderFee"
                     field="tenderFee"
                     value={requestData.tenderFee ?? ""}
@@ -124,6 +125,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
+                  required={true}
                     id="bidValue"
                     field="bidValue"
                     value={requestData.bidValue ?? ""}
@@ -153,6 +155,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
+                  required={true}
                     id="estimatedContractValue"
                     field="estimatedContractValue"
                     value={requestData.estimatedContractValue ?? ""}

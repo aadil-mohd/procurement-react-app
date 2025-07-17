@@ -86,6 +86,20 @@ export const getVendorApprovalFlowsByVendorIdAsync = async (id:string)=>{
     }
 }
 
+export const getRpfApprovalFlowsByIdAsync = async (id:string)=>{
+    try{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/ApprovelStepsByRfpIdAsync?rfpId=${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err:any){
+        throw err.response.data;
+        
+    }
+}
+
 export const getUserPendingApprovalsAsync = async ()=>{
     try{
         let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/GetUserPendingApprovals`,{
@@ -100,9 +114,9 @@ export const getUserPendingApprovalsAsync = async ()=>{
     }
 }
 
-export const approveVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number} ) => {
+export const approveVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number},type:string='vendor' ) => {
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/ApproveStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments?? null}`,data.criteriasCheckChanges,{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/ApproveStep/${data.stepId}?vendorOrRfpId=${data.vendorId}&comments=${data.comments?? null}&type=${type}`,data.criteriasCheckChanges,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }
@@ -113,9 +127,9 @@ export const approveVendorAsync= async (data:{stepId:number,approverEmail:string
     }
 }
 
-export const rejectVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number} ) => {
+export const rejectVendorAsync= async (data:{stepId:number,approverEmail:string,comments:string,criteriasCheckChanges:any[],vendorId:number},type:string='vendor' ) => {
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/RejectStep/${data.stepId}?vendorId=${data.vendorId}&comments=${data.comments ?? null}`,data.criteriasCheckChanges,{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Approvals/RejectStep/${data.stepId}?vendorOrRfpId=${data.vendorId}&comments=${data.comments?? null}&type=${type}`,data.criteriasCheckChanges,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }

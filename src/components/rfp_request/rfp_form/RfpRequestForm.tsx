@@ -1,5 +1,5 @@
 import { Steps, Button } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
@@ -13,12 +13,13 @@ import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpSe
 import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common";
 import { getAllCompaniesAsync } from "../../../services/companyService";
 
+
 const defaultRfpState: IRfp = {
   id: 0,
   rfpTitle: "",
   rfpDescription: "",
   buyerName: "",
-  buyer:[{name:getUserCredentials().name,id:getUserCredentials().userId}],
+  buyer: [{ name: getUserCredentials().name, id: getUserCredentials().userId }],
   buyerOrganizationName: "",
   departmentId: getUserCredentials().departmentId ? getUserCredentials().departmentId : "0",
   isOpen: false,
@@ -45,12 +46,14 @@ const { Step } = Steps;
 
 function RfpRequestFormComponent() {
   const [current, setCurrent] = useState(0);
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
   const [attachments, setAttachments] = useState<any[]>([]);
-  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies:[] });
+  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] });
+  const actionRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setupRfpFormAsync();
@@ -64,8 +67,7 @@ function RfpRequestFormComponent() {
       const companies = await getAllCompaniesAsync();
       setMasterData({
         users: users, departments: departments.data, categories, companies
-      });
-
+      })
       if (id && !isNaN(Number(id))) {
         try {
           const rfpRequest = await getRfpByIdAsync(Number(id));
@@ -121,8 +123,12 @@ function RfpRequestFormComponent() {
     setCurrent((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (actionRef.current?.value == "next") {
+      next();
+      return;
+    }
     try {
       const formData = new FormData();
       const formDataTemp: Record<string, any> = requestData;
@@ -149,18 +155,20 @@ function RfpRequestFormComponent() {
                 formData.append(`rfpOwners[${i}].ownerId`, item.id);
                 formData.append(`rfpOwners[${i}].rfpId`, formDataTemp.id);
                 i++;
-              });
-            } else if (key === "buyer") continue;
+                console.log(item, i, "commercial")
+              })
+            } else if (key == "buyer") continue;
             else {
               formData.append(key, value);
             }
           }
         }
       }
-      await createOrUpdateRfpAsync(formData);
-      navigate("/rfps");
+
+      const isCreated = await createOrUpdateRfpAsync(formData);
+      if (isCreated) navigate("/rfps");
     } catch (err) {
-      console.error(err);
+      console.log(err)
     }
   };
 
@@ -169,7 +177,7 @@ function RfpRequestFormComponent() {
   }, []);
 
   return (
-    <div className="w-full h-full mx-auto p-6 bg-white shadow relative">
+    <form onSubmit={handleSubmit} className="w-full h-full mx-auto p-6 bg-white shadow relative">
       <h1 className="text-2xl font-bold mb-6">Create RFP</h1>
       <div className="max-w-4xl mx-auto">
         <Steps current={current} size="small" className="mb-8 flex justify-center">
@@ -190,16 +198,21 @@ function RfpRequestFormComponent() {
           </Button>
         )}
         {current < steps.length - 1 ? (
-          <Button type="primary" onClick={next}>
+          <Button type="primary" htmlType="submit" onClick={() => {
+            if (actionRef.current) actionRef.current.value = "next";
+          }}>
             Next
           </Button>
         ) : (
-          <Button type="primary" onClick={(e) => handleSubmit(e)}>
+          <Button type="primary" htmlType="submit" onClick={() => {
+            if (actionRef.current) actionRef.current.value = "submit";
+          }}>
             Submit
           </Button>
         )}
       </div>
-    </div>
+      <input type="hidden" name="action" ref={actionRef} />
+    </form>
   );
 }
 

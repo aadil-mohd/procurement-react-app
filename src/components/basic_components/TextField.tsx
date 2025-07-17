@@ -18,7 +18,8 @@ const TextField = ({
   disablePrevDates = false,
   onKeyDown,
   maxLength,
-  step = true
+  step = true,
+  required = false
 }: ITextFieldProp) => {
   const [show, setShow] = useState<boolean>(type !== "password");
 
@@ -63,7 +64,7 @@ const TextField = ({
 
   return (
     <div
-      className={`flex flex-col p-2 rounded border relative ${type === "text" ? style : ""} ${disabled ? "bg-gray-100 border-gray-200 cursor-not-allowed" : "border-gray-300"
+      className={`flex flex-col p-2 rounded border relative ${style} ${type === "number" ? style : ""}  ${type === "password" ? style : ""} ${disabled ? "bg-gray-100 border-gray-200 cursor-not-allowed" : "border-gray-300"
         }`}
     >
       {/* Optional Title */}
@@ -72,6 +73,7 @@ const TextField = ({
       {/* Conditionally render input or textarea */}
       {type === "textarea" ? (
         <textarea
+          required={required}
           id={id || field} // Fallback to field name as id
           onFocus={handleFocus}
           value={value} // Bind value
@@ -86,6 +88,7 @@ const TextField = ({
       ) : type === "date" ? (
         <div className="relative">
           <input
+            required={required}
             onFocus={handleFocus}
             id={id || field} // Fallback to field name as id
             value={value} // Bind value
@@ -115,6 +118,7 @@ const TextField = ({
         //   aria-label={title || placeholder}
         // />
         <input
+          required={required}
           maxLength={maxLength}
           onFocus={handleFocus}
           onKeyDown={type === "number" ? (e) => handleNumberKeyDown(e) : undefined}
@@ -127,7 +131,7 @@ const TextField = ({
           disabled={disabled}
           className={`border-none outline-none h-full ${width} text-sm ${disabled ? "text-gray-400" : ""} ${type === "number" ? "hide-arrows" : ""}`}
           aria-label={title || placeholder}
-          step={step?"0.01":undefined}
+          step={step ? "0.01" : undefined}
         />
 
       )}

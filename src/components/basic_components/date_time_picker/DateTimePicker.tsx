@@ -5,13 +5,15 @@ interface IDateTimePicker {
     label: string;
     value: string;
     setValue: (val: string) => void;
+    required?:boolean;
 }
 
-export default function DateTimePicker({ label, value, setValue }: IDateTimePicker) {
+export default function DateTimePicker({ label, value, setValue ,required = false}: IDateTimePicker) {
     return (
         <div className="w-full">
             <label className="block text-sm font-medium mb-2">{label}</label>
             <DatePicker
+                required={required}
                 showTime={{ use12Hours: true }}
                 value={value ? dayjs(value) : null}
                 onChange={(val) => {
