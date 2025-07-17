@@ -21,11 +21,10 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Column 1 */}
-        <div className="flex justify-center md:border-r md:border-gray-300">
-          <div className="flex flex-col items-start  w-[400px]">
-
+        <div className="flex justify-center">
+          <div className="flex flex-col items-start w-[300px]">
             {/* Serial or Parallel */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">Serial or Parallel</label>
@@ -77,6 +76,42 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
               />
             </div>
 
+            {/* Tender Fee - moved here */}
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Tender Fee <span className="text-red-500">*</span>
+              </label>
+              <div className="flex">
+                <div className="border border-gray-300 rounded px-3 py-2 h-[34px] flex items-center bg-white text-sm">
+                  {convertCurrencyLabel(
+                    currencies.find((x) => x.value === requestData?.rfpCurrency)?.value || "USD"
+                  )}
+                </div>
+                <div className="ml-2 flex-1">
+                  <TextField
+                  required={true}
+                    id="tenderFee"
+                    field="tenderFee"
+                    value={requestData.tenderFee ?? ""}
+                    setValue={(value) =>
+                      setRequestData((prev: any) => ({
+                        ...prev,
+                        tenderFee: value,
+                      }))
+                    }
+                    placeholder="Enter amount"
+                    type="number"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Column 2 */}
+        <div className="flex justify-center">
+          <div className="flex flex-col items-start w-[300px]">
+
             {/* Bid Amount */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -90,6 +125,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
+                  required={true}
                     id="bidValue"
                     field="bidValue"
                     value={requestData.bidValue ?? ""}
@@ -119,6 +155,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
+                  required={true}
                     id="estimatedContractValue"
                     field="estimatedContractValue"
                     value={requestData.estimatedContractValue ?? ""}
@@ -132,15 +169,14 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                     type="number"
                   />
                 </div>
-
               </div>
             </div>
           </div>
         </div>
 
-        {/* Column 2 */}
+        {/* Column 3 */}
         <div className="flex justify-center">
-          <div className="flex flex-col items-start w-[400px]">
+          <div className="flex flex-col items-start w-[300px]">
 
             {/* Hide Contract Value From Vendor */}
             <div className="w-full mb-4">
@@ -165,8 +201,6 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
               />
             </div>
 
-
-
             {/* Is Tender Fee Applicable */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -188,35 +222,6 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                   }))
                 }
               />
-            </div>
-
-            {/* Tender Fee */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Tender Fee <span className="text-red-500">*</span>
-              </label>
-              <div className="flex">
-                <div className="border border-gray-300 rounded px-3 py-2 h-[34px] flex items-center bg-white text-sm">
-                  {convertCurrencyLabel(
-                    currencies.find((x) => x.value === requestData?.rfpCurrency)?.value || "USD"
-                  )}
-                </div>
-                <div className="ml-2 flex-1">
-                  <TextField
-                    id="tenderFee"
-                    field="tenderFee"
-                    value={requestData.tenderFee ?? ""}
-                    setValue={(value) =>
-                      setRequestData((prev: any) => ({
-                        ...prev,
-                        tenderFee: value,
-                      }))
-                    }
-                    placeholder="Enter amount"
-                    type="number"
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </div>

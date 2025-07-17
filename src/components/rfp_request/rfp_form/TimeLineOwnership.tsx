@@ -27,171 +27,139 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
         {/* Column 1 */}
-        <div className="flex justify-center md:border-r md:border-gray-300">
-          <div className="flex flex-col items-start  w-[400px]">
+        <div className="flex flex-col space-y-4 w-full">
+          {/* Express Interest LastDate */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Express Interest LastDate <span className="text-red-500">*</span>
+            </label>
+            <TextField
+            required={true}
+              id="expressInterestLastDate"
+              value={formatDate(requestData.expressInterestLastDate ?? "")}
+              setValue={(value: string) =>
+                setRequestData((prev: IRfp) => ({
+                  ...prev,
+                  expressInterestLastDate: value,
+                }))
+              }
+              placeholder="Enter interest last date"
+              type="date"
+              width="w-full"
+            />
+          </div>
 
-            {/* Express Interest LastDate */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Express Interest LastDate <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="expressInterestLastDate"
-                value={formatDate(requestData.expressInterestLastDate ?? "")}
-                setValue={(value: string) =>
-                  setRequestData((prev: IRfp) => ({
-                    ...prev,
-                    expressInterestLastDate: value,
-                  }))
-                }
-                placeholder="Enter interest last date"
-                type="date"
-                width="w-full"
-              />
-            </div>
+          {/* Response Due Date */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Response Due Date <span className="text-red-500">*</span>
+            </label>
+            <TextField
+            required={true}
+              id="responseDueDate"
+              value={formatDate(requestData.responseDueDate ?? "")}
+              setValue={(value: string) =>
+                setRequestData((prev: IRfp) => ({
+                  ...prev,
+                  responseDueDate: value,
+                }))
+              }
+              placeholder="Enter response due date"
+              type="date"
+              width="w-full"
+            />
+          </div>
 
-            {/* Response Due Date */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Response Due Date <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="responseDueDate"
-                value={formatDate(requestData.responseDueDate ?? "")}
-                setValue={(value: string) =>
-                  setRequestData((prev: IRfp) => ({
-                    ...prev,
-                    responseDueDate: value,
-                  }))
-                }
-                placeholder="Enter response due date"
-                type="date"
-                width="w-full"
-              />
-            </div>
-
-            {/* Buyer Reply End Date */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Buyer Reply End Date <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="buyerReplyEndDate"
-                value={formatDate(requestData.buyerReplyEndDate ?? "")}
-                setValue={(value: string) =>
-                  setRequestData((prev: IRfp) => ({
-                    ...prev,
-                    buyerReplyEndDate: value,
-                  }))
-                }
-                placeholder="Enter reply end date"
-                type="date"
-                width="w-full"
-              />
-            </div>
-
-            {/* Clarification End Date */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Clarification End Date <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="clarificationDate"
-                value={formatDate(requestData.clarificationDate ?? "")}
-                setValue={(value: string) =>
-                  setRequestData((prev: IRfp) => ({
-                    ...prev,
-                    clarificationDate: value,
-                  }))
-                }
-                placeholder="Enter clarification end date"
-                type="date"
-                width="w-full"
-              />
-            </div>
-
-            {/* Closing Date */}
-            {/* <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Closing Date <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="closingDate"
-                value={formatDate(requestData.closingDate ?? "")}
-                setValue={(value: string) =>
-                  setRequestData((prev: IRfp) => ({
-                    ...prev,
-                    closingDate: value,
-                  }))
-                }
-                placeholder="Enter closing date"
-                type="date"
-                width="w-full"
-              />
-            </div> */}
-
-            {/* Closing Time */}
-            {/* <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Closing Time <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="closingTime"
-                value={requestData.closingTime ?? ""}
-                setValue={(value: string) =>
-                  setRequestData((prev: IRfp) => ({
-                    ...prev,
-                    closingTime: value,
-                  }))
-                }
-                placeholder="Enter Closing Time like 21:00"
-                type="text"
-                width="w-full"
-              />
-            </div> */}
-
+          {/* Commercial Owners */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Commercial Owners</label>
+            <PeoplePicker
+              setValue={(value: any) =>
+                setOwners((prev: IRfp) => ({ ...prev, commercial: value }))
+              }
+              users={masterData.users}
+              value={owners.commercial}
+              placeholder="search.."
+            />
           </div>
         </div>
 
         {/* Column 2 */}
-        <div className="flex justify-center">
-          <div className="flex flex-col items-start w-[400px]">
+        <div className="flex flex-col space-y-4 w-full">
+          {/* Buyer Reply End Date */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Buyer Reply End Date <span className="text-red-500">*</span>
+            </label>
+            <TextField
+            required={true}
+              id="buyerReplyEndDate"
+              value={formatDate(requestData.buyerReplyEndDate ?? "")}
+              setValue={(value: string) =>
+                setRequestData((prev: IRfp) => ({
+                  ...prev,
+                  buyerReplyEndDate: value,
+                }))
+              }
+              placeholder="Enter reply end date"
+              type="date"
+              width="w-full"
+            />
+          </div>
 
-            <DateTimePicker
-              label="Closing Time & Date"
-              value={requestData.closingDate}
-              setValue={(val) => {
-                setRequestData((prev: any) => ({ ...prev, closingDate: val }))
-              }} />
-            {/* Technical Owners */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">Technical Owners</label>
-              <PeoplePicker
-                setValue={(value: any) =>
-                  setOwners((prev: IRfp) => ({ ...prev, technical: value }))
-                }
-                users={masterData.users}
-                value={owners.technical}
-                placeholder="search.."
-              />
-            </div>
-
-            {/* Commercial Owners */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">Commercial Owners</label>
-              <PeoplePicker
-                setValue={(value: any) =>
-                  setOwners((prev: IRfp) => ({ ...prev, commercial: value }))
-                }
-                users={masterData.users}
-                value={owners.commercial}
-                placeholder="search.."
-              />
-            </div>
+          {/* Clarification End Date */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Clarification End Date <span className="text-red-500">*</span>
+            </label>
+            <TextField
+            required={true}
+              id="clarificationDate"
+              value={formatDate(requestData.clarificationDate ?? "")}
+              setValue={(value: string) =>
+                setRequestData((prev: IRfp) => ({
+                  ...prev,
+                  clarificationDate: value,
+                }))
+              }
+              placeholder="Enter clarification end date"
+              type="date"
+              width="w-full"
+            />
           </div>
         </div>
+
+        {/* Column 3 */}
+        <div className="flex flex-col space-y-4 w-full">
+          {/* Closing Time & Date */}
+          <div>
+            <DateTimePicker
+              required={true}
+              label="Closing Time & Date"
+              value={requestData.closingDate}
+              setValue={(val) =>
+                setRequestData((prev: any) => ({ ...prev, closingDate: val }))
+              }
+            />
+          </div>
+
+          {/* Technical Owners */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Technical Owners</label>
+            <PeoplePicker
+              setValue={(value: any) =>
+                setOwners((prev: IRfp) => ({ ...prev, technical: value }))
+              }
+              users={masterData.users}
+              value={owners.technical}
+              placeholder="search.."
+            />
+          </div>
+        </div>
+
       </div>
     </div>
   );

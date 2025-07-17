@@ -1,5 +1,5 @@
 import { Steps, Button } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
@@ -41,7 +41,7 @@ const defaultRfpState: IRfp = {
   closingTime: "",
   rfpDocuments: [],
   rfpOwners: []
-}
+};
 
 const { Step } = Steps;
 
@@ -49,60 +49,54 @@ function RfpRequestFormComponent() {
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
 
-
   const navigate = useNavigate();
   const { id } = useParams();
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
-
   const [attachments, setAttachments] = useState<any[]>([]);
-
   const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [] });
-  const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
+  const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] });
+  const actionRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log(requestData, "requestData")
-  }, [requestData])
+    setupRfpFormAsync();
+  }, []);
 
   const setupRfpFormAsync = async () => {
     try {
       const users = await getAllUsersByFilterAsync();
       const departments = await getAllDepartmentsAsync();
-      const categories = await getAllCategoriesAsync()
+      const categories = await getAllCategoriesAsync();
       const companies = await getAllCompaniesAsync();
       setMasterData({
         users: users, departments: departments.data, categories, companies
       })
       if (id && !isNaN(Number(id))) {
         try {
-          console.log(id)
           const rfpRequest = await getRfpByIdAsync(Number(id));
           setRequestData({ ...rfpRequest, rfpDocuments: [] });
-          console.log(rfpRequest);
-          const ownersTemp: any = { technical: [], commercial: [] }
+          const ownersTemp: any = { technical: [], commercial: [] };
           rfpRequest.rfpOwners.forEach((item: any) => {
             const user: any = users.find((u: any) => u.id == item.ownerId);
-            console.log(user);
             if (user) {
               if (item.ownerType == 1) ownersTemp.technical.push(user);
               if (item.ownerType == 2) ownersTemp.commercial.push(user);
             }
           });
-          setOwners(ownersTemp)
-          const filesArray: any = []
+          setOwners(ownersTemp);
+          const filesArray: any = [];
           for (let filedetail of rfpRequest.rfpDocumentsPath) {
             const file = await fetchAndConvertToFile(filedetail?.filePath);
-            console.log(file)
             filesArray.push({ ...file, documentName: filedetail?.fileTitle });
           }
           setAttachments(filesArray);
         } catch (err) {
-
+          console.error(err);
         }
       }
     } catch (err) {
-
+      console.error(err);
     }
-  }
+  };
 
   const steps = [
     {
@@ -111,29 +105,17 @@ function RfpRequestFormComponent() {
     },
     {
       title: "RFP Details",
-      content: <RfpDetails
-        masterData={masterData} setRequestData={setRequestData} requestData={requestData}
-      />,
+      content: <RfpDetails masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
     },
     {
       title: "Timeline & Ownership",
-      content: <TimeLineOwnership
-        masterData={masterData} setRequestData={setRequestData} requestData={requestData}
-        owners={owners} setOwners={setOwners}
-      />,
+      content: <TimeLineOwnership masterData={masterData} setRequestData={setRequestData} requestData={requestData} owners={owners} setOwners={setOwners} />,
     },
     {
       title: "Attachments",
-      content: <AddAttachment
-        attachments={attachments} setAttachments={setAttachments}
-      />,
+      content: <AddAttachment attachments={attachments} setAttachments={setAttachments} />,
     }
   ];
-
-  useEffect(() => {
-    setupRfpFormAsync();
-  }, [])
-
 
   const next = () => {
     setCurrent((prev) => Math.min(prev + 1, steps.length - 1));
@@ -145,43 +127,31 @@ function RfpRequestFormComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const action = formData.get("action");
-    if (action === "next") {
-      // Validate current step
-      const errors = validateStep(current, requestData);
-      if (errors.length > 0) {
-        message.error(errors[0]); // or loop through all
-        return;
-      }
+    if (actionRef.current?.value == "next") {
       next();
+      return;
     }
-
     try {
-      console.log("Request Data:", requestData);
-      console.log("attachments:", attachments);
       const formData = new FormData();
-      const formDataTemp: Record<string, any> = requestData
+      const formDataTemp: Record<string, any> = requestData;
       formDataTemp.bidValue = Number(requestData.bidValue);
       formDataTemp.estimatedContractValue = Number(requestData.estimatedContractValue);
       for (var key in formDataTemp) {
         if (formDataTemp.hasOwnProperty(key)) {
           const value = formDataTemp[key];
           if (value != null) {
-            if (key == "rfpDocuments") {
-              console.log(attachments, "attachments")
+            if (key === "rfpDocuments") {
               attachments.forEach((item: any) => {
                 formData.append(key, item.document);
-              })
-            } else if (key == "rfpOwners") {
+              });
+            } else if (key === "rfpOwners") {
               let i = 0;
               owners.technical.forEach((item: any) => {
                 formData.append(`rfpOwners[${i}].ownerType`, "1");
                 formData.append(`rfpOwners[${i}].ownerId`, item.id);
                 formData.append(`rfpOwners[${i}].rfpId`, formDataTemp.id);
                 i++;
-                console.log(item, i, "technical")
-              })
+              });
               owners.commercial.forEach((item: any) => {
                 formData.append(`rfpOwners[${i}].ownerType`, "2");
                 formData.append(`rfpOwners[${i}].ownerId`, item.id);
@@ -204,16 +174,15 @@ function RfpRequestFormComponent() {
     }
   };
 
-
   useEffect(() => {
     setCurrent(0);
-  }, [])
+  }, []);
 
   return (
     <form onSubmit={handleSubmit} className="w-full h-full mx-auto p-6 bg-white shadow relative">
       <h1 className="text-2xl font-bold mb-6">Create RFP</h1>
-      <div className="max-w-4xl">
-        <Steps current={current} size="small" className="mb-8">
+      <div className="max-w-4xl mx-auto">
+        <Steps current={current} size="small" className="mb-8 flex justify-center">
           {steps.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}
@@ -231,17 +200,22 @@ function RfpRequestFormComponent() {
           </Button>
         )}
         {current < steps.length - 1 ? (
-          <Button type="primary" name="action" value="next" htmlType="submit">
+          <Button type="primary" htmlType="submit" onClick={() => {
+            if (actionRef.current) actionRef.current.value = "next";
+          }}>
             Next
           </Button>
         ) : (
-          <Button type="primary" name="action" value="submit" htmlType="submit">
+          <Button type="primary" htmlType="submit" onClick={() => {
+            if (actionRef.current) actionRef.current.value = "submit";
+          }}>
             Submit
           </Button>
         )}
       </div>
+      <input type="hidden" name="action" ref={actionRef} />
     </form>
   );
-};
+}
 
 export default RfpRequestFormComponent;
