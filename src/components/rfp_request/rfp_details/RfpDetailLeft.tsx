@@ -5,9 +5,11 @@ import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
+import { publishRfpAsync } from "../../../services/rfpService";
 
 interface RfpDetailLeftProp {
     requestData: any | undefined
+    trigger: () => void
 }
 
 
@@ -85,7 +87,7 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     );
 };
 
-const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLeftProp) => {
+const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: RfpDetailLeftProp) => {
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
 
@@ -219,7 +221,10 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData }: RfpDetailLe
                 </div>
             </>}
             {requestData?.status == 1 && getUserCredentials().userId == requestData?.createdBy.toString() && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">
-                <button className="bg-customBlue h-[36px] hover:bg-blue-400 text-sm text-white rounded px-1 py-1  w-[200px]" onClick={() => {}}>Publish now</button>
+                <button className="bg-customBlue h-[36px] hover:bg-blue-400 text-sm text-white rounded px-1 py-1  w-[200px]" onClick={() => {
+                    publishRfpAsync(requestData?.id)
+                    trigger();
+                }}>Publish now</button>
             </div>}
         </div>
     )

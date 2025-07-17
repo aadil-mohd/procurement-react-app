@@ -13,11 +13,11 @@ const RequestDetailPage: React.FC = () => {
 
     const { id } = useParams();
     const [rfpData, setRfpData] = useState<any>();
-    const [updateRfpTrigger,setUpdateRfpTrigger]= useState(false)
+    const [updateRfpTrigger, setUpdateRfpTrigger] = useState(false)
 
     const getRequestDetailData = async () => {
         if (id) {
-            console.log(id,"requestId")
+            console.log(id, "requestId")
             setUpdateRfpTrigger(false);
             const response = await getRfpByIdAsync(Number(id));
             console.log(response);
@@ -28,14 +28,14 @@ const RequestDetailPage: React.FC = () => {
 
     useEffect(() => {
         getRequestDetailData();
-    }, [updateRfpTrigger,id])
+    }, [updateRfpTrigger, id])
     return (
         <div className="desktop-wide:flex desktop-wide:justify-center">
             <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
-                {rfpData ? <><RfpDetailLeft requestData={rfpData} />
-                    {rfpData.isPublished ?<RfpDetailRight rfp={rfpData} trigger={()=>{}}/>:
-                    <RfpApproveReject rfpDetails={rfpData} trigger={()=>{}}/>}
-                        </> : <PageLoader />}
+                {rfpData ? <><RfpDetailLeft requestData={rfpData} trigger={() => { getRequestDetailData(); }} />
+                    {rfpData.isPublished ? <RfpDetailRight rfp={rfpData} trigger={() => { }} /> :
+                        <RfpApproveReject rfpDetails={rfpData} trigger={() => { }} />}
+                </> : <PageLoader />}
             </div>
         </div>
     )
