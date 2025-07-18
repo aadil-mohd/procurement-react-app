@@ -16,6 +16,7 @@ import RequestPage from '../pages/request_page/RequestPage';
 import RequestDetailPage from '../pages/rfp_detail/RfpDetailPage';
 import VendorPage from '../pages/vendor_page/VendorPage';
 import VendorDetailPage from '../pages/vendor_detail/VendorDetailPage';
+import UserProfilePage from '../pages/profile/UserProfilePage';
 
 interface procurementContextProp {
   countryCodes: ICountryCode[] | null;
@@ -134,6 +135,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/settings/department-managment" element={<SettingsPage />} />
                     <Route path="/settings/workflow-managment" element={<SettingsPage />} />
                     <Route path="/settings/roles-managment" element={<SettingsPage />} />
+                    <Route path="/profile" element={<UserProfilePage/>} />
                   </Routes>
                 ) : (
                   <div className="flex items-center justify-center h-full">
