@@ -2,29 +2,34 @@ import React from 'react';
 import { projectStatuses, milestoneStatuses, rfpStatuses } from '../../utils/constants';
 
 interface ShowStatusProps {
-  status: string;
-  type: 'proposal' | 'vendors' | 'rfps' ;
+  status: number;
+  type: 'proposal' | 'vendors' | 'rfps';
 }
 
 const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
   const getStatusClass = () => {
-    switch (status.toLowerCase()) {
+    switch (status) {
       // Common Statuses
-      case 'closed':
-        return 'bg-green-500/30 text-green-900 min-w-16';
-      case 'on_hold':
-      case 'delayed':
-        return 'bg-red-500/50 text-red-900 min-w-16';
-      case 'on_track':
-      case 'in_progress':
+
+      // case 'on_hold':
+      // case 'delayed':
+      //   return 'bg-red-500/50 text-red-900 min-w-16';
+      // case 'on_track':
+      case 1:
         return 'bg-blue-500/30 text-blue-900 min-w-16';
-      case 'not_started':
-      case 'open':
+      // case 'not_started':
+      // case 'open':
+      //   return 'bg-orange-500/40 text-orange-900 min-w-16';
+      case 0:
         return 'bg-orange-500/40 text-orange-900 min-w-16';
-      case 'approved':
-        return 'bg-green-500/40 text-green-900 min-w-16';
-      case 'rejected':
+      case 4:
+        return 'bg-orange-500/40 text-orange-900 min-w-16';
+      case 2:
         return 'bg-red-500/40 text-red-900 min-w-16';
+      case 5:
+        return 'bg-green-500/30 text-green-900 min-w-16';
+      case 6:
+        return 'bg-green-500/30 text-green-900 min-w-16';
       default:
         return 'bg-gray-500/30 text-gray-900 min-w-16';
     }
@@ -34,10 +39,10 @@ const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
   const getStatusLabel = () => {
     const statusList =
       type === 'proposal' ? projectStatuses :
-      type === 'vendors' ? milestoneStatuses :
-      rfpStatuses; // default to requestStatuses
+        type === 'vendors' ? rfpStatuses :
+          rfpStatuses; // default to requestStatuses
 
-    return statusList.find((e:any) => e.value === status)?.label || status;
+    return statusList.find((e: any) => e.value === status)?.label || status;
   };
 
   return (

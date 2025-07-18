@@ -57,7 +57,7 @@ function VendorPage() {
       setTotalCount(0)
       const modified_vendor_list: any[] = []
       vendors_list.forEach((item: any) => {
-        const tempItem = { ...item, ownerName: `${item?.firstName} ${item?.lastName}`, status: vendorStatusConverter(item?.status) as any };
+        const tempItem = { ...item, ownerName: `${item?.firstName} ${item?.lastName}` };
         if (item.status != 3) {
           if (set && set?.has(item.id)) modified_vendor_list.push(tempItem)
           else if (!set) modified_vendor_list.push(tempItem)

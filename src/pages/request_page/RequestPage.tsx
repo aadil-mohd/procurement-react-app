@@ -21,7 +21,7 @@ const tempfilter = {
 }
 
 function RequestPage() {
-  const commonColumns=['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'isOpen']
+  const commonColumns=['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'status']
   const [columns,setColumns] = useState(commonColumns);
   const [trigger, setTrigger] = useState(false);
   // const [hideDepartment,setHideDepartment]= useState(true);
@@ -35,7 +35,7 @@ function RequestPage() {
   const [defaultFilter,setDefaultFilter] = useState<IFilterDto>(tempfilter)
   const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
   const [showLoader] = useState<boolean>(false);
-  const [statusFilter, setStatusFilter] = useState<string>("All requests");
+  const [statusFilter, setStatusFilter] = useState<string>("All RFPs");
   const navigate = useNavigate();
 
   // const requestStatuses = [
@@ -77,12 +77,12 @@ function RequestPage() {
     if (statusFilter != tab) {
       let filterdata = filter;
 
-      if (tab == "All requests") {
+      if (tab == "All RFPs") {
         setColumns(commonColumns);
         // setHideDepartment(true);
         // setHideStatus(false)
         filterdata = { ...filterdata, fields: [] }
-      } else if (tab == "My requests") {
+      } else if (tab == "My RFPs") {
         setColumns(commonColumns);
         // setHideDepartment(false);
         // setHideStatus(false)
@@ -91,7 +91,7 @@ function RequestPage() {
         setColumns(commonColumns);
         // setHideDepartment(false);
         // setHideStatus(false)
-        // filterdata = { ...filterdata, fields: [{ columnName: "status", operator: "!=", value: "draft" }, { columnName: "assigned_capex", value: true }] }
+        filterdata = { ...filterdata, fields: [ { columnName: "assigned_rfps", value: true }] }
       } else {
         return;
         //setColumns(columns.filter(x=>x!="capexId"));
@@ -124,14 +124,14 @@ function RequestPage() {
     getRfpRequestFilter();
   }, [filter, trigger]);
 
-  const tabs = ["All requests", "My requests", "Draft requests"];
+  const tabs = ["All RFPs", "My RFPs", "Draft RFPs","Assigned"];
 
   return (
     <div className="desktop-wide:flex desktop-wide:justify-center">
       <div className="pt-[24px] px-[32px] h-full">
         {!showLoader ? <>
           <div className="flex items-center justify-between">
-            <div className="mb-2 text-xl font-bold">Requests</div>
+            <div className="mb-2 text-xl font-bold">RFPs</div>
             <div>
               <CreateButton name="Create RFP" onClick={onCreateRequest} />
               

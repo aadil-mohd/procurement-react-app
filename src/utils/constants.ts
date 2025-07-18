@@ -20,7 +20,7 @@ export const rfp_column_labels = {
     rfpTitle: 'RFP Title',
     buyerName: 'Buyer',
     estimatedContractValueLabel: 'Estd. Con Value',
-    isOpen: 'Status',
+    status: 'Status',
 };
 
 export const costSummuryColumnLabels = {
@@ -76,7 +76,12 @@ export const milestoneStatuses = [
 ]
 
 export const rfpStatuses = [
-    { label: "Open", value: "open" },
-    { label: "Closed", value: "closed" },
-    { label: "Draft", value: "draft" },
+    { label: "pending", value: 0 },
+    { label: "approved", value: 1 },
+    { label: "rejected", value: 2 },
+    { label: "under clarification", value: 3 },
+    { label: "under approval", value: 4 },
+    { label: "published", value: 5 },
+    { label: "closed", value: 6 },
+    
 ]

@@ -222,8 +222,10 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
             </>}
             {requestData?.status == 1 && getUserCredentials().userId == requestData?.createdBy.toString() && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">
                 <button className="bg-customBlue h-[36px] hover:bg-blue-400 text-sm text-white rounded px-1 py-1  w-[200px]" onClick={() => {
-                    publishRfpAsync(requestData?.id)
-                    trigger();
+                    async () => {
+                        await publishRfpAsync(requestData?.id)
+                        trigger();
+                    }
                 }}>Publish now</button>
             </div>}
         </div>

@@ -25,7 +25,7 @@ const defaultFilter: IFilterDto = {
 }
 
 function Dashboard() {
-  const commonColumns = ['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'isOpen']
+  const commonColumns = ['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'status']
 
   const [requestStatus, setRequestStatus] = useState([0, 0, 0]);
 

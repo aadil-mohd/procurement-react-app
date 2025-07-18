@@ -18,7 +18,7 @@ const defaultRfpState: IRfp = {
   id: 0,
   rfpTitle: "",
   rfpDescription: "",
-  buyerName: "",
+  buyerName: getUserCredentials().name,
   buyer: [{ name: getUserCredentials().name, id: getUserCredentials().userId }],
   buyerOrganizationName: "",
   departmentId: getUserCredentials().departmentId ? getUserCredentials().departmentId : "0",
