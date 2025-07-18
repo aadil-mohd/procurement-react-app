@@ -2,11 +2,15 @@ import React from "react";
 import { HiOutlineUpload } from "react-icons/hi"; // Install via `npm install react-icons`
 
 interface AddAttachmentProps {
+  id?:string
+  label?:string;
   setAttachments: React.Dispatch<React.SetStateAction<any[]>>;
   attachments: any[];
 }
 
 const AddAttachment: React.FC<AddAttachmentProps> = ({
+  id = "file-upload",
+  label = "Attachments",
   setAttachments,
   attachments,
 }) => {
@@ -33,7 +37,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
       <div className="flex items-start gap-4">
         {/* Left Section */}
         <div className="w-[280px]">
-          <h2 className="text-lg font-semibold">Attachments</h2>
+          <h2 className="text-lg font-semibold">{label}</h2>
         </div>
 
         {/* Right Section */}
@@ -60,7 +64,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
 
           {/* Upload Box */}
           <label
-            htmlFor="file-upload"
+            htmlFor={id}
             className="block w-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 rounded-lg cursor-pointer text-center py-8 px-4 transition"
           >
             <div className="flex flex-col items-center justify-center">
@@ -74,7 +78,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
               </span>
             </div>
             <input
-              id="file-upload"
+              id={id}
               type="file"
               accept=".pdf,.doc,.docx,.xls,.xlsx"
               className="hidden"

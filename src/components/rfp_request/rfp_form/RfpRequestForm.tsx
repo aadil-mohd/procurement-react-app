@@ -50,6 +50,7 @@ function RfpRequestFormComponent() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
+  const [technicalAttachments, setTechnicalAttachments] = useState<any[]>([]);
   const [attachments, setAttachments] = useState<any[]>([]);
   const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] });
@@ -111,7 +112,8 @@ function RfpRequestFormComponent() {
     },
     {
       title: "Attachments",
-      content: <AddAttachment attachments={attachments} setAttachments={setAttachments} />,
+      content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} />
+        <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} /></>,
     }
   ];
 
@@ -139,8 +141,16 @@ function RfpRequestFormComponent() {
           const value = formDataTemp[key];
           if (value != null) {
             if (key === "rfpDocuments") {
+              let i = 0;
+              technicalAttachments.forEach((item) => {
+                formData.append(`rfpDocuments[${i}].Document`, item.document);
+                formData.append(`rfpDocuments[${i}].DocumentType`, "Technical");
+                i++;
+              })             
               attachments.forEach((item: any) => {
-                formData.append(key, item.document);
+                formData.append(`rfpDocuments[${i}].Document`, item.document);
+                formData.append(`rfpDocuments[${i}].DocumentType`, "General");
+                i++;
               });
             } else if (key === "rfpOwners") {
               let i = 0;

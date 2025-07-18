@@ -161,7 +161,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
                     <CommonCard data={{
                         "Category": requestData?.categoryName ?? "-" as string,
                         "Purchase\u00A0Requisition\u00A0ID": requestData?.purchaseRequisitionId as string,
-                        "RFP Status": <ShowStatus type="rfps" status={requestData?.isOpen ? "open" : "closed"} />
+                        "RFP Status": <ShowStatus type="rfps" status={requestData?.status} />
                     }} className="mb-[16px]" />
                     <KeyValueGrid className="mb-[16px]"
                         data={[
