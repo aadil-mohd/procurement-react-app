@@ -1,4 +1,4 @@
-import { currencies } from "./constants";
+import { currencies, currenciesWithLabel } from "./constants";
 import Cookies from "js-cookie";
 
 export const getUserToken = (): string => {
@@ -8,6 +8,11 @@ export const getUserToken = (): string => {
 
 export const convertCurrencyLabel = (currencyType: string) => {
     const type = currencies.find(x => x.value === currencyType);
+    return type?.label;
+}
+
+export const convertCurrencyWithLabel = (currencyType: string) => {
+    const type = currenciesWithLabel.find(x => x.value === currencyType);
     return type?.label;
 }
 

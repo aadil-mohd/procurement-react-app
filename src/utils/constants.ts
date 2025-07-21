@@ -5,6 +5,13 @@ export const currencies = [
     { label: "₹", value: "INR" },
 ]
 
+export const currenciesWithLabel = [
+    { label: "$ (USD)", value: "USD" },
+    { label: "€ (EUR)", value: "EUR" },
+    { label: "£ (GBP)", value: "GBP" },
+    { label: "₹ (INR)", value: "INR" },
+]
+
 export const defaultFilter = {
     fields: [],
     pageNo: 0,

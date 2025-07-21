@@ -15,8 +15,8 @@ import { getAllRfpsByFilterAsync } from "../../services/rfpService";
 
 const defaultFilter: IFilterDto = {
   fields: [{
-    columnName: "isOpen",
-    value: false
+    columnName: "status",
+    value: 5
   }],
   sortColumn: "CreatedAt",
   sortDirection: "DESC",
@@ -86,7 +86,7 @@ function Dashboard() {
         switch (request.isOpen) {
           case false:
             statusCounts[0]++;
-            if (approvedRequests.length < 10) {
+            if (approvedRequests) {
               approvedRequests.push(request as any);
             }
             break;
@@ -219,7 +219,7 @@ function Dashboard() {
             </div>
           </div>
           <div className="w-full flex justify-center items-center px-[2rem] pt-[2rem]">
-            <Table filter={filter} setFilter={setFilter} title={"Closed RFPs"} setIsSortModalOpen={setIsSortModalOpen} columns={commonColumns} items={dashboardData.rfpRequests} columnLabels={rfp_column_labels} setIsFilterModalOpen={() => { }} setSearchQuery={setSearchQuery} totalCount={20} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} />
+            <Table filter={filter} setFilter={setFilter} title={"Published RFPs"} setIsSortModalOpen={setIsSortModalOpen} columns={commonColumns} items={dashboardData.rfpRequests} columnLabels={rfp_column_labels} setIsFilterModalOpen={() => { }} setSearchQuery={setSearchQuery} totalCount={20} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} />
           </div>
         </div>
 

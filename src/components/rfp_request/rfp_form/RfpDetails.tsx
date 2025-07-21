@@ -1,7 +1,7 @@
 import React, { SetStateAction } from "react";
 import SelectField from "../../basic_components/SelectField";
-import { currencies } from "../../../utils/constants";
-import { convertCurrencyLabel } from "../../../utils/common";
+import { currencies, currenciesWithLabel } from "../../../utils/constants";
+import { convertCurrencyLabel, convertCurrencyWithLabel } from "../../../utils/common";
 import TextField from "../../basic_components/TextField";
 
 interface RfpDetailsProps {
@@ -33,7 +33,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
           {/* Column 1 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Serial or Parallel */}
-            <div className="w-full mb-4">
+            <div className="w-full mb-8">
               <label className="block text-sm font-medium mb-2">Serial or Parallel</label>
               <div className="flex space-x-4">
                 {[{ title: 'Serial', value: true }, { title: 'Parallel', value: false }].map((option, i) => (
@@ -59,18 +59,18 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             {/* Currency */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
-                Currency <span className="text-red-500">*</span>
+                RFP Currency <span className="text-red-500">*</span>
               </label>
               <SelectField
                 id="rfpCurrency"
                 label=""
                 style="w-full"
                 value={
-                  convertCurrencyLabel(
-                    currencies.find((x) => x.value === requestData?.rfpCurrency)?.value || "USD"
+                  convertCurrencyWithLabel(
+                    currenciesWithLabel.find((x) => x.value === requestData?.rfpCurrency)?.value || "USD"
                   ) as string
                 }
-                options={(currencies || []).map((x) => ({
+                options={(currenciesWithLabel || []).map((x) => ({
                   label: <span className="text-md font-medium">{x.label}</span>,
                   value: x.value,
                 }))}
@@ -84,7 +84,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             </div>
 
             {/* Tender Fee */}
-            <div className="w-full mb-4">
+            {requestData?.isTenderFeeApplicable && <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
                 Tender Fee <span className="text-red-500">*</span>
               </label>
@@ -96,7 +96,8 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
-                  required={true}
+                    required={true}
+                    style=""
                     id="tenderFee"
                     field="tenderFee"
                     value={requestData.tenderFee ?? ""}
@@ -111,7 +112,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                   />
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* Column 2 */}
@@ -129,7 +130,8 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
-                  required={true}
+                    required={true}
+                    style=""
                     id="bidValue"
                     field="bidValue"
                     value={requestData.bidValue ?? ""}
@@ -159,7 +161,8 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
-                  required={true}
+                    required={true}
+                    style=""
                     id="estimatedContractValue"
                     field="estimatedContractValue"
                     value={requestData.estimatedContractValue ?? ""}
