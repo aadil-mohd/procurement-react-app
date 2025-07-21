@@ -7,6 +7,7 @@ import VendorDetailLeft from "../../components/vendors/vendor_details/VendorDeta
 import VendorDetailRight from "../../components/vendors/vendor_details/VendorDetailRight";
 import { getVendorsDetailsByIdAsync } from "../../services/vendorService";
 import { Vendor } from "../../types/vendorTypes";
+import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 
 const VendorDetailPage: React.FC = () => {
 
@@ -111,11 +112,15 @@ Embedded Systems`,
 
     return (
         <div className="desktop-wide:flex desktop-wide:justify-center">
-            <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
+            <div>
+                <CommonTitleCard/>
+                <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
                 {true ? <>
                     <VendorDetailLeft vendorDetails={vendorData} />
                     <VendorDetailRight vendorDetails={vendorData as any} trigger={() => { }} /></> : <PageLoader />}
             </div>
+            </div>
+            
         </div>
     )
 }

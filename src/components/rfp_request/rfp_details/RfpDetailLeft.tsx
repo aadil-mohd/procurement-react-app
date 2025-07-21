@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
 import { publishRfpAsync } from "../../../services/rfpService";
+import CreateButton from "../../buttons/CreateButton";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface RfpDetailLeftProp {
     requestData: any | undefined
@@ -90,6 +92,8 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
 const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: RfpDetailLeftProp) => {
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
+    const navigate = useNavigate();
+    const { id } = useParams();
 
     const setupOwners = async () => {
         try {
@@ -137,6 +141,14 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
         } catch (err) { }
     }
 
+    const onEditRequest = async () => {
+        try {
+            navigate(`/rfps/edit-rfp/${id}`)
+        } catch (error) {
+
+        }
+    }
+
     useEffect(() => {
         setupOwners();
         setDocuments();
@@ -147,7 +159,14 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
             {requestData && <>
                 {/* Project Name,ID */}
                 <div className="mb-[16px]" style={{ width: "504px" }}>
-                    <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.rfpTitle}</span>
+                    <div className="flex justify-between items-center">
+                        <>
+                            <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.rfpTitle}</span>
+                            <div>
+                                <CreateButton name="Edit RFP" onClick={onEditRequest} />
+                            </div>
+                        </>
+                    </div>
                     <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {requestData?.tenderNumber || "-"}</span>
                 </div>
                 {/* Description */}

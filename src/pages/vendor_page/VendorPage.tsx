@@ -7,6 +7,7 @@ import PageLoader from "../../components/basic_components/PageLoader";
 import { getAllVendorsAsync } from "../../services/vendorService";
 import { vendorStatusConverter } from "../../utils/common";
 import { getUserPendingApprovalsAsync } from "../../services/flowService";
+import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 
 const tempfilter = {
   nameFilter: ""
@@ -123,46 +124,50 @@ function VendorPage() {
 
   return (
     <div className="desktop-wide:flex desktop-wide:justify-center">
-      <div className="pt-[24px] px-[32px] h-full">
-        {!showLoader ? <>
-          <div className="flex items-center justify-between">
-            <div className="mb-2 text-xl font-bold">Vendors</div>
-            <div>
-              {/* <CreateButton name="Create request" onClick={onCreateRequest} /> */}
+      <div>
+        <CommonTitleCard />
+        <div className="pt-[24px] px-[32px] h-full">
+          {!showLoader ? <>
+            <div className="flex items-center justify-between">
+              <div className="mb-2 text-xl font-bold">Vendors</div>
+              <div>
+                {/* <CreateButton name="Create request" onClick={onCreateRequest} /> */}
+
+              </div>
 
             </div>
-
-          </div>
-          <div className="pt-[24px] flex justify-start mb-[16px]">
-            {tabs.map((tab, index) => (
-              <div className="flex items-center h-[37px]" key={tab}>
-                <div
-                  onClick={() => setupTab(tab)}
-                  className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
-                    ? "text-customBlue"
-                    : "text-black hover:text-customBlue"
-                    }`}
-                >
-                  {tab}
-                  <span
-                    className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
-                      ? "bg-customBlue"
-                      : "bg-transparent group-hover:bg-customBlue"
+            <div className="pt-[24px] flex justify-start mb-[16px]">
+              {tabs.map((tab, index) => (
+                <div className="flex items-center h-[37px]" key={tab}>
+                  <div
+                    onClick={() => setupTab(tab)}
+                    className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
+                      ? "text-customBlue"
+                      : "text-black hover:text-customBlue"
                       }`}
-                  ></span>
+                  >
+                    {tab}
+                    <span
+                      className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
+                        ? "bg-customBlue"
+                        : "bg-transparent group-hover:bg-customBlue"
+                        }`}
+                    ></span>
+                  </div>
+                  {index !== tabs.length - 1 && (
+                    <span className="mx-[12px] h-[37px] text-gray-400">|</span>
+                  )}
                 </div>
-                {index !== tabs.length - 1 && (
-                  <span className="mx-[12px] h-[37px] text-gray-400">|</span>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
 
-          <div className="ml-[10px]">
-            <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
-          </div></> : <PageLoader />}
+            <div className="ml-[10px]">
+              <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
+            </div></> : <PageLoader />}
+        </div>
       </div>
+
     </div>
   );
 }

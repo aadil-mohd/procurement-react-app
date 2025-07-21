@@ -16,3 +16,17 @@ export const getAllCompaniesAsync = async (data:any = {nameFilter: ""}) => {
         throw err.response.data;
     }
 }
+
+export const getCompanyById = async (id: any) => {
+  try {
+    const response = await axios.get(`${Urls.defaultUrl}/api/Company/GetCompanyById`, {
+      params: { companyId: id },
+      headers: {
+        Authorization: `Bearer ${getUserToken()}`
+      }
+    });
+    return response.data;
+  } catch (err: any) {
+    throw err.response?.data || err.message;
+  }
+};

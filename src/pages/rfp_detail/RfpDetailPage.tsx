@@ -7,6 +7,7 @@ import { getRfpByIdAsync } from "../../services/rfpService";
 import PageLoader from "../../components/basic_components/PageLoader";
 import RfpDetailRight from "../../components/rfp_request/rfp_details/RfpDetailRight";
 import RfpApproveReject from "../../components/rfp_request/rfp_details/RfpApproveReject";
+import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 
 
 const RequestDetailPage: React.FC = () => {
@@ -31,12 +32,16 @@ const RequestDetailPage: React.FC = () => {
     }, [updateRfpTrigger, id])
     return (
         <div className="desktop-wide:flex desktop-wide:justify-center">
-            <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
-                {rfpData ? <><RfpDetailLeft requestData={rfpData} trigger={() => { getRequestDetailData(); }} />
-                    {rfpData.isPublished ? <RfpDetailRight rfp={rfpData} trigger={() => { }} /> :
-                        <RfpApproveReject rfpDetails={rfpData} trigger={() => { }} />}
-                </> : <PageLoader />}
+            <div>
+                <CommonTitleCard />
+                <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
+                    {rfpData ? <><RfpDetailLeft requestData={rfpData} trigger={() => { getRequestDetailData(); }} />
+                        {rfpData.isPublished ? <RfpDetailRight rfp={rfpData} trigger={() => { }} /> :
+                            <RfpApproveReject rfpDetails={rfpData} trigger={() => { }} />}
+                    </> : <PageLoader />}
+                </div>
             </div>
+
         </div>
     )
 }

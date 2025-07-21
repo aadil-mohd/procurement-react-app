@@ -1,11 +1,18 @@
-import React from "react";
-import { HiOutlineUpload } from "react-icons/hi"; // Install via `npm install react-icons`
+import React, { useEffect } from "react";
+import { HiOutlineUpload } from "react-icons/hi";
+
+type AttachmentItem = {
+  document?: File;
+  documentName: string;
+  documentUrl?: string;
+};
 
 interface AddAttachmentProps {
-  id?:string
-  label?:string;
-  setAttachments: React.Dispatch<React.SetStateAction<any[]>>;
-  attachments: any[];
+  id?: string;
+  label?: string;
+  setAttachments: React.Dispatch<React.SetStateAction<AttachmentItem[]>>;
+  attachments: AttachmentItem[];
+  requestData: any;
 }
 
 const AddAttachment: React.FC<AddAttachmentProps> = ({
@@ -13,7 +20,26 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
   label = "Attachments",
   setAttachments,
   attachments,
+  requestData,
 }) => {
+  // Populate existing attachments when editing
+  useEffect(() => {
+    if (requestData?.rfpDocumentsPath?.length > 0) {
+      const mapped = requestData.rfpDocumentsPath.map((doc: any) => ({
+        documentName: doc.fileTitle,
+        documentUrl: doc.filePath,
+      }));
+
+      setAttachments((prev) => {
+        const existingNames = new Set(prev.map((a) => a.documentName));
+        const uniqueMapped = mapped.filter(
+          (item:any) => !existingNames.has(item.documentName)
+        );
+        return [...prev, ...uniqueMapped];
+      });
+    }
+  }, [requestData]);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
@@ -50,7 +76,18 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
                   key={index}
                   className="flex items-center gap-2 bg-white border border-gray-300 rounded px-3 py-2 shadow-sm text-sm text-gray-800"
                 >
-                  <span>{file.documentName}</span>
+                  {file.documentUrl ? (
+                    <a
+                      href={file.documentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline"
+                    >
+                      {file.documentName}
+                    </a>
+                  ) : (
+                    <span>{file.documentName}</span>
+                  )}
                   <button
                     onClick={() => removeFile(index)}
                     className="text-red-500 hover:text-red-700"
@@ -70,7 +107,9 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
             <div className="flex flex-col items-center justify-center">
               <HiOutlineUpload className="text-gray-500 text-2xl mb-2" />
               <p className="text-sm mt-1">
-                <span className="text-blue-600 font-semibold underline">Click to upload</span>
+                <span className="text-blue-600 font-semibold underline">
+                  Click to upload
+                </span>
                 <span className="text-gray-500"> or drag and drop</span>
               </p>
               <span className="text-xs text-gray-400 mt-1">
