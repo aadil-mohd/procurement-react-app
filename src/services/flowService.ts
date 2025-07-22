@@ -5,9 +5,9 @@ import { getUserToken } from "../utils/common";
 
   
 
-export const getApprovalFlowAsync= async (): Promise<any> => {
+export const getApprovalFlowAsync= async (type:string): Promise<any> => {
     try{
-        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/flow`,{
+        let response = await axios.get(`${Urls.defaultUrl}/api/Approvals/flow/${type}`,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }
@@ -46,9 +46,9 @@ export const createWorkFlowAsync= async (body:any ) => {
     }
 }
 
-export const editWorkFlowAsync= async (body:any,id:string ) => {
+export const editWorkFlowAsync= async (body:any) => {
     try{
-        let response = await axios.put(`${Urls.defaultUrl}/api/ApprovalFlows/${id}`,body,{
+        let response = await axios.put(`${Urls.defaultUrl}/api/Approvals/UpdateApprovalFlowAsync`,body,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }

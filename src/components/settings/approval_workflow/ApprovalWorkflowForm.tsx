@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, SetStateAction } from 'react';
 import TextField from '../../basic_components/TextField';
 import { IFilterDto, IModalProps } from '../../../types/commonTypes';
 import ApproverSearchDropdown from './ApproverSearchDropdown';
@@ -21,6 +21,7 @@ interface ApprovalFlowData {
     id?:number
     flowName: string;
     steps: ApprovalflowUsers[];
+    flowType:number
 }
 
 interface FormErrors {
@@ -32,6 +33,7 @@ interface IApprovalWorkflowForm extends IModalProps {
     type?: "edit" | "create";
     initialData?: any;
     onSubmit?: (data: ApprovalFlowData) => void;
+    seViewType: React.Dispatch<SetStateAction<"view" | "edit" | "create">>;
 }
 
 const defaultFilter = {
@@ -43,6 +45,7 @@ const defaultFilter = {
 }
 
 const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
+    seViewType,
     type = "create",
     initialData,
     trigger,
@@ -51,7 +54,8 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     const [formData, setFormData] = useState<ApprovalFlowData>({
         id:initialData?.id || 0,
         flowName: initialData?.flowName || "",
-        steps: initialData?.steps || []
+        steps: initialData?.steps || [],
+        flowType: initialData?.flowType || 0
     });
     const [errors, setErrors] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);
@@ -63,8 +67,10 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
 
     useEffect(() => {
         setFormData({
+            id: initialData?.id || 0,
             flowName: initialData?.flowName || "",
-            steps: initialData?.steps || []
+            steps: initialData?.steps || [],
+            flowType : initialData?.flowType
         });
     }, [initialData])
     useEffect(() => {
@@ -131,7 +137,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                     }
                 } else {
                     if (initialData) {
-                        let response = await editWorkFlowAsync(formData, initialData.id)
+                        let response = await editWorkFlowAsync(formData);
                         console.log(response)
                         notification.success({
                             message: "workflow updated successfully"
@@ -140,6 +146,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                 }
                 trigger();
                 closeModal();
+                seViewType("view")
 
             } catch (error: any) {
                 console.log(error);

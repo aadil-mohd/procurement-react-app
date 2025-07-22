@@ -15,8 +15,10 @@ interface ApprovalflowUsers {
 }
 
 interface ApprovalFlowData {
+    id?:number
     flowName: string;
     steps: ApprovalflowUsers[];
+    flowType:number;
 }
 
 interface ApproverSearchDropdownProps {

@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import userPhoto from '../../../assets/profile_photo/userPhoto.png';
+import { PenIcon } from 'lucide-react';
 
 
 interface ViewApprovalFlowProps {
     usersData: any[]
     flowDetails: any | null;
+    label:string;
     closeModal: () => void;
     trigger: () => void;
+    seViewType: React.Dispatch<SetStateAction<"view" | "edit" | "create">>;
 }
 
 const ViewApprovalFlow: React.FC<ViewApprovalFlowProps> = ({
+    label,
+    seViewType,
     usersData,
     flowDetails,
 }) => {
@@ -19,7 +24,7 @@ const ViewApprovalFlow: React.FC<ViewApprovalFlowProps> = ({
         <div className="w-full bg-white flex flex-col h-full ">
             <div className="px-4 py-3 flex-1 overflow-y-auto scrollbar">
                 <div className="mb-4">
-                    <h3 className="text-md font-semibold text-gray-900 mb-4">Approval Workflow</h3>
+                    <h3 className="flex justify-between px-2 text-md font-semibold text-gray-900 mb-4">{label}<span onClick={()=>seViewType("edit")}><PenIcon size={"1.2rem"}/></span></h3>
                     <div className="space-y-6">
                         {flowDetails && flowDetails.steps.map((s: any, index: number) => {
                             let user = usersData.find(u => u.email == s.

@@ -14,13 +14,7 @@ import { IUserDetails } from '../../../types/userTypes';
 import ViewApprovalFlow from './ViewApprovalFlowCard';
 import { getAllUsersByFilterAsync } from '../../../services/userService';
 
-const defaultFilterData = {
-  fields: [],
-  pageNo: 1,
-  pageSize: 10,
-  sortColumn: "CreatedAt",
-  sortOrder: "DESC",
-}
+const tabs = ["Vendor Approvalflow", "RFP Approvalflow"];
 
 const ApprovalWorkflow: React.FC = () => {
   const [trigger, setTrigger] = useState(false);
@@ -30,15 +24,13 @@ const ApprovalWorkflow: React.FC = () => {
   const [usersData, setUsersData] = useState<IUserDetails[] | null>(null);
   const [workflow, setWorkflow] = useState<any>();
   const [viewType, seViewType] = useState<"view" | "edit" | "create">("view");
-
-  const [filter, ] = useState<IFilterDto>(defaultFilterData);
-
+  const [statusFilter, setStatusFilter] = useState<string>("Vendor Approvalflow");
 
   const setWorkflowsData = async () => {
     try {
       try {
-        const response = await getApprovalFlowAsync();
-        console.log(response, "response")
+        const response = await getApprovalFlowAsync(statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp");
+        console.log(response, "response-approv")
         setWorkflow(response);
       } catch (err) {
         seViewType("create");
@@ -54,10 +46,17 @@ const ApprovalWorkflow: React.FC = () => {
     }
   };
 
+  async function setupTab(tab: string) {
+    if (statusFilter != tab) {
+      setStatusFilter(tab);
+    }
+  }
+
 
   useEffect(() => {
     setWorkflowsData();
-  }, [filter, trigger]);
+    setWorkflow(undefined);
+  }, [statusFilter,trigger]);
 
   return (
     <div className="bg-bgBlue">
@@ -66,19 +65,45 @@ const ApprovalWorkflow: React.FC = () => {
 
       </div>
 
+      <div className="px-[24px] flex justify-start mb-[16px]">
+        {tabs.map((tab, index) => (
+          <div className="flex items-center h-[37px]" key={tab}>
+            <div
+              onClick={() => setupTab(tab)}
+              className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
+                ? "text-customBlue"
+                : "text-black hover:text-customBlue"
+                }`}
+            >
+              {tab}
+              <span
+                className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
+                  ? "bg-customBlue"
+                  : "bg-transparent group-hover:bg-customBlue"
+                  }`}
+              ></span>
+            </div>
+            {index !== tabs.length - 1 && (
+              <span className="mx-[12px] h-[37px] text-gray-400">|</span>
+            )}
+          </div>
+        ))}
+      </div>
 
-      {viewType == "view" ? <ViewApprovalFlow flowDetails={workflow as any} usersData={usersData || []}
+      {viewType == "view" ? <ViewApprovalFlow label={statusFilter} seViewType={seViewType} flowDetails={workflow as any} usersData={usersData || []}
         closeModal={() => setIsCreateModalOpen(false)}
         trigger={() => { }}
       />
         :
         <ApprovalWorkflowForm
+        seViewType={seViewType}
           type={viewType as any}
           closeModal={() => setIsCreateModalOpen(false)}
           trigger={() => { setTrigger(true) }}
           initialData={workflow}
         />
       }
+
     </div>
   );
 };
