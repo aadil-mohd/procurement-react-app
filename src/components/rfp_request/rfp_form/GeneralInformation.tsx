@@ -134,7 +134,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 style="w-full"
                 value={
                   masterData?.departments?.find(
-                    (x: any) => x?.id.toString() === requestData?.departmentId
+                    (x: any) => x?.id === requestData?.departmentId
                   )?.departmentName || "Buyer department"
                 }
                 options={(masterData?.departments || []).map((x: any) => ({

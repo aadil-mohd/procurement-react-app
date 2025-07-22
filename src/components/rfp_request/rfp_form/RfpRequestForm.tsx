@@ -12,6 +12,13 @@ import TimeLineOwnership from "./TimeLineOwnership";
 import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpService";
 import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common";
 import { getAllCompaniesAsync } from "../../../services/companyService";
+import CommonTitleCard from "../../basic_components/CommonTitleCard";
+
+type RfpType = 'create' | 'edit';
+
+interface RfpRequestFormProps {
+  type?: RfpType; // optional, will default to 'create'
+}
 
 
 const defaultRfpState: IRfp = {
@@ -44,7 +51,7 @@ const defaultRfpState: IRfp = {
 
 const { Step } = Steps;
 
-function RfpRequestFormComponent() {
+function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
   const [current, setCurrent] = useState(0);
 
   const navigate = useNavigate();
@@ -88,6 +95,10 @@ function RfpRequestFormComponent() {
             filesArray.push({ ...file, documentName: filedetail?.fileTitle });
           }
           setAttachments(filesArray);
+
+          console.log(requestData,"RequestData")
+          console.log(ownersTemp,"ownersTemp")
+          console.log(attachments,"attachements")
         } catch (err) {
           console.error(err);
         }
@@ -112,8 +123,8 @@ function RfpRequestFormComponent() {
     },
     {
       title: "Attachments",
-      content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} />
-        <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} /></>,
+      content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} requestData={requestData}/>
+        <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} requestData={requestData}/></>,
     }
   ];
 
@@ -187,8 +198,10 @@ function RfpRequestFormComponent() {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit} className="w-full h-full mx-auto p-6 bg-white shadow relative">
-      <h1 className="text-2xl font-bold mb-6">Create RFP</h1>
+    <div>
+      <CommonTitleCard/>
+      <form onSubmit={handleSubmit} className="w-full h-full mx-auto p-6 bg-white shadow relative">
+      <h1 className="text-2xl font-bold mb-6">{type=="create"?"Create":"Edit"} RFP</h1>
       <div className="max-w-4xl mx-auto">
         <Steps current={current} size="small" className="mb-8 flex justify-center">
           {steps.map((item) => (
@@ -223,6 +236,8 @@ function RfpRequestFormComponent() {
       </div>
       <input type="hidden" name="action" ref={actionRef} />
     </form>
+    </div>
+    
   );
 }
 

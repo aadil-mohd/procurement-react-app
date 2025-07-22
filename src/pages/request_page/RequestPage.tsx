@@ -11,6 +11,7 @@ import PageLoader from "../../components/basic_components/PageLoader";
 import { useNavigate } from "react-router-dom";
 import { getAllRfpsByFilterAsync } from "../../services/rfpService";
 import { convertCurrencyLabel, getUserCredentials } from "../../utils/common";
+import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 
 const tempfilter = {
   fields: [],
@@ -21,8 +22,8 @@ const tempfilter = {
 }
 
 function RequestPage() {
-  const commonColumns=['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'status']
-  const [columns,setColumns] = useState(commonColumns);
+  const commonColumns = ['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'status']
+  const [columns, setColumns] = useState(commonColumns);
   const [trigger, setTrigger] = useState(false);
   // const [hideDepartment,setHideDepartment]= useState(true);
   // const [hideStatus,setHideStatus]= useState(false);
@@ -32,7 +33,7 @@ function RequestPage() {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableName, setTableName] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [defaultFilter,setDefaultFilter] = useState<IFilterDto>(tempfilter)
+  const [defaultFilter, setDefaultFilter] = useState<IFilterDto>(tempfilter)
   const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
   const [showLoader] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>("All RFPs");
@@ -62,10 +63,10 @@ function RequestPage() {
   const getRfpRequestFilter = async (filterDto: IFilterDto = filter) => {
     try {
       //setShowLoader(true);
-      let capex_request_responese:any = await getAllRfpsByFilterAsync(filterDto)
+      let capex_request_responese: any = await getAllRfpsByFilterAsync(filterDto)
       //setShowLoader(false);
       setTotalCount(0)
-      let data:any = capex_request_responese.map((r:any)=>({...r,estimatedContractValueLabel:`${convertCurrencyLabel(r.rfpCurrency as string)}${r.estimatedContractValue?.toFixed(2)}`}));;
+      let data: any = capex_request_responese.map((r: any) => ({ ...r, estimatedContractValueLabel: `${convertCurrencyLabel(r.rfpCurrency as string)}${r.estimatedContractValue?.toFixed(2)}` }));;
       setRfpRequests(data);
       setTrigger(false);
     } catch (err) {
@@ -91,7 +92,7 @@ function RequestPage() {
         setColumns(commonColumns);
         // setHideDepartment(false);
         // setHideStatus(false)
-        filterdata = { ...filterdata, fields: [ { columnName: "assigned_rfps", value: true }] }
+        filterdata = { ...filterdata, fields: [{ columnName: "assigned_rfps", value: true }] }
       } else {
         return;
         //setColumns(columns.filter(x=>x!="capexId"));
@@ -124,50 +125,53 @@ function RequestPage() {
     getRfpRequestFilter();
   }, [filter, trigger]);
 
-  const tabs = ["All RFPs", "My RFPs", "Draft RFPs","Assigned"];
+  const tabs = ["All RFPs", "My RFPs", "Draft RFPs", "Assigned"];
 
   return (
     <div className="desktop-wide:flex desktop-wide:justify-center">
-      <div className="pt-[24px] px-[32px] h-full">
-        {!showLoader ? <>
-          <div className="flex items-center justify-between">
-            <div className="mb-2 text-xl font-bold">RFPs</div>
-            <div>
-              <CreateButton name="Create RFP" onClick={onCreateRequest} />
-              
+      <div>
+        <CommonTitleCard />
+        <div className="pt-[24px] px-[32px] h-full">
+          {!showLoader ? <>
+            <div className="flex items-center justify-between">
+              <div className="mb-2 text-xl font-bold">RFPs</div>
+              <div>
+                <CreateButton name="Create RFP" onClick={onCreateRequest} />
+
+              </div>
+
+            </div>
+            <div className="pt-[24px] flex justify-start mb-[16px]">
+              {tabs.map((tab, index) => (
+                <div className="flex items-center h-[37px]" key={tab}>
+                  <div
+                    onClick={() => setupTab(tab)}
+                    className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
+                      ? "text-customBlue"
+                      : "text-black hover:text-customBlue"
+                      }`}
+                  >
+                    {tab}
+                    <span
+                      className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
+                        ? "bg-customBlue"
+                        : "bg-transparent group-hover:bg-customBlue"
+                        }`}
+                    ></span>
+                  </div>
+                  {index !== tabs.length - 1 && (
+                    <span className="mx-[12px] h-[37px] text-gray-400">|</span>
+                  )}
+                </div>
+              ))}
             </div>
 
-          </div>
-          <div className="pt-[24px] flex justify-start mb-[16px]">
-            {tabs.map((tab, index) => (
-              <div className="flex items-center h-[37px]" key={tab}>
-                <div
-                  onClick={() => setupTab(tab)}
-                  className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
-                    ? "text-customBlue"
-                    : "text-black hover:text-customBlue"
-                    }`}
-                >
-                  {tab}
-                  <span
-                    className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
-                      ? "bg-customBlue"
-                      : "bg-transparent group-hover:bg-customBlue"
-                      }`}
-                  ></span>
-                </div>
-                {index !== tabs.length - 1 && (
-                  <span className="mx-[12px] h-[37px] text-gray-400">|</span>
-                )}
-              </div>
-            ))}
-          </div>
 
-
-          <div className="ml-[10px]">
-            <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={()=>{}} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} />
-            {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
-          </div></> : <PageLoader />}
+            <div className="ml-[10px]">
+              <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={() => { }} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} />
+              {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+            </div></> : <PageLoader />}
+        </div>
       </div>
     </div>
   );

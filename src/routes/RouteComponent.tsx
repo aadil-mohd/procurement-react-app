@@ -128,7 +128,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/rfps" element={<RequestPage />} />
                     <Route path="/rfps/:id" element={<RequestDetailPage />} />
                     <Route path="/rfps/create-rfp" element={<RfpRequestFormComponent />} />
-                    <Route path="/rfps/edit-rfp/:id" element={<RfpRequestFormComponent />} />
+                    <Route path="/rfps/edit-rfp/:id" element={<RfpRequestFormComponent type='edit' />} />
                     <Route path="/vendors" element={<VendorPage />} />
                     <Route path="/vendors/:id" element={<VendorDetailPage />} />
                     <Route path="/settings/user-managment" element={<SettingsPage />} />
