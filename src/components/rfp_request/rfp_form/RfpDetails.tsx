@@ -86,7 +86,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             {/* Bid Amount */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
-                Bid Amount <span className="text-red-500">*</span>
+                Bid Amount
               </label>
               <div className="flex">
                 <div className="border border-gray-300 rounded px-3 py-2 h-[34px] flex items-center bg-white text-sm">
@@ -96,7 +96,6 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 </div>
                 <div className="ml-2 flex-1">
                   <TextField
-                    required={true}
                     style=""
                     id="bidValue"
                     field="bidValue"
