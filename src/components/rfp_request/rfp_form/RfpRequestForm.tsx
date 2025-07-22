@@ -123,8 +123,9 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
     },
     {
       title: "Attachments",
-      content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} requestData={requestData}/>
-        <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} requestData={requestData}/></>,
+      content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} type="technical" requestData={requestData.rfpTechnicalDocuments
+}/>
+        <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} type="general" requestData={requestData.rfpGeneralDocuments}/></>,
     }
   ];
 

@@ -14,3 +14,30 @@ export const getAllCategoriesAsync = async()=>{
 
     }
 }
+
+export const deleteCategoryAsync = async(id:any)=>{
+    try{
+        let response = await axios.delete(`${Urls.defaultUrl}/api/Category/${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        });
+        return response.data;
+    }catch(err){
+
+    }
+}
+
+export const createOrUpdateCategoryAsync = async (categoryData: any) => {
+  try {
+    const response = await axios.post(`${Urls.defaultUrl}/api/Category`, categoryData, {
+      headers: {
+        Authorization: `Bearer ${getUserToken()}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    throw err.response?.data || err;
+  }
+};

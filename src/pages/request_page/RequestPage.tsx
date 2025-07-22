@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Button, notification } from 'antd';
+import { Modal as AntdModal } from 'antd';
 import Table from "../../components/basic_components/Table";
 import { IFilterDto } from "../../types/commonTypes";
 // import Cookies from "js-cookie";
@@ -9,9 +11,10 @@ import CreateButton from "../../components/buttons/CreateButton";
 import PageLoader from "../../components/basic_components/PageLoader";
 // import { convertCurrencyLabel } from "../../utils/common";
 import { useNavigate } from "react-router-dom";
-import { getAllRfpsByFilterAsync } from "../../services/rfpService";
+import { createOrUpdateRfpAsync, deleteRfpByIdAsync, getAllRfpsByFilterAsync } from "../../services/rfpService";
 import { convertCurrencyLabel, getUserCredentials } from "../../utils/common";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
+import { IRfp } from "../../types/rfpTypes";
 
 const tempfilter = {
   fields: [],
@@ -37,6 +40,9 @@ function RequestPage() {
   const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
   const [showLoader] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>("All RFPs");
+  const [selectedRfp, setSelectedRfp] = useState<IRfp>();
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "block", rfp: IRfp } | null>(null);
   const navigate = useNavigate();
 
   // const requestStatuses = [
@@ -121,6 +127,52 @@ function RequestPage() {
     console.log(searchQuery, "searchquery after fetch")
   };
 
+  const handleThreeDots = (type: "edit" | "delete" | "block", rfp: IRfp) => {
+    console.log(rfp)
+    setSelectedRfp(rfp)
+    if (type === "edit") {
+      navigate(`/rfps/edit-rfp/${rfp.id}`);
+    } else {
+      setConfirmAction({ type, rfp });
+      setIsConfirmModalOpen(true);
+    }
+  };
+
+  const handleConfirmAction = async () => {
+    try {
+      if (confirmAction?.type === "delete") {
+        console.log("here delete")
+        const response = await deleteRfpByIdAsync(confirmAction.rfp.id as number);
+        if (response) {
+          setTrigger(true);
+        }
+      } else if (confirmAction?.type === "block") {
+        // const formData = new FormData();
+        // formData.append("id", confirmAction.user.id as string);
+        // formData.append("isActive", (!confirmAction.user.isActive).toString());
+        const formData = {
+          id: confirmAction.rfp.id,
+          status: "hold", // setting RFP status to "hold"
+        };
+        const response = await createOrUpdateRfpAsync(formData)
+        if (response) {
+          setTrigger(true);
+        }
+      }
+      notification.success({
+        message: `User ${confirmAction?.type == "delete" ? "deletion" : "action"} successfull`
+      })
+
+    } catch (error: any) {
+      notification.error({
+        message: `${confirmAction?.type} error`,
+        description: error.message
+      })
+    }
+
+    setIsConfirmModalOpen(false);
+  };
+
   useEffect(() => {
     getRfpRequestFilter();
   }, [filter, trigger]);
@@ -168,8 +220,35 @@ function RequestPage() {
 
 
             <div className="ml-[10px]">
-              <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={() => { }} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} />
+              <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={() => { }} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} dots setEditOption={(user) => handleThreeDots("edit", user)}
+                setDeleteOption={(user) => handleThreeDots("delete", user)} setBlockOption={(user) => handleThreeDots("block", user)} />
               {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+
+              <AntdModal
+                title={confirmAction?.type === "delete" ? "Confirm Delete" : "Confirm Block"}
+                open={isConfirmModalOpen}
+                onCancel={() => setIsConfirmModalOpen(false)}
+                footer={[
+                  <Button key="cancel" onClick={() => setIsConfirmModalOpen(false)}>
+                    Cancel
+                  </Button>,
+                  <Button
+                    key="confirm"
+                    type="primary"
+                    danger={confirmAction?.type === "delete"}
+                    onClick={handleConfirmAction}
+                  >
+                    {confirmAction?.type === "delete" ? "Delete" : "Block"}
+                  </Button>,
+                ]}
+              >
+                <p>
+                  Are you sure you want to{" "}
+                  {confirmAction?.type === "delete" ? "delete" : "block"} this rfp?
+                </p>
+              </AntdModal>
+
+
             </div></> : <PageLoader />}
         </div>
       </div>

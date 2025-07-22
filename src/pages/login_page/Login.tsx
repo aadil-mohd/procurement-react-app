@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { LoginComponent } from "../../components/login/LoginComponent";
 import backgroundImage from "../../assets/login/login_background_image.jpg";
-import ProcurementLogo from "../../assets/procurement_logo/procurement-logo.svg";
+import ProcurementLogo from "../../assets/procurement_logo/procurement-logo.png";
 
 // Fixing the prop type for setExpenditureTypes
 interface LoginProps {

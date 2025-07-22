@@ -82,3 +82,16 @@ export const updateProposalStatusAsync = async(proposalId : number,status : "Pen
         console.log(err);
     }
 }
+
+export const deleteRfpByIdAsync = async(id:any)=>{
+    try{
+        const response = await axios.delete(`${Urls.defaultUrl}/api/Rfps/${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}

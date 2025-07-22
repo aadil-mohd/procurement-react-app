@@ -23,5 +23,7 @@ export interface IRfp {
     closingDate?: string
     closingTime?: string
     rfpDocuments: any[]
+    rfpTechnicalDocuments?:any[]
+    rfpGeneralDocuments?:any[]
     rfpOwners: any[]
 }

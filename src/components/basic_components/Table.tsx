@@ -64,15 +64,15 @@ const Table: React.FC<TableProps> = ({
   //     setPages([]);
   //   }
   // }, [totalCount, pageSize]);
-  useEffect(()=>{
+  useEffect(() => {
 
-  },[totalCount])
+  }, [totalCount])
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page !== currentPage && setFilter) {
       setFilter((prev) => ({ ...prev, pageNo: page }));
     }
-    trigger && trigger(); 
+    trigger && trigger();
   };
 
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
@@ -147,7 +147,7 @@ const Table: React.FC<TableProps> = ({
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">{title}</h2>
           <div className="flex space-x-2">
-        {setSearchQuery && <div className="relative w-[219px] h-[32px]">
+            {setSearchQuery && <div className="relative w-[219px] h-[32px]">
               <MagnifyingGlass className="absolute w-6 h-6 left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -156,18 +156,18 @@ const Table: React.FC<TableProps> = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>}
-            {filter &&  <button
+            {filter && <button
               className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
               onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
             >
               <FilterIcon className="size-6 mr-2" /> Filter
-            </button>} 
+            </button>}
             {setIsSortModalOpen && <button
               className="px-3 py-2 w-[75px] h-[32px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
               onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
             >
               <SortIcon className="size-6 mr-2" /> Sort
-            </button>}       
+            </button>}
           </div>
         </div>
 
@@ -196,13 +196,15 @@ const Table: React.FC<TableProps> = ({
                         {col === 'status' ? <ShowStatus status={item[col]} type={type} /> : item[col]}
                       </td>
                     ))}
-                    {dots && (
-                      <td className="px-6 py-2 border-b text-xs" onClick={(e) => e.stopPropagation()}>
+
+                    <td className="px-6 py-2 border-b text-xs" onClick={(e) => e.stopPropagation()}>
+                      {dots && item.status == 0 && (
                         <button onClick={(e) => toggleDropdown(index, e)} className="focus:outline-none">
                           <EllipsisVerticalIcon className="w-4 h-4 stroke-gray-600" />
                         </button>
-                      </td>
-                    )}
+                      )}
+                    </td>
+
                   </tr>
                 ))
               ) : (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { NavItem } from "../../types/Types";
-import procurementLogo from "../../assets/procurement_logo/procurement-logo.svg";
+import procurementLogo from "../../assets/procurement_logo/procurement-logo.png";
 import {
   BellIcon,
   ClipboardIcon,
@@ -197,7 +197,7 @@ const Sidebar = ({ notifications,trigger }: SidebarProp) => {
         <section className="space-y-2">
           {/* Logo */}
           <div className="my-[32px] flex items-center justify-center">
-            <img src={procurementLogo} alt="Logo" className="w-[34px] h-[34px]" />
+            <img src={procurementLogo} alt="Logo" className="w-[36px] h-[36px]" />
           </div>
 
           {/* Navigation Links */}

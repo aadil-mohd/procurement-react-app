@@ -132,6 +132,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/vendors" element={<VendorPage />} />
                     <Route path="/vendors/:id" element={<VendorDetailPage />} />
                     <Route path="/settings/user-managment" element={<SettingsPage />} />
+                    <Route path="/settings/category-managment" element={<SettingsPage />} />
                     <Route path="/settings/department-managment" element={<SettingsPage />} />
                     <Route path="/settings/workflow-managment" element={<SettingsPage />} />
                     <Route path="/settings/roles-managment" element={<SettingsPage />} />

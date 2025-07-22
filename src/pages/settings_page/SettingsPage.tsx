@@ -5,9 +5,11 @@ import ApprovalWorkflow from '../../components/settings/approval_workflow/Approv
 import UserManagement from '../../components/settings/user_managment/UserManagment';
 import RolesPermissions from '../../components/settings/roles_and_permissions/RolesPermissions';
 import CommonTitleCard from '../../components/basic_components/CommonTitleCard';
+import CategoryManagment from '../../components/settings/category_managment/CategoryManagment';
 
 type SettingsSection =
   | 'User management'
+  | 'Category management'
   | 'Manage department'
   | 'Roles & permissions'
   | 'Approval workflow'
@@ -26,6 +28,7 @@ const SettingsPage = () => {
 
   const navigationItems: SettingsRoute[] = [
     { name: 'User management', path: '/settings/user-managment' },
+    { name: 'Category management', path: '/settings/category-managment' },
     { name: 'Manage department', path: '/settings/department-managment' },
     { name: 'Roles & permissions', path: '/settings/roles-managment' },
     { name: 'Approval workflow', path: '/settings/workflow-managment' },
@@ -64,6 +67,8 @@ const SettingsPage = () => {
     switch (activeSection) {
       case 'User management':
         return <UserManagement />;
+      case 'Category management':
+        return <CategoryManagment />;
         return <></>;
       case 'Manage department':
         return <DepartmentManagment />;

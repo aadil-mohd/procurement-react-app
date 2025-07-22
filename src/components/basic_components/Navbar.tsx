@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import procurementLogo from "../../assets/procurement_logo/procurement-logo.svg";
+import procurementLogo from "../../assets/procurement_logo/procurement-logo.png";
 import {
   BellIcon,
   ClipboardIcon,

@@ -5,7 +5,7 @@ interface SettingsSortModalProps {
   filter: IFilterDto;
   setFilter: React.Dispatch<React.SetStateAction<IFilterDto>>;
   setIsSettingsSortModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  type?: "user" | "department" | "workflow" | "budgetallocation" | "role";
+  type?: "user" | "department" | "workflow" | "budgetallocation" | "role" | "category";
 }
 
 const sortColumns = {
@@ -37,7 +37,11 @@ const sortColumns = {
   ],
   role:[{ key: "CreatedAt", label: "Date Added" },
     { key: "UpdatedAt", label: "Last Updated" },
-    { key: "roleName", label: "Role" }]
+    { key: "roleName", label: "Role" }],
+    
+  category:[{ key: "CreatedAt", label: "Date Added" },
+    { key: "UpdatedAt", label: "Last Updated" },
+    { key: "categoryId", label: "Category" }]
 };
 
 const SettingsSortModal: React.FC<SettingsSortModalProps> = ({

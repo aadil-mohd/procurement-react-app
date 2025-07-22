@@ -22,7 +22,7 @@ interface TableProps extends Partial<IDot> {
     data: any[];
     onRowClick?: (item: any) => void;
     statusColumn?: string;
-    filter: IFilterDto;
+    filter?: IFilterDto;
     dots?: boolean;
     setIsFilterModalOpen?: (open: boolean) => void;
     setIsSortModalOpen: (open: boolean) => void;
@@ -113,7 +113,7 @@ const SettingsTable: React.FC<TableProps> = ({
     setDeleteOption,
 }) => {
     // const currentPage = filter.pageNo ?? 1;
-    const pageSize = filter.pageSize ?? 10;
+    const pageSize = filter?.pageSize ?? 10;
     // const [pages, setPages] = useState<number[]>([]);
     const tableContainerRef = useRef<HTMLDivElement>(null);
         console.log(data,columns,"hiiidsf");
@@ -193,7 +193,7 @@ const SettingsTable: React.FC<TableProps> = ({
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        {setIsFilterModalOpen && <button className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200" onClick={() => setIsFilterModalOpen(true)}>
+                        {filter && setIsFilterModalOpen && <button className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200" onClick={() => setIsFilterModalOpen(true)}>
                             <FilterIcon className="size-6 mr-2" /> Filter
                         </button>}
                         <button className="px-3 py-2 w-[75px] h-[32px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200" onClick={() => setIsSortModalOpen(true)}>

@@ -8,6 +8,7 @@ type AttachmentItem = {
 };
 
 interface AddAttachmentProps {
+  type: "technical" | "general";
   id?: string;
   label?: string;
   setAttachments: React.Dispatch<React.SetStateAction<AttachmentItem[]>>;
@@ -21,24 +22,32 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
   setAttachments,
   attachments,
   requestData,
+  type,
 }) => {
   // Populate existing attachments when editing
   useEffect(() => {
-    if (requestData?.rfpDocumentsPath?.length > 0) {
-      const mapped = requestData.rfpDocumentsPath.map((doc: any) => ({
-        documentName: doc.fileTitle,
-        documentUrl: doc.filePath,
-      }));
+    if (requestData) {
+      const documents =
+        type === "technical"
+          ? requestData.rfpTechnicalDocuments
+          : requestData.rfpGeneralDocuments;
 
-      setAttachments((prev) => {
-        const existingNames = new Set(prev.map((a) => a.documentName));
-        const uniqueMapped = mapped.filter(
-          (item:any) => !existingNames.has(item.documentName)
-        );
-        return [...prev, ...uniqueMapped];
-      });
+      if (documents?.length > 0) {
+        const mapped = documents.map((doc: any) => ({
+          documentName: doc.fileTitle,
+          documentUrl: doc.filePath,
+        }));
+
+        setAttachments((prev) => {
+          const existingNames = new Set(prev.map((a) => a.documentName));
+          const uniqueMapped = mapped.filter(
+            (item: any) => !existingNames.has(item.documentName)
+          );
+          return [...prev, ...uniqueMapped];
+        });
+      }
     }
-  }, [requestData]);
+  }, [requestData, setAttachments, type]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
