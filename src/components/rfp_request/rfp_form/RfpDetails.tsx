@@ -20,7 +20,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
   ];
 
   return (
-    <div className="p-6">
+    <div className="p-6 border-t">
       {/* Left Title + Right Form */}
       <div className="flex items-start gap-4">
         {/* Section Label */}
@@ -29,7 +29,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
         </div>
 
         {/* Form Fields */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Column 1 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Serial or Parallel */}
@@ -83,40 +83,6 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
               />
             </div>
 
-            {/* Tender Fee */}
-            {requestData?.isTenderFeeApplicable && <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Tender Fee <span className="text-red-500">*</span>
-              </label>
-              <div className="flex">
-                <div className="border border-gray-300 rounded px-3 py-2 h-[34px] flex items-center bg-white text-sm">
-                  {convertCurrencyLabel(
-                    currencies.find((x) => x.value === requestData?.rfpCurrency)?.value || "USD"
-                  )}
-                </div>
-                <div className="ml-2 flex-1">
-                  <TextField
-                    required={true}
-                    style=""
-                    id="tenderFee"
-                    field="tenderFee"
-                    value={requestData.tenderFee ?? ""}
-                    setValue={(value) =>
-                      setRequestData((prev: any) => ({
-                        ...prev,
-                        tenderFee: value,
-                      }))
-                    }
-                    placeholder="Enter amount"
-                    type="number"
-                  />
-                </div>
-              </div>
-            </div>}
-          </div>
-
-          {/* Column 2 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* Bid Amount */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -180,8 +146,9 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             </div>
           </div>
 
-          {/* Column 3 */}
+          {/* Column 2 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
+
             {/* Hide Contract Value From Vendor */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -233,6 +200,37 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 }
               />
             </div>
+
+            {/* Tender Fee */}
+            {requestData?.isTenderFeeApplicable && <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Tender Fee <span className="text-red-500">*</span>
+              </label>
+              <div className="flex">
+                <div className="border border-gray-300 rounded px-3 py-2 h-[34px] flex items-center bg-white text-sm">
+                  {convertCurrencyLabel(
+                    currencies.find((x) => x.value === requestData?.rfpCurrency)?.value || "USD"
+                  )}
+                </div>
+                <div className="ml-2 flex-1">
+                  <TextField
+                    required={true}
+                    style=""
+                    id="tenderFee"
+                    field="tenderFee"
+                    value={requestData.tenderFee ?? ""}
+                    setValue={(value) =>
+                      setRequestData((prev: any) => ({
+                        ...prev,
+                        tenderFee: value,
+                      }))
+                    }
+                    placeholder="Enter amount"
+                    type="number"
+                  />
+                </div>
+              </div>
+            </div>}
           </div>
         </div>
       </div>

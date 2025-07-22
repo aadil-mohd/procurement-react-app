@@ -24,8 +24,8 @@ const columns = [
     { key: 'email', label: 'Email' },
     { key: 'roleName', label: 'Role' },
     { key: 'departmentName', label: 'Department' },
-    { key: 'dateAdded', label: 'Date Added' },
-    { key: 'lastUpdated', label: 'Last Active' },
+    { key: 'createdAt', label: 'Date Added' },
+    { key: 'updatedAt', label: 'Last Login' },
     { key: 'status', label: 'Status' }
 ];
 

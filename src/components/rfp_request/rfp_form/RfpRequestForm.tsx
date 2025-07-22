@@ -13,6 +13,7 @@ import { createOrUpdateRfpAsync, getRfpByIdAsync } from "../../../services/rfpSe
 import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common";
 import { getAllCompaniesAsync } from "../../../services/companyService";
 import CommonTitleCard from "../../basic_components/CommonTitleCard";
+import RfpAttachments from "./RfpAttachments";
 
 type RfpType = 'create' | 'edit';
 
@@ -96,53 +97,60 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
           }
           setAttachments(filesArray);
 
-          console.log(requestData,"RequestData")
-          console.log(ownersTemp,"ownersTemp")
-          console.log(attachments,"attachements")
+          console.log(requestData, "RequestData")
+          console.log(ownersTemp, "ownersTemp")
+          console.log(attachments, "attachements")
         } catch (err) {
           console.error(err);
         }
+      } else {
+        setRequestData((prev) => ({
+          ...prev, buyerOrganizationName: companies?.find(
+            (x: any) =>
+              x?.id.toString() === getUserCredentials().companyId
+          )?.companyName
+        }));
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const steps = [
-    {
-      title: "General Information",
-      content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
-    },
-    {
-      title: "RFP Details",
-      content: <RfpDetails masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
-    },
-    {
-      title: "Timeline & Ownership",
-      content: <TimeLineOwnership masterData={masterData} setRequestData={setRequestData} requestData={requestData} owners={owners} setOwners={setOwners} />,
-    },
-    {
-      title: "Attachments",
-      content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} type="technical" requestData={requestData.rfpTechnicalDocuments
-}/>
-        <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} type="general" requestData={requestData.rfpGeneralDocuments}/></>,
-    }
-  ];
+  // const steps = [
+  //   {
+  //     title: "General Information",
+  //     content: <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
+  //   },
+  //   {
+  //     title: "RFP Details",
+  //     content: <RfpDetails masterData={masterData} setRequestData={setRequestData} requestData={requestData} />,
+  //   },
+  //   {
+  //     title: "Timeline & Ownership",
+  //     content: <TimeLineOwnership masterData={masterData} setRequestData={setRequestData} requestData={requestData} owners={owners} setOwners={setOwners} />,
+  //   },
+  //   {
+  //     title: "Attachments",
+  //     content: <><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} type="technical" requestData={requestData.rfpTechnicalDocuments
+  //     } />
+  //       <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} type="general" requestData={requestData.rfpGeneralDocuments} /></>,
+  //   }
+  // ];
 
-  const next = () => {
-    setCurrent((prev) => Math.min(prev + 1, steps.length - 1));
-  };
+  // const next = () => {
+  //   setCurrent((prev) => Math.min(prev + 1, steps.length - 1));
+  // };
 
-  const prev = () => {
-    setCurrent((prev) => Math.max(prev - 1, 0));
-  };
+  // const prev = () => {
+  //   setCurrent((prev) => Math.max(prev - 1, 0));
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (actionRef.current?.value == "next") {
-      next();
-      return;
-    }
+    // if (actionRef.current?.value == "next") {
+    //   next();
+    //   return;
+    // }
     try {
       const formData = new FormData();
       const formDataTemp: Record<string, any> = requestData;
@@ -158,7 +166,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
                 formData.append(`rfpDocuments[${i}].Document`, item.document);
                 formData.append(`rfpDocuments[${i}].DocumentType`, "Technical");
                 i++;
-              })             
+              })
               attachments.forEach((item: any) => {
                 formData.append(`rfpDocuments[${i}].Document`, item.document);
                 formData.append(`rfpDocuments[${i}].DocumentType`, "General");
@@ -200,45 +208,39 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
 
   return (
     <div>
-      <CommonTitleCard/>
+      <CommonTitleCard />
       <form onSubmit={handleSubmit} className="w-full h-full mx-auto p-6 bg-white shadow relative">
-      <h1 className="text-2xl font-bold mb-6">{type=="create"?"Create":"Edit"} RFP</h1>
-      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold mb-6">{type == "create" ? "Create" : "Edit"} RFP</h1>
+        {/* <div className="max-w-4xl mx-auto">
         <Steps current={current} size="small" className="mb-8 flex justify-center">
           {steps.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-      </div>
+      </div> */}
 
-      <div className="p-6 mb-6">
-        <p className="text-gray-700">{steps[current].content}</p>
-      </div>
+        <div className="p-6 mb-6">
+          {/* <p className="text-gray-700">{steps[current].content}</p> */}
+          <GeneralInformation masterData={masterData} setRequestData={setRequestData} requestData={requestData} />
+          <RfpDetails masterData={masterData} setRequestData={setRequestData} requestData={requestData} />
+          <TimeLineOwnership masterData={masterData} setRequestData={setRequestData} requestData={requestData} owners={owners} setOwners={setOwners} />
+          {/* <div className="w-full border-t"><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} type="technical" requestData={requestData.rfpTechnicalDocuments
+          } />
+            <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} type="general" requestData={requestData.rfpGeneralDocuments} /></div> */}
+          <RfpAttachments currency="USD" quotes={[]} setQuotes={() => { }} setQuotesToDelete={() => { }} />
+        </div>
 
-      <div className="absolute right-5 bottom-5 flex justify-end space-x-4">
-        {current > 0 && (
-          <Button onClick={prev} className="bg-gray-100">
-            Previous
+        <div className="fixed right-5 bottom-5 flex justify-end space-x-4">
+          <Button onClick={() => { }} className="bg-gray-100">
+            Cancel
           </Button>
-        )}
-        {current < steps.length - 1 ? (
-          <Button type="primary" htmlType="submit" onClick={() => {
-            if (actionRef.current) actionRef.current.value = "next";
-          }}>
-            Next
+          <Button type="primary" htmlType="submit">
+            Send for Approval
           </Button>
-        ) : (
-          <Button type="primary" htmlType="submit" onClick={() => {
-            if (actionRef.current) actionRef.current.value = "submit";
-          }}>
-            Submit
-          </Button>
-        )}
-      </div>
-      <input type="hidden" name="action" ref={actionRef} />
-    </form>
+        </div>
+      </form>
     </div>
-    
+
   );
 }
 

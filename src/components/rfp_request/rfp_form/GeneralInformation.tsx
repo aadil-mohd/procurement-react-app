@@ -25,7 +25,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
         </div>
 
         {/* Form Fields */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Column 1 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             {/* RFP Title */}
@@ -44,6 +44,28 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 placeholder="Enter RFP Title"
                 style=""
                 type="text"
+                width="w-full"
+              />
+            </div>
+
+            {/* RFP Description */}
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-2">
+                RFP Description <span className="text-red-500">*</span>
+              </label>
+              <TextField
+                id="rfpDescription"
+                field="rfpDescription"
+                value={requestData.rfpDescription || ""}
+                setValue={(value) =>
+                  setRequestData((prev: any) => ({
+                    ...prev,
+                    rfpDescription: value,
+                  }))
+                }
+                placeholder="Enter RFP description"
+                style="min-h-[50px]"
+                type="textarea"
                 width="w-full"
               />
             </div>
@@ -75,22 +97,58 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               />
             </div>
 
-            {/* Buyer */}
+            {/* Purchase Requisition ID */}
             <div className="w-full mb-4">
-              <PeoplePicker
-                users={masterData?.users}
-                setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val.length ? [val[val.length - 1]] : [], buyerName: val.length ? val[val.length - 1].name : "" })) }}
-                value={requestData && requestData?.buyer ? requestData?.buyer : []}
-                label="Buyer"
-                height={"41px"}
+              <label className="block text-sm font-medium mb-2">
+                Purchase Requisition ID
+              </label>
+              <TextField
+                id="purchaseRequisitionId"
+                field="purchaseRequisitionId"
+                value={requestData.purchaseRequisitionId || ""}
+                setValue={(value) =>
+                  setRequestData((prev: any) => ({
+                    ...prev,
+                    purchaseRequisitionId: value,
+                  }))
+                }
+                placeholder="Purchase Requisition ID"
+                style=""
+                type="text"
+                width="w-full"
               />
             </div>
+
           </div>
 
           {/* Column 2 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
+
             {/* Organization */}
             <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Organization
+              </label>
+              <TextField
+                id="organizationId"
+                field="organizationId"
+                value={requestData?.buyerOrganizationName || ""}
+                setValue={(value) =>
+                  setRequestData((prev: any) => ({
+                    ...prev,
+                    buyerOrganizationName: value,
+                  }))
+                }
+                disabled
+                placeholder="Purchase Requisition ID"
+                style=""
+                type="text"
+                width="w-full"
+              />
+            </div>
+
+            {/* Organization */}
+            {/* <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
                 Organization <span className="text-red-500">*</span>
               </label>
@@ -121,7 +179,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                   }));
                 }}
               />
-            </div>
+            </div> */}
 
             {/* Buyer Department */}
             <div className="w-full mb-4">
@@ -151,52 +209,15 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 }}
               />
             </div>
-          </div>
 
-          {/* Column 3 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
-            {/* Purchase Requisition ID */}
+            {/* Buyer */}
             <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Purchase Requisition ID
-              </label>
-              <TextField
-                required={true}
-                id="purchaseRequisitionId"
-                field="purchaseRequisitionId"
-                value={requestData.purchaseRequisitionId || ""}
-                setValue={(value) =>
-                  setRequestData((prev: any) => ({
-                    ...prev,
-                    purchaseRequisitionId: value,
-                  }))
-                }
-                placeholder="Purchase Requisition ID"
-                style=""
-                type="text"
-                width="w-full"
-              />
-            </div>
-
-            {/* RFP Description */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                RFP Description <span className="text-red-500">*</span>
-              </label>
-              <TextField
-                id="rfpDescription"
-                field="rfpDescription"
-                value={requestData.rfpDescription || ""}
-                setValue={(value) =>
-                  setRequestData((prev: any) => ({
-                    ...prev,
-                    rfpDescription: value,
-                  }))
-                }
-                placeholder="Enter RFP description"
-                style="min-h-[50px]"
-                type="textarea"
-                width="w-full"
+              <PeoplePicker
+                users={masterData?.users}
+                setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val.length ? [val[val.length - 1]] : [], buyerName: val.length ? val[val.length - 1].name : "" })) }}
+                value={requestData && requestData?.buyer ? requestData?.buyer : []}
+                label="Buyer"
+                height={"41px"}
               />
             </div>
           </div>
