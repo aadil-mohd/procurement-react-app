@@ -1,31 +1,36 @@
 import axios from "axios"
 import { Urls } from "./ApiConfig"
 import { getUserToken } from "../utils/common";
+import { IFilterDto } from "../types/commonTypes";
 
-export const getAllCategoriesAsync = async()=>{
-    try{
-        let response = await axios.get(`${Urls.defaultUrl}/api/Category`,{
-            headers:{
-                Authorization:`Bearer ${getUserToken()}`
-            }
-        });
-        return response.data;
-    }catch(err){
+export const getAllCategoriesAsync = async (filter: IFilterDto = {
+  fields: [],
+  pageNo: 0,
+  pageSize: 0
+}) => {
+  try {
+    let response = await axios.post(`${Urls.defaultUrl}/api/Category/GetCategories`, filter, {
+      headers: {
+        Authorization: `Bearer ${getUserToken()}`
+      }
+    });
+    return response.data.items;
+  } catch (err) {
 
-    }
+  }
 }
 
-export const deleteCategoryAsync = async(id:any)=>{
-    try{
-        let response = await axios.delete(`${Urls.defaultUrl}/api/Category/${id}`,{
-            headers:{
-                Authorization:`Bearer ${getUserToken()}`
-            }
-        });
-        return response.data;
-    }catch(err){
+export const deleteCategoryAsync = async (id: any) => {
+  try {
+    let response = await axios.delete(`${Urls.defaultUrl}/api/Category/${id}`, {
+      headers: {
+        Authorization: `Bearer ${getUserToken()}`
+      }
+    });
+    return response.data;
+  } catch (err) {
 
-    }
+  }
 }
 
 export const createOrUpdateCategoryAsync = async (categoryData: any) => {

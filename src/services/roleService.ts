@@ -12,7 +12,7 @@ export const getAllRolesFilterAsync = async (filter: IFilterDto = { fields: [], 
                 Authorization: `Bearer ${getUserToken()}`
             }
         })
-        return { data:response.data, count:response.data.length };
+        return { data:response?.data, count:response?.data?.length };
     } catch (error: any) {
         throw error.response.data
     }

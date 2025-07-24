@@ -88,8 +88,8 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     const getApproversFilter = async (filterDto: IFilterDto = defaultFilter) => {
         try {
             setIsLoading(true);
-            let approvers = await getAllUsersByFilterAsync(filterDto)
-            setUsersList(approvers);
+            let approvers:any = await getAllUsersByFilterAsync(filterDto)
+            setUsersList(approvers?.items);
             // setTrigger(false);
         } catch (err: any) {
             notification.error({

@@ -61,8 +61,8 @@ const UserManagement: React.FC = () => {
     async function setupUsers() {
         try {
             setTrigger(false);
-            const users:any[] = await getAllUsersByFilterAsync(filter);
-            const users_list: any[] = users.map((u) => {
+            const users:any = await getAllUsersByFilterAsync(filter);
+            const users_list: any[] = users.items.map((u:any) => {
                 return { ...u, dateAdded: formatDate(u.createdAt), place: u.place !== "undefined" ? u.place : "", lastUpdated: formatDate(u.updatedAt), photoUrl: u.photo , status: u.isActive ? "Active" : "Inactive", userWithLogo: <div className='flex items-center'><img src={u.photo || userPhoto} className='w-[25px] h-[25px]' style={{ borderRadius: "50%" }} /><p className='pl-[15px]'>{u.name}</p></div> }
             });
             setUsers(users_list.filter((x)=>x.roleName!=="Admin"));

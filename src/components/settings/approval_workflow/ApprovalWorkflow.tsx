@@ -35,8 +35,8 @@ const ApprovalWorkflow: React.FC = () => {
       } catch (err) {
         seViewType("create");
       }
-      let users = await getAllUsersByFilterAsync();
-      setUsersData(users);
+      let users:any = await getAllUsersByFilterAsync();
+      setUsersData(users.items);
       setTrigger(false)
     } catch (error: any) {
       notification.error({

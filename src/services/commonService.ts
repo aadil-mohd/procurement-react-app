@@ -10,7 +10,7 @@ export const getAllCountryCodes = async () => {
                 Authorization: `Bearer ${getUserToken()}`
             }
         })
-        return response.data;
+        return response.data.items;
 
     }catch (err: any) {
         throw err.response.data;

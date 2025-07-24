@@ -85,7 +85,7 @@ const RolesPermissions: React.FC = () => {
 
             // Fetch roles and users
             const { data: allRoles } = await getAllRolesFilterAsync(filter);
-            const users = await getAllUsersByFilterAsync(filter);
+            const users:any = await getAllUsersByFilterAsync(filter);
             // const permissionss = await getAllPermissionsAsync();
             const permissionss = [
                 { "permissionId": 1, "permissionName": "CanCreateUser" },
@@ -118,11 +118,11 @@ const RolesPermissions: React.FC = () => {
             console.log("Roles:", allRoles);
 
             // Map roles to RoleData array
-            const currentUser: IUserDetails | undefined = users.find(user => user.id === userId);
+            const currentUser: IUserDetails | undefined = users?.items.find((user:any) => user.id === userId);
             const currentUserRole = currentUser?.roleName; // assuming role is a string like "Manager"
 
             const roleData: any[] = allRoles.map(role => {
-                const userCount = users.filter(user => user.roleId === role.id).length;
+                const userCount = users?.items.filter((user:any) => user.roleId === role.id).length;
 
                 console.log({
                     roleid: role.id,
