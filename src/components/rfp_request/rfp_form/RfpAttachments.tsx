@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { TableCloseIcon } from "../../../utils/Icons";
 import { Select } from "antd";
 
-interface QuotesRecommendationProps {
-    currency: string;
-    quotes: any[]
-    setQuotes: React.Dispatch<React.SetStateAction<any[]>>;
-    setQuotesToDelete: React.Dispatch<React.SetStateAction<string[]>>;
+interface RfpAttachmentsProps {
+    documentTypes:any[]
+    attachments: any[]
+    setAttachments: React.Dispatch<React.SetStateAction<any[]>>;
+    setAttachmentsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 interface TableRow {
@@ -14,19 +14,17 @@ interface TableRow {
     type: string
 }
 
-const RfpAttachments: React.FC<QuotesRecommendationProps> = ({
-    currency,
-    quotes,
-    setQuotes,
-    setQuotesToDelete
+const RfpAttachments: React.FC<RfpAttachmentsProps> = ({
+    documentTypes,
+    attachments,
+    setAttachments,
+    setAttachmentsToDelete
 }) => {
     const [tableData, setTableData] = useState<any[]>([]);
 
     const [isAdding, setIsAdding] = useState(false);
     const [newRow, setNewRow] = useState<any>({
-        vendorName: "",
-        currency: currency,
-        amount: "",
+        type: 0,
         attachment: null
     });
     const [errors, setErrors] = useState({
@@ -38,7 +36,7 @@ const RfpAttachments: React.FC<QuotesRecommendationProps> = ({
 
     const syncToParent = (updatedData: any[]) => {
         setTableData(updatedData);
-        setQuotes(updatedData)
+        setAttachments(updatedData)
     };
 
     const validateRow = (): boolean => {
@@ -61,7 +59,7 @@ const RfpAttachments: React.FC<QuotesRecommendationProps> = ({
 
     const deleteTableRow = (index: number) => {
         const updatedData = tableData.filter((_, i) => i !== index);
-        if (tableData[index].id) setQuotesToDelete(x => ([...x, tableData[index].id as string]))
+        if (tableData[index].id) setAttachmentsToDelete(x => ([...x, tableData[index].id as string]))
         syncToParent(updatedData);
     };
 
@@ -73,8 +71,8 @@ const RfpAttachments: React.FC<QuotesRecommendationProps> = ({
     };
 
     useEffect(() => {
-        setTableData(quotes);
-    }, [quotes])
+        setTableData(attachments);
+    }, [attachments])
 
     return (
         <div className="p-6 border-t">
@@ -120,7 +118,7 @@ const RfpAttachments: React.FC<QuotesRecommendationProps> = ({
                                                     "No file"
                                                 )}
                                             </td>
-                                            <td className="px-4 py-2 w-full">{row.type}</td>
+                                            <td className="px-4 py-2 w-full">{documentTypes?.find(dt=>dt.id == row.type).documentTypeName}</td>
 
                                             <td className="absolute right-3 top-3 hidden group-hover:block">
                                                 <button
@@ -151,9 +149,7 @@ const RfpAttachments: React.FC<QuotesRecommendationProps> = ({
                                                 )}
                                             </td>
                                             <td className="px-2 py-2 max-w-[136px]">
-                                                <Select value={"Financial"} className="w-full" options={[
-                                                    { label: "Finacial", value: 1 }
-                                                ]} onChange={(value) => updateNewRowData("type", value)}>
+                                                <Select value={newRow.type || "select type"} className="w-full" options={documentTypes?.map((item:any)=>({ label: item?.documentTypeName, value: item?.id }))} onChange={(value) => updateNewRowData("type", value)}>
 
                                                 </Select>
                                                 {errors.type && (

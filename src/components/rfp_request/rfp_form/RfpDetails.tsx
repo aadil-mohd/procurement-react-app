@@ -62,6 +62,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                 RFP Currency <span className="text-red-500">*</span>
               </label>
               <SelectField
+                search={false}
                 id="rfpCurrency"
                 label=""
                 style="w-full"

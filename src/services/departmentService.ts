@@ -3,7 +3,7 @@ import { Urls } from "./ApiConfig";
 import { getUserToken } from "../utils/common";
 import { IDepartment } from "../types/departmentTypes";
 import { IFilterDto } from "../types/commonTypes";
-export const getAllDepartmentsAsync=async(filterData:IFilterDto = {fields:[]}):Promise<{data:IDepartment[]; count:number}>=>{
+export const getAllDepartmentsAsync=async(filterData:IFilterDto = {fields:[],pageNo:0,pageSize:0}):Promise<{data:IDepartment[]; count:number}>=>{
     try{
         let response = await axios.post(`${Urls.defaultUrl}/api/Department/GetAllDepartmentAsync`,filterData,{
             headers:{

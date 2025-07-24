@@ -11,7 +11,7 @@ interface IDateTimePicker {
 export default function DateTimePicker({ label, value, setValue ,required = false}: IDateTimePicker) {
     return (
         <div className="w-full">
-            <label className="block text-sm font-medium mb-2">{label}</label>
+            <label className="block text-sm font-medium mb-2">{label} <span className="text-red-500">*</span></label>
             <DatePicker
                 required={required}
                 showTime={{ use12Hours: true }}

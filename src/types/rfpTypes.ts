@@ -5,7 +5,7 @@ export interface IRfp {
     buyerName?: string
     buyer?: any
     buyerOrganizationName?: string
-    departmentId?: string
+    departmentId?: number
     isOpen?: false
     isSerial?: false
     rfpCurrency?: string
@@ -25,5 +25,6 @@ export interface IRfp {
     rfpDocuments: any[]
     rfpTechnicalDocuments?:any[]
     rfpGeneralDocuments?:any[]
-    rfpOwners: any[]
+    rfpOwners: any[],
+    rfpCategories:any[]
 }

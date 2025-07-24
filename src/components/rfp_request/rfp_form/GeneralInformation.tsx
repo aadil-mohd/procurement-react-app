@@ -2,7 +2,8 @@ import React, { SetStateAction } from "react";
 import TextField from "../../basic_components/TextField";
 import SelectField from "../../basic_components/SelectField";
 import PeoplePicker from "../../basic_components/PeoplePicker";
-import { getUserCredentials } from "../../../utils/common";
+import { Form, Select } from "antd";
+
 
 interface GeneralInformationProps {
   requestData: any;
@@ -51,7 +52,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             {/* RFP Description */}
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
-                RFP Description <span className="text-red-500">*</span>
+                RFP Description
               </label>
               <TextField
                 id="rfpDescription"
@@ -75,26 +76,25 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               <label className="block text-sm font-medium mb-2">
                 Category <span className="text-red-500">*</span>
               </label>
-              <SelectField
-                id="categoryId"
-                label=""
-                style="w-full"
-                value={
-                  masterData?.categories?.find(
-                    (x: any) => x?.id === requestData?.categoryId
-                  )?.name || "Select Category"
-                }
-                options={(masterData?.categories || []).map((x: any) => ({
-                  label: <span className="text-md font-medium">{x.name}</span>,
-                  value: x.id,
-                }))}
-                onChange={(selectedValue) => {
-                  setRequestData((prev: any) => ({
-                    ...prev,
-                    categoryId: selectedValue,
-                  }));
-                }}
-              />
+                <Select
+                  className="h-[41px]"
+                  mode="multiple"
+                  allowClear
+                  style={{ width: "100%" }}
+                  placeholder="Select category"
+                  value={requestData?.rfpCategories?.map((item: any) => (item.categoryId))}
+                  // defaultValue={[]}
+                  onChange={(selectedValue) => {
+                    setRequestData((prev: any) => ({
+                      ...prev,
+                      rfpCategories: selectedValue.map((item: string) => ({ categoryId: Number(item), rfpId: 0 })),
+                    }));
+                  }}
+                  options={(masterData?.categories || []).map((x: any) => ({
+                    label: <span className="text-md font-medium">{x.name}</span>,
+                    value: x.id,
+                  }))}
+                />
             </div>
 
             {/* Purchase Requisition ID */}
@@ -187,24 +187,29 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 Buyer Department <span className="text-red-500">*</span>
               </label>
               <SelectField
+                search={false}
                 id="departmentId"
                 label=""
                 style="w-full"
                 value={
                   masterData?.departments?.find(
-                    (x: any) => x?.id === requestData?.departmentId
+                    (x: any) => Number(x?.id) == Number(requestData?.departmentId)
                   )?.departmentName || "Buyer department"
                 }
-                options={(masterData?.departments || []).map((x: any) => ({
+                options={(masterData?.departments)?.map((x: any) => ({
                   label: (
                     <span className="text-md font-medium">{x.departmentName}</span>
                   ),
                   value: x.id,
                 }))}
                 onChange={(selectedValue) => {
+                  const newDeptId = Number(selectedValue);
+                  const isDeptChanged = requestData.departmentId !== newDeptId;
+
                   setRequestData((prev: any) => ({
                     ...prev,
-                    departmentId: selectedValue.toString(),
+                    departmentId: newDeptId,
+                    ...(isDeptChanged ? { buyer: [], buyerName: "" } : {}),
                   }));
                 }}
               />
@@ -213,7 +218,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             {/* Buyer */}
             <div className="w-full mb-4">
               <PeoplePicker
-                users={masterData?.users}
+                users={masterData?.users.items}
                 setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val.length ? [val[val.length - 1]] : [], buyerName: val.length ? val[val.length - 1].name : "" })) }}
                 value={requestData && requestData?.buyer ? requestData?.buyer : []}
                 label="Buyer"

@@ -1,7 +1,7 @@
 import { Steps, Button } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AddAttachment from "./AddAttachment";
+// import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
 import { getAllUsersByFilterAsync } from "../../../services/userService";
 import { getAllDepartmentsAsync } from "../../../services/departmentService";
@@ -14,6 +14,7 @@ import { fetchAndConvertToFile, getUserCredentials } from "../../../utils/common
 import { getAllCompaniesAsync } from "../../../services/companyService";
 import CommonTitleCard from "../../basic_components/CommonTitleCard";
 import RfpAttachments from "./RfpAttachments";
+import { getAllDocumentTypesAsync } from "../../../services/commonService";
 
 type RfpType = 'create' | 'edit';
 
@@ -29,7 +30,7 @@ const defaultRfpState: IRfp = {
   buyerName: getUserCredentials().name,
   buyer: [{ name: getUserCredentials().name, id: getUserCredentials().userId }],
   buyerOrganizationName: "",
-  departmentId: getUserCredentials().departmentId ? getUserCredentials().departmentId : "0",
+  departmentId: Number(getUserCredentials().departmentId || "0"),
   isOpen: false,
   isSerial: false,
   rfpCurrency: "USD",
@@ -47,7 +48,8 @@ const defaultRfpState: IRfp = {
   closingDate: "",
   closingTime: "",
   rfpDocuments: [],
-  rfpOwners: []
+  rfpOwners: [],
+  rfpCategories: []
 };
 
 const { Step } = Steps;
@@ -58,9 +60,8 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [requestData, setRequestData] = useState<IRfp>(defaultRfpState);
-  const [technicalAttachments, setTechnicalAttachments] = useState<any[]>([]);
   const [attachments, setAttachments] = useState<any[]>([]);
-  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [] });
+  const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [], documentTypes: [] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] });
   const actionRef = useRef<HTMLInputElement>(null);
 
@@ -74,8 +75,9 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
       const departments = await getAllDepartmentsAsync();
       const categories = await getAllCategoriesAsync();
       const companies = await getAllCompaniesAsync();
+      const documentTypes = await getAllDocumentTypesAsync();
       setMasterData({
-        users: users, departments: departments.data, categories, companies
+        users: users, departments: departments.data, categories, companies, documentTypes
       })
       if (id && !isNaN(Number(id))) {
         try {
@@ -144,6 +146,9 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
   // const prev = () => {
   //   setCurrent((prev) => Math.max(prev - 1, 0));
   // };
+  useEffect(() => {
+    console.log(requestData, "reg")
+  }, [requestData])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -162,14 +167,15 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
           if (value != null) {
             if (key === "rfpDocuments") {
               let i = 0;
-              technicalAttachments.forEach((item) => {
-                formData.append(`rfpDocuments[${i}].Document`, item.document);
-                formData.append(`rfpDocuments[${i}].DocumentType`, "Technical");
-                i++;
-              })
+              // technicalAttachments.forEach((item) => {
+              //   formData.append(`rfpDocuments[${i}].Document`, item.document);
+              //   formData.append(`rfpDocuments[${i}].DocumentType`, "Technical");
+              //   i++;
+              // })
+              console.log(attachments);
               attachments.forEach((item: any) => {
-                formData.append(`rfpDocuments[${i}].Document`, item.document);
-                formData.append(`rfpDocuments[${i}].DocumentType`, "General");
+                formData.append(`rfpDocuments[${i}].Document`, item.attachment);
+                formData.append(`rfpDocuments[${i}].DocumentTypeId`, item.type);
                 i++;
               });
             } else if (key === "rfpOwners") {
@@ -188,6 +194,14 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
                 console.log(item, i, "commercial")
               })
             } else if (key == "buyer") continue;
+            else if (key === "rfpCategories") {
+              let i = 0;
+              requestData.rfpCategories.forEach((item: any) => {
+                formData.append(`rfpCategories[${i}].categoryId`, item.categoryId);
+                formData.append(`rfpCategories[${i}].rfpId`, formDataTemp.id);
+                i++;
+              });
+            }
             else {
               formData.append(key, value);
             }
@@ -227,7 +241,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
           {/* <div className="w-full border-t"><AddAttachment id={"technical-doc1"} label="Technical documents" attachments={technicalAttachments} setAttachments={setTechnicalAttachments} type="technical" requestData={requestData.rfpTechnicalDocuments
           } />
             <AddAttachment id={"general_doc1"} label="General documents" attachments={attachments} setAttachments={setAttachments} type="general" requestData={requestData.rfpGeneralDocuments} /></div> */}
-          <RfpAttachments currency="USD" quotes={[]} setQuotes={() => { }} setQuotesToDelete={() => { }} />
+          <RfpAttachments attachments={attachments} setAttachments={setAttachments} setAttachmentsToDelete={() => { }} documentTypes={masterData.documentTypes} />
         </div>
 
         <div className="fixed right-5 bottom-5 flex justify-end space-x-4">

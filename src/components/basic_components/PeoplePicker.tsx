@@ -57,7 +57,7 @@ const PeoplePicker: React.FC<PeoplePickerProps> = ({
 
   return (
     <div className="w-full">
-      {label && <label className="block text-sm font-medium mb-2">{label}</label>}
+      {label && <label className="block text-sm font-medium mb-2">{label} <span className="text-red-500">*</span></label>}
 
       <div className={`flex flex-wrap items-center border border-gray-300 rounded-md p-2 gap-2 ${ height ? `min-h-[${height}]` : "min-h-[48px]"}`}>
         {value.map((person) => (
