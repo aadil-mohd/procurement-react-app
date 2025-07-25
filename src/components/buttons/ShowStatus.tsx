@@ -22,6 +22,8 @@ const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
       //   return 'bg-orange-500/40 text-orange-900 min-w-16';
       case 0:
         return 'bg-orange-500/40 text-orange-900 min-w-16';
+      case 7:
+        return 'bg-orange-500/40 text-orange-900 min-w-16';
       case 4:
         return 'bg-orange-500/40 text-orange-900 min-w-16';
       case 2:

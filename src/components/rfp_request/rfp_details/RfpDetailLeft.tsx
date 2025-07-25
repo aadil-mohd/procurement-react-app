@@ -8,8 +8,10 @@ import { getAllUsersByFilterAsync } from "../../../services/userService";
 import { publishRfpAsync } from "../../../services/rfpService";
 import CreateButton from "../../buttons/CreateButton";
 import { useNavigate, useParams } from "react-router-dom";
+import { Tag } from 'antd';
 
 interface RfpDetailLeftProp {
+    masterData: any;
     requestData: any | undefined
     trigger: () => void
 }
@@ -89,7 +91,7 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     );
 };
 
-const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: RfpDetailLeftProp) => {
+const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, trigger }: RfpDetailLeftProp) => {
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
     const navigate = useNavigate();
@@ -98,10 +100,10 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
     const setupOwners = async () => {
         try {
             if (requestData) {
-                const users = await getAllUsersByFilterAsync();
+                const users: any = await getAllUsersByFilterAsync();
                 const tempOwners: { technical: any[], commercial: any[] } = { technical: [], commercial: [] }
                 requestData?.rfpOwners.forEach((ow: any) => {
-                    const userExist: any = users.find((u: any) => u.id == ow.ownerId);
+                    const userExist: any = users.items.find((u: any) => u.id == ow.ownerId);
                     if (userExist) {
                         switch (ow.ownerType) {
                             case 1: {
@@ -133,7 +135,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
     const setDocuments = async () => {
         try {
             if (requestData) {
-                const documents_to_display = requestData.rfpDocumentsPath.map((d: any) =>
+                const documents_to_display = requestData.rfpGeneralDocuments.map((d: any) =>
                     ({ ...d, attachmentComponent: <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
                 )
                 setRfpDocuments(documents_to_display);
@@ -177,8 +179,25 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ requestData, trigger }: Rf
                 {/* General Details */}
                 <div className="h-full" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">General Details</span></span>
+                    <div className="mb-[24px]" style={{ width: "504px" }}>
+                        <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Published Categories</span>
+                        {masterData?.categories?.length > 0 && requestData?.rfpCategories?.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {requestData?.rfpCategories?.map((item: any) => {
+                                    const category = masterData?.categories?.find(
+                                        (c: any) => c.id === item.categoryId
+                                    );
+                                    return (
+                                        <Tag className="text-md" key={item.categoryId} color="blue">
+                                            {category?.name || 'Unknown'}
+                                        </Tag>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
                     <CommonCard data={{
-                        "Category": requestData?.categoryName ?? "-" as string,
+                        // "Category": requestData?.categoryName ?? "-" as string,
                         "Purchase\u00A0Requisition\u00A0ID": requestData?.purchaseRequisitionId as string,
                         "RFP Status": <ShowStatus type="rfps" status={requestData?.status} />
                     }} className="mb-[16px]" />
