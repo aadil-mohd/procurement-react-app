@@ -31,6 +31,7 @@ interface FormErrors {
 
 interface IApprovalWorkflowForm extends IModalProps {
     type?: "edit" | "create";
+    flowType: "vendor" | "rfp"
     initialData?: any;
     onSubmit?: (data: ApprovalFlowData) => void;
     seViewType: React.Dispatch<SetStateAction<"view" | "edit" | "create">>;
@@ -47,6 +48,7 @@ const defaultFilter = {
 const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     seViewType,
     type = "create",
+    flowType = "vendor",
     initialData,
     trigger,
     closeModal
@@ -55,7 +57,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
         id:initialData?.id || 0,
         flowName: initialData?.flowName || "",
         steps: initialData?.steps || [],
-        flowType: initialData?.flowType || 0
+        flowType: initialData?.flowType || flowType == "vendor" ? 1 : 2
     });
     const [errors, setErrors] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);

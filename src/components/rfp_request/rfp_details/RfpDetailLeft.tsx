@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
-import { convertCurrencyLabel, convertToAmPm, getUserCredentials } from "../../../utils/common";
+import { convertCurrencyLabel, getUserCredentials } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"

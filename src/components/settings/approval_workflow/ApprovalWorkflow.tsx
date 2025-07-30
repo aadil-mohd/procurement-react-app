@@ -96,6 +96,7 @@ const ApprovalWorkflow: React.FC = () => {
       />
         :
         <ApprovalWorkflowForm
+        flowType={statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp"}
         seViewType={seViewType}
           type={viewType as any}
           closeModal={() => setIsCreateModalOpen(false)}
