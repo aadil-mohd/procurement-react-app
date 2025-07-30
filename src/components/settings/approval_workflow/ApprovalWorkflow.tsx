@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 // import SettingsTable from '../settings_components/SettingsTable';
 // import SettingsFilterModal from '../settings_components/SettingsFilterModal';
 // import SettingsSortModal from '../settings_components/SettingsSortModal';
-import { IFilterDto } from '../../../types/commonTypes';
 // import { Modal as AntdModal } from 'antd';
 import ApprovalWorkflowForm from './ApprovalWorkflowForm';
 //import { IFlow } from '../../../types/approvalTypes';
