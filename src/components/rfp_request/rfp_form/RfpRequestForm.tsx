@@ -78,7 +78,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
        if (id && !isNaN(Number(id))) {
         try {
           const rfpRequest = await getRfpByIdAsync(Number(id));
-          setRequestData({ ...rfpRequest, rfpDocuments: [] });
+          // setRequestData({ ...rfpRequest, rfpDocuments: [] });
 
           const ownersTemp: any = { technical: [], commercial: [] };
           rfpRequest.rfpOwners.forEach((item: any) => {
@@ -99,6 +99,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
           console.log(requestData, "RequestData")
           console.log(ownersTemp, "ownersTemp")
           console.log(attachments, "attachements")
+          return;
         } catch (err) {
           console.error(err);
         }

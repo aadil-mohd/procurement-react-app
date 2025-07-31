@@ -6,9 +6,9 @@ import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
 import { publishRfpAsync } from "../../../services/rfpService";
-import CreateButton from "../../buttons/CreateButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { Tag } from 'antd';
+import { PenIcon } from "lucide-react";
 
 interface RfpDetailLeftProp {
     masterData: any;
@@ -165,7 +165,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                         <>
                             <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.rfpTitle}</span>
                             <div>
-                                <CreateButton name="Edit RFP" onClick={onEditRequest} />
+                                <span onClick={onEditRequest}><PenIcon className="text-gray-500" size={"1.2rem"}/></span>
                             </div>
                         </>
                     </div>
