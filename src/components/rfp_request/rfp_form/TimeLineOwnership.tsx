@@ -91,7 +91,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
                 setValue={(value: any) =>
                   setOwners((prev: IRfp) => ({ ...prev, technical: value }))
                 }
-                users={masterData?.users?.items}
+                users={masterData?.users}
                 value={owners.technical}
                 placeholder="search.."
               />
@@ -102,7 +102,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
                 setValue={(value: any) =>
                   setOwners((prev: IRfp) => ({ ...prev, commercial: value }))
                 }
-                users={masterData?.users?.items}
+                users={masterData?.users}
                 value={owners.commercial}
                 placeholder="search.."
               />

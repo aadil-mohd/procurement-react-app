@@ -141,7 +141,7 @@ const NotificationContent: React.FC<INotificationContent> = ({ data, closeModal,
                   </span>
                   </p>
                   <div className="flex items-center ml-2">
-                    <ShowStatus status={notification.status.toLowerCase()} type="rfps" />
+                    <ShowStatus status={Number(notification.status)} type="rfps" />
                     <div className="ml-2 dropdown relative">
                       <button
                         className="text-gray-500 hover:text-gray-700"

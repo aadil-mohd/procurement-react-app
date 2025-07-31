@@ -43,7 +43,7 @@ function Dashboard() {
     spend: [],
   });
 
-  const [trigger, setTrigger] = useState(false);
+  const [, setTrigger] = useState(false);
 
   //const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [_, setIsSortModalOpen] = useState(false);

@@ -2,7 +2,7 @@ import React, { SetStateAction } from "react";
 import TextField from "../../basic_components/TextField";
 import SelectField from "../../basic_components/SelectField";
 import PeoplePicker from "../../basic_components/PeoplePicker";
-import { Form, Select } from "antd";
+import { Select } from "antd";
 
 
 interface GeneralInformationProps {
@@ -38,7 +38,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 required={true}
                 id="rfpTitle"
                 field="rfpTitle"
-                value={requestData.rfpTitle || ""}
+                value={requestData?.rfpTitle || ""}
                 setValue={(value) =>
                   setRequestData((prev: any) => ({ ...prev, rfpTitle: value }))
                 }
@@ -57,7 +57,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               <TextField
                 id="rfpDescription"
                 field="rfpDescription"
-                value={requestData.rfpDescription || ""}
+                value={requestData?.rfpDescription || ""}
                 setValue={(value) =>
                   setRequestData((prev: any) => ({
                     ...prev,
@@ -87,7 +87,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                   onChange={(selectedValue) => {
                     setRequestData((prev: any) => ({
                       ...prev,
-                      rfpCategories: selectedValue.map((item: string) => ({ categoryId: Number(item), rfpId: 0 })),
+                      rfpCategories: selectedValue?.map((item: string) => ({ categoryId: Number(item), rfpId: 0 })),
                     }));
                   }}
                   options={(masterData?.categories || []).map((x: any) => ({
@@ -105,7 +105,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
               <TextField
                 id="purchaseRequisitionId"
                 field="purchaseRequisitionId"
-                value={requestData.purchaseRequisitionId || ""}
+                value={requestData?.purchaseRequisitionId || ""}
                 setValue={(value) =>
                   setRequestData((prev: any) => ({
                     ...prev,
@@ -204,7 +204,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                 }))}
                 onChange={(selectedValue) => {
                   const newDeptId = Number(selectedValue);
-                  const isDeptChanged = requestData.departmentId !== newDeptId;
+                  const isDeptChanged = requestData?.departmentId !== newDeptId;
 
                   setRequestData((prev: any) => ({
                     ...prev,
@@ -218,7 +218,7 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             {/* Buyer */}
             <div className="w-full mb-4">
               <PeoplePicker
-                users={masterData?.users.items}
+                users={masterData?.users}
                 setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val.length ? [val[val.length - 1]] : [], buyerName: val.length ? val[val.length - 1].name : "" })) }}
                 value={requestData && requestData?.buyer ? requestData?.buyer : []}
                 label="Buyer"

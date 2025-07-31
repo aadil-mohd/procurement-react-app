@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 // import { handleFile } from '../../utils/common';
 // import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 // import { IStep } from '../../../types/approvalflowTypes';
-import { getRpfApprovalFlowsByIdAsync, getVendorApprovalFlowsByVendorIdAsync } from '../../../services/flowService';
+import { getRpfApprovalFlowsByIdAsync } from '../../../services/flowService';
 import { getUserCredentials } from '../../../utils/common';
 import StepIndicator from './rfp_approve-reject_right_component/StepIndicator';
 import StepCard from './rfp_approve-reject_right_component/StepCard';

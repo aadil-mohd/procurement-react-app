@@ -31,7 +31,7 @@ interface ICompany {
 const CommonTitleCard = () => {
     const userCredentials = getUserCredentials();
     const [companyDetails, setCompanyDetails] = useState<ICompany>();
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
 
 
     useEffect(() => {

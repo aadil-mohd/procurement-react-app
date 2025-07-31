@@ -1,5 +1,5 @@
-import { Steps, Button } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { Button } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 // import AddAttachment from "./AddAttachment";
 import GeneralInformation from "./GeneralInformation";
@@ -52,10 +52,7 @@ const defaultRfpState: IRfp = {
   rfpCategories: []
 };
 
-const { Step } = Steps;
-
 function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
-  const [current, setCurrent] = useState(0);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -63,7 +60,6 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
   const [attachments, setAttachments] = useState<any[]>([]);
   const [masterData, setMasterData] = useState<any>({ users: [], departments: [], categories: [], companies: [], documentTypes: [] });
   const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] });
-  const actionRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setupRfpFormAsync();
@@ -77,15 +73,16 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
       const companies = await getAllCompaniesAsync();
       const documentTypes = await getAllDocumentTypesAsync();
       setMasterData({
-        users: users, departments: departments.data, categories, companies, documentTypes
+        users: (users as any)?.items, departments: departments.data, categories, companies, documentTypes
       })
-      if (id && !isNaN(Number(id))) {
+       if (id && !isNaN(Number(id))) {
         try {
           const rfpRequest = await getRfpByIdAsync(Number(id));
           setRequestData({ ...rfpRequest, rfpDocuments: [] });
+
           const ownersTemp: any = { technical: [], commercial: [] };
           rfpRequest.rfpOwners.forEach((item: any) => {
-            const user: any = users.find((u: any) => u.id == item.ownerId);
+            const user: any = (users as any)?.items.find((u: any) => u.id == item.ownerId);
             if (user) {
               if (item.ownerType == 1) ownersTemp.technical.push(user);
               if (item.ownerType == 2) ownersTemp.commercial.push(user);
@@ -93,7 +90,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
           });
           setOwners(ownersTemp);
           const filesArray: any = [];
-          for (let filedetail of rfpRequest.rfpDocumentsPath) {
+          for (let filedetail of rfpRequest.rfpGeneralDocuments) {
             const file = await fetchAndConvertToFile(filedetail?.filePath);
             filesArray.push({ ...file, documentName: filedetail?.fileTitle });
           }
@@ -215,10 +212,6 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
       console.log(err)
     }
   };
-
-  useEffect(() => {
-    setCurrent(0);
-  }, []);
 
   return (
     <div>

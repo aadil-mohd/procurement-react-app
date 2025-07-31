@@ -5,7 +5,6 @@ import "./vendorPage.css";
 import PageLoader from "../../components/basic_components/PageLoader";
 // import { convertCurrencyLabel } from "../../utils/common";
 import { getAllVendorsAsync } from "../../services/vendorService";
-import { vendorStatusConverter } from "../../utils/common";
 import { getUserPendingApprovalsAsync } from "../../services/flowService";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 

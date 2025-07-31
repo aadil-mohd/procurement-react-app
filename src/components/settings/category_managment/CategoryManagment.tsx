@@ -15,8 +15,8 @@ const columns = [
 ];
 
 const CategoryManagment: React.FC = () => {
-  const [sortModalOpen, setSortModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [, setSortModalOpen] = useState(false);
+  const [, setSearchQuery] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);

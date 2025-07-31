@@ -58,7 +58,7 @@ const NewRequestsCard: React.FC<NewRequestsCardProp> = ({ requests,trigger }: Ne
               </div>
             </div>
             <span>
-              <ShowStatus status={request.status as string} type='rfps' />
+              <ShowStatus status={request.status} type='rfps' />
             </span>
           </li>
         ))}

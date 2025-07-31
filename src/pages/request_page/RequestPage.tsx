@@ -40,7 +40,7 @@ function RequestPage() {
   const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
   const [showLoader] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>("All RFPs");
-  const [selectedRfp, setSelectedRfp] = useState<IRfp>();
+  const [, setSelectedRfp] = useState<IRfp>();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "block", rfp: IRfp } | null>(null);
   const navigate = useNavigate();

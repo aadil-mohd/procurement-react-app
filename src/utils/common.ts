@@ -1,3 +1,4 @@
+import axios from "axios";
 import { currencies, currenciesWithLabel } from "./constants";
 import Cookies from "js-cookie";
 
@@ -61,23 +62,36 @@ export const convertToAmPm = (timeString: string) => {
     return date.toLocaleTimeString([], options);
 };
 
-export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string ,companyId:string,role:string} => {
-    const [userId, roleId, name, departmentId,companyId,role] = [Cookies.get("userId") as string, Cookies.get("roleId") as string, Cookies.get("name") as string, Cookies.get("departmentId") as string, Cookies.get("companyId") as string,Cookies.get("role") as string]
-    return { userId, roleId, name, departmentId ,companyId,role}
+export const getUserCredentials = (): { userId: string, roleId: string, name: string, departmentId: string, companyId: string, role: string } => {
+    const [userId, roleId, name, departmentId, companyId, role] = [Cookies.get("userId") as string, Cookies.get("roleId") as string, Cookies.get("name") as string, Cookies.get("departmentId") as string, Cookies.get("companyId") as string, Cookies.get("role") as string]
+    return { userId, roleId, name, departmentId, companyId, role }
 }
 
 
 export const fetchAndConvertToFile = async (fileUrl: string): Promise<{ document: File, documentName: string }> => {
-    console.log(fileUrl, "fileUrl")
-    const response = await fetch(fileUrl);
-    const blob = await response.blob();
+    try {
+        console.log("Fetching file from:", fileUrl);
 
-    // Extract filename from URL
-    const urlParts = fileUrl.split('/');
-    const fileName = urlParts[urlParts.length - 1] || `downloaded-${Date.now()}`;
-    console.log(fileName, "fileName")
-    const file = new File([blob], fileName, { type: blob.type });
-    return { document: file, documentName: fileName };
+        const response = await axios.get(fileUrl, {
+            responseType: "blob", // THIS IS IMPORTANT
+            withCredentials: true, // For CORS + cookies
+        });
+
+        console.log("Blob fetched successfully");
+
+        // Extract filename from URL or set fallback
+        const urlParts = fileUrl.split('/');
+        const fileName = urlParts[urlParts.length - 1] || `downloaded-${Date.now()}`;
+        console.log("File name:", fileName);
+
+        const blob = response.data;
+        const file = new File([blob], fileName, { type: blob.type });
+
+        return { document: file, documentName: fileName };
+    } catch (error) {
+        console.error("Error in fetchAndConvertToFile:", error);
+        throw new Error("Something went wrong during file fetch.");
+    }
 };
 
 

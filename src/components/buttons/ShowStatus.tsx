@@ -1,5 +1,5 @@
 import React from 'react';
-import { projectStatuses, milestoneStatuses, rfpStatuses } from '../../utils/constants';
+import { projectStatuses, rfpStatuses } from '../../utils/constants';
 
 interface ShowStatusProps {
   status: number;

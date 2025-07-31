@@ -51,7 +51,7 @@ const RouteComponent: React.FC = () => {
     try {
       console.log(clientId,"clientId");
       let countryCodesData = await getAllCountryCodes();
-      setCountryCodes(countryCodesData.sort((a: any, b: any) => (a.countryCode ?? "").localeCompare(b.countryCode ?? "")));
+      setCountryCodes(countryCodesData?.sort((a: any, b: any) => (a.countryCode ?? "").localeCompare(b.countryCode ?? "")) || []);
 
     } catch (e) {
       console.error("route", e);
