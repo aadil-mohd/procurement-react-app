@@ -159,7 +159,7 @@ const RolesPermissions: React.FC = () => {
 
 
     const handlePermissionToggle = (permission: any) => {
-
+        console.log(permission,"permissionpermissionpermissionpermission")
         const exists = selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId);
         const updatedPermissions = exists
             ? selectedRole?.permissions?.filter((p:any) => p.permissionId !== permission.permissionId) // remove

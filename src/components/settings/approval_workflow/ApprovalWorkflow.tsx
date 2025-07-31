@@ -48,6 +48,7 @@ const ApprovalWorkflow: React.FC = () => {
   async function setupTab(tab: string) {
     if (statusFilter != tab) {
       setStatusFilter(tab);
+      seViewType("view")
     }
   }
 
