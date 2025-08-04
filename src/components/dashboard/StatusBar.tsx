@@ -13,7 +13,7 @@ interface StatusBarProps {
 
 const StatusBar: React.FC<StatusBarProps> = ({ statuses }) => {
   return (
-    <div className="flex flex-col justify-center items-start desktop:flex-row desktop:items-center desktop:justify-start rounded-lg desktop:space-x-8 space-y-4 desktop:space-y-0">
+    <div className="flex flex-col justify-center items-start desktop:flex-row desktop:items-center desktop:justify-start rounded-lg desktop:space-x-4 space-y-4 desktop:space-y-0">
       {statuses.map((status, index) => (
         <React.Fragment key={index}>
           <div className="flex items-center space-x-2">
@@ -28,7 +28,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ statuses }) => {
             </div>
           </div>
           {index < statuses.length - 1 && (
-            <p className="hidden desktop:block mx-2 text-md text-gray-300">|</p>
+            <p className="hidden desktop:block text-md text-gray-300">|</p>
           )}
         </React.Fragment>
       ))}

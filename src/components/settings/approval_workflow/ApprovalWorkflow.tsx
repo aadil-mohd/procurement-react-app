@@ -34,7 +34,7 @@ const ApprovalWorkflow: React.FC = () => {
       } catch (err) {
         seViewType("create");
       }
-      let users:any = await getAllUsersByFilterAsync();
+      let users: any = await getAllUsersByFilterAsync();
       setUsersData(users.items);
       setTrigger(false)
     } catch (error: any) {
@@ -56,35 +56,33 @@ const ApprovalWorkflow: React.FC = () => {
   useEffect(() => {
     setWorkflowsData();
     setWorkflow(undefined);
-  }, [statusFilter,trigger]);
+  }, [statusFilter, trigger]);
 
   return (
     <div className="bg-bgBlue">
       {/* Header */}
-      <div className="pr-8 py-6 border-gray-200 flex justify-between items-center">
+      
 
-      </div>
-
-      <div className="px-[24px] flex justify-start mb-[16px]">
+      <div className="pt-[24px] flex justify-start mb-[16px] ml-[20px] border-b">
         {tabs.map((tab, index) => (
           <div className="flex items-center h-[37px]" key={tab}>
             <div
               onClick={() => setupTab(tab)}
-              className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
+              className={`relative h-full w-full text-sm text-start cursor-pointer font-semibold ${statusFilter === tab
                 ? "text-customBlue"
-                : "text-black hover:text-customBlue"
+                : "text-gray-500 hover:text-black"
                 }`}
             >
               {tab}
               <span
-                className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
+                className={`absolute bottom-0 left-0 w-full h-[3px] ${statusFilter === tab
                   ? "bg-customBlue"
-                  : "bg-transparent group-hover:bg-customBlue"
+                  : "bg-transparent group-hover:bg-customeBlue"
                   }`}
               ></span>
             </div>
             {index !== tabs.length - 1 && (
-              <span className="mx-[12px] h-[37px] text-gray-400">|</span>
+              <span className="mx-[12px] h-[37px] text-gray-400"></span>
             )}
           </div>
         ))}
@@ -96,15 +94,14 @@ const ApprovalWorkflow: React.FC = () => {
       />
         :
         <ApprovalWorkflowForm
-        flowType={statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp"}
-        seViewType={seViewType}
+          flowType={statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp"}
+          seViewType={seViewType}
           type={viewType as any}
           closeModal={() => setIsCreateModalOpen(false)}
           trigger={() => { setTrigger(true) }}
           initialData={workflow}
         />
       }
-
     </div>
   );
 };

@@ -65,6 +65,13 @@ function Dashboard() {
       icon: "!",
       label: "Open RFPs",
       value: 0,
+      color: "bg-blue-500/30",
+      textColor: "text-blue-900"
+    },
+    {
+      icon: "!",
+      label: "Under Approval",
+      value: 0,
       color: "bg-yellow-500/30",
       textColor: "text-yellow-900",
     }
@@ -78,19 +85,22 @@ function Dashboard() {
       setShowLoader(true);
       const rfpResponse = await getAllRfpsByFilterAsync();
       const requests = rfpResponse.map((r: any) => ({ ...r, bidValueLabel: `${convertCurrencyLabel(r.rfpCurrency as string)}${r.bidValue?.toFixed(2)}` }));
-      const statusCounts = [0, 0];
+      const statusCounts = [0, 0, 0];
       const approvedRequests: any[] = [];
 
       // Process requests and count statuses
       requests.forEach((request: any) => {
-        switch (request.isOpen) {
-          case false:
+        switch (request.status) {
+          case 6:
             statusCounts[0]++;
             if (approvedRequests) {
               approvedRequests.push(request as any);
             }
             break;
-          case true:
+          case 5:
+            statusCounts[2]++;
+            break;
+          default:
             statusCounts[1]++;
             break;
         }
@@ -109,6 +119,13 @@ function Dashboard() {
           icon: "!",
           label: "Open RFPs",
           value: statusCounts[1],
+          color: "bg-blue-500/30",
+          textColor: "text-blue-900"
+        },
+        {
+          icon: "!",
+          label: "Under Approval",
+          value: statusCounts[2],
           color: "bg-yellow-500/30",
           textColor: "text-yellow-900",
         }
@@ -151,7 +168,7 @@ function Dashboard() {
         rfpRequests: approvedRequests,
         totalCount: statusCounts[0], // Total approved requests
       });
-      console.log(approvedRequests,"approvedRequests---")
+      console.log(approvedRequests, "approvedRequests---")
     } catch (error: any) {
       console.error("Error fetching dashboard data:", error);
       notification.error({
@@ -212,9 +229,9 @@ function Dashboard() {
             <div className="flex flex-col desktop:flex-row justify-center desktop:justify-between items-center w-full h-full space-y-4 desktop:space-y-0 desktop:space-x-6">
               <BudgetCard budgetDetails={budgetDetails} />
               <RequestCard
-                labels={['Closed', 'Open']}
+                labels={['Closed', 'Open', 'Under Approval']}
                 data={requestStatus}
-                colors={['#0F9670', '#E79937']}
+                colors={['#0F9670', 'rgba(59, 130, 246, 0.8)', '#E79937']}
               />
             </div>
           </div>

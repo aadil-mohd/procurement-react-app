@@ -199,9 +199,9 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
 
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col h-full bg-white rounded">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full rounded">
             {/* Fixed Header */}
-            <div className="sticky top-0 bg-white z-10 px-4 py-3 border-b">
+            <div className="sticky top-0 z-10 px-4 py-3 border-b">
                 <p className="text-xl font-bold">
                     {type === "create" ? "Create flow" : "Edit flow"}
                 </p>
@@ -222,8 +222,8 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                             setFormData(prev => ({ ...prev, flowName: value }));
                             setErrors((prev: any) => ({ ...prev, flowName: undefined }));
                         }}
+                        style='bg-white'
                         placeholder="Enter flow name"
-                        style=""
                         type="text"
                         width="w-full"
                     />

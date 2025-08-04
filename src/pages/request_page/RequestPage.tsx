@@ -177,7 +177,7 @@ function RequestPage() {
     getRfpRequestFilter();
   }, [filter, trigger]);
 
-  const tabs = ["All RFPs", "My RFPs", "Draft RFPs", "Assigned"];
+  const tabs = ["All RFPs", "My RFPs", "Assigned","Draft RFPs"];
 
   return (
     <div className="desktop-wide:flex desktop-wide:justify-center">
@@ -193,26 +193,26 @@ function RequestPage() {
               </div>
 
             </div>
-            <div className="pt-[24px] flex justify-start mb-[16px]">
+            <div className="pt-[24px] flex justify-start border-b ml-[10px] mb-[16px]">
               {tabs.map((tab, index) => (
                 <div className="flex items-center h-[37px]" key={tab}>
                   <div
                     onClick={() => setupTab(tab)}
-                    className={`relative h-full w-full text-sm text-start cursor-pointer ${statusFilter === tab
+                    className={`relative h-full w-full text-sm text-start cursor-pointer font-semibold ${statusFilter === tab
                       ? "text-customBlue"
-                      : "text-black hover:text-customBlue"
+                      : "text-gray-500 hover:text-black"
                       }`}
                   >
                     {tab}
                     <span
-                      className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${statusFilter === tab
+                      className={`absolute bottom-0 left-0 w-full h-[3px] ${statusFilter === tab
                         ? "bg-customBlue"
-                        : "bg-transparent group-hover:bg-customBlue"
+                        : "bg-transparent group-hover:bg-customeBlue"
                         }`}
                     ></span>
                   </div>
                   {index !== tabs.length - 1 && (
-                    <span className="mx-[12px] h-[37px] text-gray-400">|</span>
+                    <span className="mx-[12px] h-[37px] text-gray-400"></span>
                   )}
                 </div>
               ))}
