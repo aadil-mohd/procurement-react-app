@@ -25,8 +25,8 @@ const NewRequestsCard: React.FC<NewRequestsCardProp> = ({ requests,trigger }: Ne
   }
 
   return (
-    <div className="bg-white h-full rounded-lg p-4 min-h-[100vh] flex flex-col ">
-      <h2 className="text-lg font-semibold mb-4 text-gray-700 sticky">New tasks</h2>
+    <div className="bg-white h-[100vh] rounded-lg p-4 flex flex-col overflow-y-auto relative">
+      <h2 className="text-lg font-semibold mb-4 text-gray-700 bg-white sticky">New tasks</h2>
 
       {requests.length!==0?<ul className="flex flex-col gap-4">
         {requests.map((request, index) => (
@@ -62,7 +62,7 @@ const NewRequestsCard: React.FC<NewRequestsCardProp> = ({ requests,trigger }: Ne
             </span>
           </li>
         ))}
-      </ul>:<span className='px-4 py-2 border-b text-center text-sm'>No new requests</span>}
+      </ul>:<div className='h-[80vh] flex justify-center items-center'><span className='text-center text-sm'>No new requests</span></div>}
     </div>
   );
 };

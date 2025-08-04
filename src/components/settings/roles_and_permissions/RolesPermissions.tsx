@@ -138,7 +138,7 @@ const RolesPermissions: React.FC = () => {
                     createdAt: formatDate(role.createdAt ?? "") || "N/A"
                 };
 
-            }).filter((role) => role.roleName !== "Admin" && role.roleName !== currentUserRole);
+            }).filter((role) =>  role.roleName !== currentUserRole);
 
             const permission = await getPermissionsByRoleIdAsync(roleData[0]?.roleid)
             console.log({

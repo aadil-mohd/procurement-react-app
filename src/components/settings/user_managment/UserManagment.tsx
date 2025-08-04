@@ -25,7 +25,7 @@ const columns = [
     { key: 'roleName', label: 'Role' },
     { key: 'departmentName', label: 'Department' },
     { key: 'createdAt', label: 'Date Added' },
-    { key: 'updatedAt', label: 'Last Login' },
+    //{ key: 'updatedAt', label: 'Last Login' },
     { key: 'status', label: 'Status' }
 ];
 

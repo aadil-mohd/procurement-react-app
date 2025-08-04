@@ -6,7 +6,7 @@ export interface IRfp {
     buyer?: any
     buyerOrganizationName?: string
     departmentId?: number
-    isOpen?: false
+    isOpen?: boolean
     isSerial?: false
     rfpCurrency?: string
     bidValue?: number

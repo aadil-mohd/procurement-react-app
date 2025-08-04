@@ -108,7 +108,7 @@ const RequestCard: React.FC<RequestCardProps> = ({ labels, data, colors }: Reque
       className="p-4 bg-white rounded-lg w-full desktop:max-w-[32rem] desktop:min-w-[25rem] h-[15.25rem]"
       style={{ border: '2px solid #E5E6EC' }}
     >
-      <h2 className="text-lg font-semibold text-gray-600 mt-2 mb-2">Request Status</h2>
+      <h2 className="text-lg font-semibold mt-2 mb-2">Request Status</h2>
       <div className="w-full flex items-center justify-between px-[50px]">
         {/* Chart */}
         <div className="relative">

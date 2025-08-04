@@ -130,6 +130,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                 setIsButtonnLoading(true);
                 if (type == "create") {
                     console.log(formData)
+                    formData.flowType = initialData?.flowType || flowType == "vendor" ? 1 : 2
                     let response = await createWorkFlowAsync(formData)
                     console.log(response)
                     if (response) {

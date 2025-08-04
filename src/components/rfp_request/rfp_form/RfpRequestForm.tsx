@@ -31,7 +31,7 @@ const defaultRfpState: IRfp = {
   buyer: [{ name: getUserCredentials().name, id: getUserCredentials().userId }],
   buyerOrganizationName: "",
   departmentId: Number(getUserCredentials().departmentId || "0"),
-  isOpen: false,
+  isOpen: true,
   isSerial: false,
   rfpCurrency: "USD",
   bidValue: undefined,

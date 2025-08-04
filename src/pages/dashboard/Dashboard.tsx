@@ -201,7 +201,7 @@ function Dashboard() {
   return (
     <div className="flex flex-col justify-between h-full desktop:flex-row desktop-wide:justify-center">
       {(!showLoader) ? (<>
-        <div className="w-full desktop:max-w-[61.5rem] desktop:min-w-[57.5rem] h-full">
+        <div className="w-full desktop:max-w-[61.5rem] desktop:min-w-[57.5rem] h-full overflow-y-auto">
           <div className="w-full px-[2rem] pt-[1.5rem]">
             <TitleCard trigger={() => setTrigger(true)} />
           </div>

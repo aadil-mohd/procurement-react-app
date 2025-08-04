@@ -116,7 +116,7 @@ const SettingsTable: React.FC<TableProps> = ({
     const pageSize = filter?.pageSize ?? 10;
     // const [pages, setPages] = useState<number[]>([]);
     const tableContainerRef = useRef<HTMLDivElement>(null);
-        console.log(data,columns,"hiiidsf");
+    console.log(data, columns, "hiiidsf");
     useEffect(() => {
         // if (totalCount ?? 0 > 0) {
         //     const pagesNeeded = Math.ceil(totalCount ?? 0 / pageSize);
@@ -152,17 +152,17 @@ const SettingsTable: React.FC<TableProps> = ({
 
     const toggleDropdown = (index: number, event: React.MouseEvent) => {
         event.stopPropagation();
-        
+
         if (openDropdown === index) {
             setOpenDropdown(null);
         } else {
             const buttonRect = event.currentTarget.getBoundingClientRect();
             const containerRect = tableContainerRef.current?.getBoundingClientRect();
-            
+
             if (containerRect) {
                 // Calculate if this is one of the last items in the table
                 const isNearBottom = buttonRect.bottom > containerRect.bottom - 50; // 150px threshold
-                
+
                 const dropdownHeight = 120; // Approximate height of dropdown with all options
                 const topPosition = isNearBottom
                     ? buttonRect.top + window.scrollY - dropdownHeight + 40 // Position above the button
@@ -173,7 +173,7 @@ const SettingsTable: React.FC<TableProps> = ({
                     left: buttonRect.left + window.scrollX - 110,
                 });
             }
-            
+
             setOpenDropdown(index);
         }
     };
@@ -184,20 +184,26 @@ const SettingsTable: React.FC<TableProps> = ({
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-[18px] font-semibold mr-4">{title}</h2>
                     <div className="flex space-x-2">
-                        <div className="relative w-[219px] h-[32px]">
-                            <MagnifyingGlass className="absolute w-6 h-6 left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <div className="relative w-[219px] h-[30px] flex items-center">
+                            <MagnifyingGlass className="absolute size-4 left-3 top-1/2 transform -translate-y-1/2 text-[#1E1F21] z-10" />
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="w-full pl-10 pr-3 py-[5px] border rounded bg-[#EFF4F9] text-[12px] focus:outline-none focus:ring-0"
+                                className="w-full pl-10 pr-3 py-1.5 rounded bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        {filter && setIsFilterModalOpen && <button className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200" onClick={() => setIsFilterModalOpen(true)}>
+                        {filter && setIsFilterModalOpen && <button
+                            className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+                            onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
+                        >
                             <FilterIcon className="size-6 mr-2" /> Filter
                         </button>}
-                        <button className="px-3 py-2 w-[75px] h-[32px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200" onClick={() => setIsSortModalOpen(true)}>
-                            <SortIcon className="size-6 mr-2" /> Sort
+                        <button
+                            className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+                            onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
+                        >
+                            <SortIcon className="size-3 mr-2" /> Sort
                         </button>
                     </div>
                 </div>
@@ -218,12 +224,12 @@ const SettingsTable: React.FC<TableProps> = ({
                                 data.map((item, index) => (
                                     <tr key={index} onClick={() => onRowClick?.(item)} className="cursor-pointer hover:bg-gray-100">
                                         {columns.map((col) => (
-                                            <td key={col.key} className={`px-1 py-2 ${index < data.length-1 && "border-b"} text-[12px]`}>
+                                            <td key={col.key} className={`px-1 py-2 ${index < data.length - 1 && "border-b"} text-[12px]`}>
                                                 {col.key === "status" ? getStatusBadge(item[col.key]) : item[col.key]}
                                             </td>
                                         ))}
                                         {dots && (
-                                            <td className={`px-6 py-2 ${index < data.length-1 && "border-b"} text-xs`} onClick={(e) => e.stopPropagation()}>
+                                            <td className={`px-6 py-2 ${index < data.length - 1 && "border-b"} text-xs`} onClick={(e) => e.stopPropagation()}>
                                                 <button onClick={(e) => toggleDropdown(index, e)} className="focus:outline-none">
                                                     <EllipsisVerticalIcon className="w-4 h-4 stroke-gray-600" />
                                                 </button>

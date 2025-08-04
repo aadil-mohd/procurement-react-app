@@ -28,7 +28,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ statuses }) => {
             </div>
           </div>
           {index < statuses.length - 1 && (
-            <p className="hidden desktop:block mx-2 text-2xl text-gray-400">|</p>
+            <p className="hidden desktop:block mx-2 text-md text-gray-300">|</p>
           )}
         </React.Fragment>
       ))}

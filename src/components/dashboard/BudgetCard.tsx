@@ -117,21 +117,21 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budg
 
   return (
     <div
-      className={`p-4 bg-white rounded-lg w-full  desktop:min-width:${width} desktop:max-width:${width}`}
+      className={`p-4 bg-white rounded-lg w-full  desktop:min-width:${width} desktop:max-width:${width} overflow-hidden`}
       style={{ border: '2px solid #E5E6EC', height }}
     >
       <div className="flex justify-between mt-[.5rem] mb-[.9375rem]">
-        <h2 className="text-lg font-semibold text-gray-600">{heading}</h2>
+        <h2 className="text-lg font-semibold">{heading}</h2>
         <div className="flex text-sm">
           <span className="flex items-center mr-2">
-            <div className="p-1.5 bg-[#1A73E8] rounded-full mr-[4px]"></div> Estimated
+            <div className="p-[4.9px] bg-[#1A73E8] rounded-full mr-[4px]"></div> Estimated
           </span>
           <span className="flex items-center">
-            <div className="p-1.5 bg-[#00C3D1] rounded-full mr-[4px]"></div> Spend Amount
+            <div className="p-[4.9px] bg-[#00C3D1] rounded-full mr-[4px]"></div> Spend Amount
           </span>
         </div>
       </div>
-      <div className="relative" style={{ height: 'calc(100% - 60px)' }}>
+      <div className="relative" style={{ height: 'calc(100% - 50px)' }}>
         <canvas
           ref={chartRef}
           style={{ width: '100%', height: '100%' }}

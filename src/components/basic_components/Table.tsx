@@ -145,28 +145,29 @@ const Table: React.FC<TableProps> = ({
     <div className="overflow-x-auto bg-white rounded-md border w-full">
       <div className="bg-white p-3">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">{title}</h2>
+          <h2 className="text-lg font-semibold">{title}</h2>
           <div className="flex space-x-2">
-            {setSearchQuery && <div className="relative w-[219px] h-[32px]">
-              <MagnifyingGlass className="absolute w-6 h-6 left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full pl-10 pr-3 py-[5px] border rounded bg-[#EFF4F9] text-sm focus:outline-none"
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>}
+            {setSearchQuery &&
+              <div className="relative w-[219px] h-[30px] flex items-center">
+                <MagnifyingGlass className="absolute size-4 left-3 top-1/2 transform -translate-y-1/2 text-[#1E1F21] z-10" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-full pl-10 pr-3 py-1.5 rounded bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>}
             {filter && <button
-              className="px-3 py-2 w-[75px] h-[32px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+              className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
               onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
             >
               <FilterIcon className="size-6 mr-2" /> Filter
             </button>}
             {setIsSortModalOpen && <button
-              className="px-3 py-2 w-[75px] h-[32px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+              className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
               onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
             >
-              <SortIcon className="size-6 mr-2" /> Sort
+              <SortIcon className="size-3 mr-2" /> Sort
             </button>}
           </div>
         </div>
