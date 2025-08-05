@@ -11,13 +11,12 @@ import CreateUserForm from './CreateUserForm';
 import ViewUserCard from './ViewUserCard';
 import { deleteUserAsync, getAllUsersByFilterAsync, createOrUpdateUserAsync } from '../../../services/userService';
 //import { formatDate, getUserCredentials, handleFile } from '../../../utils/common';
-import { formatDate, getUserCredentials } from '../../../utils/common';
+import { formatDate, getUserCredentials, getUserInitials } from '../../../utils/common';
 import { User } from '../../../types/userTypes';
 import { IRole } from '../../../types/roleTypes';
 import { IDepartment } from '../../../types/departmentTypes';
 import { getAllDepartmentsAsync } from '../../../services/departmentService';
 import { getAllRolesFilterAsync } from '../../../services/roleService';
-import userPhoto from '../../../assets/profile_photo/userPhoto.png'
 import dayjs from 'dayjs';
 
 const columns = [
@@ -62,13 +61,37 @@ const UserManagement: React.FC = () => {
     async function setupUsers() {
         try {
             setTrigger(false);
-            const users:any = await getAllUsersByFilterAsync(filter);
-            const users_list: any[] = users.items.map((u:any) => {
-                return { ...u, dateAdded: dayjs(u.createdAt).format("DD-MM-YYYY"), place: u.place !== "undefined" ? u.place : "", lastUpdated: formatDate(u.updatedAt), photoUrl: u.photo , status: u.isActive ? "Active" : "Inactive", userWithLogo: <div className='flex items-center'><img src={u.photo || userPhoto} className='w-[25px] h-[25px]' style={{ borderRadius: "50%" }} /><p className='pl-[8px]'>{u.name}</p></div> }
+            const users: any = await getAllUsersByFilterAsync(filter);
+            const users_list: any[] = users.items.map((u: any) => {
+                return {
+                    ...u,
+                    dateAdded: dayjs(u.createdAt).format("DD-MM-YYYY"),
+                    place: u.place !== "undefined" ? u.place : "",
+                    lastUpdated: formatDate(u.updatedAt),
+                    photoUrl: u.photo,
+                    status: u.isActive ? "Active" : "Inactive",
+                    userWithLogo: (
+                        <div className="flex items-center">
+                            {u.photo ? (
+                                <img
+                                    src={u.photo}
+                                    className="w-[25px] h-[25px]"
+                                    style={{ borderRadius: "50%" }}
+                                    alt="User"
+                                />
+                            ) : (
+                                <div className="w-[25px] h-[25px] rounded-full bg-gray-300 text-xs font-medium flex items-center justify-center">
+                                    {getUserInitials(u.name)}
+                                </div>
+                            )}
+                            <p className="pl-[8px]">{u.name}</p>
+                        </div>
+                    )
+                };
             });
-            setUsers(users_list.filter((x)=>x.roleName!=="Admin"));
+            setUsers(users_list.filter((x) => x.roleName !== "Admin"));
             setUsersCount(users.length);
-            
+
 
             //setup roles and departments
             const { data: alldepartments } = await getAllDepartmentsAsync();
@@ -108,14 +131,14 @@ const UserManagement: React.FC = () => {
                 // const formData = new FormData();
                 // formData.append("id", confirmAction.user.id as string);
                 // formData.append("isActive", (!confirmAction.user.isActive).toString());
-                 const formData = {};               
+                const formData = {};
                 const response = await createOrUpdateUserAsync(formData)
                 if (response) {
                     setTrigger(true);
                 }
             }
             notification.success({
-                message:`User ${confirmAction?.type=="delete"?"deletion":"action"} successfull`
+                message: `User ${confirmAction?.type == "delete" ? "deletion" : "action"} successfull`
             })
 
         } catch (error: any) {

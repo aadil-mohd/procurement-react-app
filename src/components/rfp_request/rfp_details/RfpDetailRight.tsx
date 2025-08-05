@@ -74,40 +74,27 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
             <div className="w-full bg-white">
                 <div className="w-full space-y-2 desktop:max-w-[700px] mx-auto rounded-lg h-full px-6 max-h-[900px] overflow-y-auto scrollbar">
                     <div className="relative flex items-center sticky top-0 bg-white z-10">
-                        <div className="overflow-x-auto py-4 flex-1 scroll-smooth no-scrollbar border-b">
-                            <div className="pt-[24px] flex justify-start mb-[16px]">
+                        <div className="overflow-x-auto py-4 flex-1 scroll-smooth no-scrollbar">
+                            <div className="pt-[24px] flex justify-start border-b ml-[10px]">
                                 {tabs.map((tab, index) => (
                                     <div className="flex items-center h-[37px]" key={tab}>
                                         <div
                                             onClick={() => setActiveTab(tab)}
-                                            className={`relative h-full w-full text-sm text-start cursor-pointer ${activeTab === tab
+                                            className={`relative h-full w-full text-sm text-start cursor-pointer font-semibold ${activeTab === tab
                                                 ? "text-customBlue"
-                                                : "text-black hover:text-customBlue"
+                                                : "text-gray-500 hover:text-black"
                                                 }`}
                                         >
+                                            {tab}
                                             <span
-                                                onClick={() => setActiveTab(tab)}
-                                                className={`cursor-pointer font-bold text-[16px] flex items-center ${activeTab === "proposals" ? "border-black" : "text-gray-500"}`}
-                                            >
-                                                <GeneralDetailIcon className="size-5" />
-                                                <span className={`pl-[8px] ${activeTab === tab ? "text-customBlue"
-                                                    : "text-black hover:text-customBlue"
-                                                    }`}>{tab}</span>
-                                                <span
-                                                    className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${activeTab === "proposals"
-                                                        ? "bg-customBlue"
-                                                        : "bg-transparent group-hover:bg-customBlue"
-                                                        }`}
-                                                ></span></span>
-                                            <span
-                                                className={`absolute bottom-0 left-0 w-full h-[3px] rounded-t-[10px] ${activeTab === tab
+                                                className={`absolute bottom-0 left-0 w-full h-[3px] ${activeTab === tab
                                                     ? "bg-customBlue"
-                                                    : "bg-transparent group-hover:bg-customBlue"
+                                                    : "bg-transparent group-hover:bg-customeBlue"
                                                     }`}
                                             ></span>
                                         </div>
                                         {index !== tabs.length - 1 && (
-                                            <span className="mx-[12px] h-[37px] text-gray-400">|</span>
+                                            <span className="mx-[12px] h-[37px] text-gray-400"></span>
                                         )}
                                     </div>
                                 ))}
