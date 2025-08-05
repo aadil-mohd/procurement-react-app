@@ -98,10 +98,10 @@ function Dashboard() {
             }
             break;
           case 5:
-            statusCounts[2]++;
+            statusCounts[1]++;
             break;
           default:
-            statusCounts[1]++;
+            statusCounts[2]++;
             break;
         }
       });

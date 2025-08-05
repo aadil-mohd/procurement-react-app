@@ -76,7 +76,7 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
                 {users.map((user, idx) => (
                     <div
                         key={idx}
-                        className="flex items-center bg-purple-100 rounded-full py-1 px-3"
+                        className="flex items-center bg-[#EBEEF4] rounded-full py-1 px-1"
                     >
                         <img
                             src={user.avatarUrl || userPhoto}
@@ -188,9 +188,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                                         (c: any) => c.id === item.categoryId
                                     );
                                     return (
-                                        <Tag className="text-md" key={item.categoryId} color="blue">
-                                            {category?.name || 'Unknown'}
-                                        </Tag>
+                                        <div key={item.categoryId} className={"py-1 px-2 text-xs border rounded-full flex justify-center bg-blue-100 text-blue-700 border-blue-500"}>{category?.name || 'Unknown'}</div>                    
                                     );
                                 })}
                             </div>
@@ -232,12 +230,6 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                     <KeyValueGrid className="mb-[16px]"
                         data={[
                             { label: "Express Interest Last Date", value: dayjs(requestData?.expressInterestLastDate).format("DD-MM-YYYY") },
-                            { label: "Response Due Date", value: dayjs(requestData?.responseDueDate).format("DD-MM-YYYY") },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Buyer Reply End Date", value: dayjs(requestData?.buyerReplyEndDate).format("DD-MM-YYYY") },
                             { label: "Clarification Date", value: dayjs(requestData?.clarificationDate).format("DD-MM-YYYY") },
                         ]}
                     />

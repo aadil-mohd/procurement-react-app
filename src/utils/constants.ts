@@ -83,13 +83,13 @@ export const milestoneStatuses = [
 ]
 
 export const rfpStatuses = [
-    { label: "pending", value: 0 },
-    { label: "pending", value: 7 },
-    { label: "approved", value: 1 },
-    { label: "rejected", value: 2 },
-    { label: "under clarification", value: 3 },
-    { label: "under approval", value: 4 },
-    { label: "published", value: 5 },
-    { label: "closed", value: 6 },
+    { label: "Pending", value: 0 },
+    { label: "Pending", value: 7 },
+    { label: "Approved", value: 1 },
+    { label: "Rejected", value: 2 },
+    { label: "Under Clarification", value: 3 },
+    { label: "Under Approval", value: 4 },
+    { label: "Published", value: 5 },
+    { label: "Closed", value: 6 },
     
 ]

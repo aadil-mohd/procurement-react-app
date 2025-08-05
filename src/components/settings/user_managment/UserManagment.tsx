@@ -18,13 +18,14 @@ import { IDepartment } from '../../../types/departmentTypes';
 import { getAllDepartmentsAsync } from '../../../services/departmentService';
 import { getAllRolesFilterAsync } from '../../../services/roleService';
 import userPhoto from '../../../assets/profile_photo/userPhoto.png'
+import dayjs from 'dayjs';
 
 const columns = [
     { key: 'userWithLogo', label: 'Name' },
     { key: 'email', label: 'Email' },
     { key: 'roleName', label: 'Role' },
     { key: 'departmentName', label: 'Department' },
-    { key: 'createdAt', label: 'Date Added' },
+    { key: 'dateAdded', label: 'Date Added' },
     //{ key: 'updatedAt', label: 'Last Login' },
     { key: 'status', label: 'Status' }
 ];
@@ -63,7 +64,7 @@ const UserManagement: React.FC = () => {
             setTrigger(false);
             const users:any = await getAllUsersByFilterAsync(filter);
             const users_list: any[] = users.items.map((u:any) => {
-                return { ...u, dateAdded: formatDate(u.createdAt), place: u.place !== "undefined" ? u.place : "", lastUpdated: formatDate(u.updatedAt), photoUrl: u.photo , status: u.isActive ? "Active" : "Inactive", userWithLogo: <div className='flex items-center'><img src={u.photo || userPhoto} className='w-[25px] h-[25px]' style={{ borderRadius: "50%" }} /><p className='pl-[15px]'>{u.name}</p></div> }
+                return { ...u, dateAdded: dayjs(u.createdAt).format("DD-MM-YYYY"), place: u.place !== "undefined" ? u.place : "", lastUpdated: formatDate(u.updatedAt), photoUrl: u.photo , status: u.isActive ? "Active" : "Inactive", userWithLogo: <div className='flex items-center'><img src={u.photo || userPhoto} className='w-[25px] h-[25px]' style={{ borderRadius: "50%" }} /><p className='pl-[8px]'>{u.name}</p></div> }
             });
             setUsers(users_list.filter((x)=>x.roleName!=="Admin"));
             setUsersCount(users.length);

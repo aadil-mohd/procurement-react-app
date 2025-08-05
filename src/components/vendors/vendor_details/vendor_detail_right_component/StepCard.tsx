@@ -15,7 +15,7 @@ const StepCard: React.FC<{ step: IStep, trigger: () => void }> = ({ step, trigge
                     <div className="flex items-center space-x-2 p-1">
                         <div className="font-semibold text-[18px]">{step.approverRole}</div>
                         <div className="flex items-center justify-center bg-[#EBEEF4] rounded-2xl space-x-2 p-1">
-                            <div className="w-[20px] h-[20px] rounded-full bg-red-300"><img className="w-full h-full z-2 rounded-full object-cover" src={step.photo || userPhoto} alt="imag" /></div>
+                            <div className="w-[20px] h-[20px] rounded-full bg-[#EBEEF4]"><img className="w-full h-full z-2 rounded-full object-cover" src={step.photo || userPhoto} alt="imag" /></div>
                             <div className="text-black font-semibold text-[13px]">{step.approverName}</div>
                             <span className="text-gray-400 text-[13px]">|</span>
                             <div className="text-[13px]">{step.approverEmail}</div>

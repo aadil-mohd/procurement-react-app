@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ShowStatus from '../buttons/ShowStatus';
 import { useNavigate } from 'react-router-dom';
 import { IRfp } from '../../types/rfpTypes';
+import { NoDataIcon } from '../../utils/Icons';
 
 interface NewRequestsCardProp {
   requests: any[]
@@ -62,7 +63,7 @@ const NewRequestsCard: React.FC<NewRequestsCardProp> = ({ requests,trigger }: Ne
             </span>
           </li>
         ))}
-      </ul>:<div className='h-[80vh] flex justify-center items-center'><span className='text-center text-sm'>No new requests</span></div>}
+      </ul>:<div className='h-[80vh] flex justify-center items-center'><span className='text-center text-sm flex flex-col items-center text-gray-400'><NoDataIcon className='w-10 h-10 text-gray-300 m-2'/> No new requests</span></div>}
     </div>
   );
 };

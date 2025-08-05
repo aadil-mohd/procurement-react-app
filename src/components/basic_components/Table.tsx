@@ -153,18 +153,18 @@ const Table: React.FC<TableProps> = ({
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="w-full pl-10 pr-3 py-1.5 rounded bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
+                  className="w-full pl-10 pr-3 py-1.5 rounded-[6px] bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>}
             {filter && <button
-              className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+              className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
               onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
             >
               <FilterIcon className="size-6 mr-2" /> Filter
             </button>}
             {setIsSortModalOpen && <button
-              className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+              className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
               onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
             >
               <SortIcon className="size-3 mr-2" /> Sort
@@ -193,8 +193,8 @@ const Table: React.FC<TableProps> = ({
                     className="cursor-pointer hover:bg-gray-100"
                   >
                     {columns.map((col) => (
-                      <td key={col} className="px-4 py-2 border-b text-sm">
-                        {col === 'status' ? <ShowStatus status={item[col]} type={type} /> : item[col]}
+                      <td key={col} className={`px-4 py-2 border-b text-sm`}>
+                        {col === 'status' ? <ShowStatus status={item[col]} type={type} /> : <span className={`w-[60%] ${(col.includes("Value") || col.includes("value") || col.includes("amount") || col.includes("Amount")) ? "flex justify-end" : ""}`}>{item[col]}</span>}
                       </td>
                     ))}
 

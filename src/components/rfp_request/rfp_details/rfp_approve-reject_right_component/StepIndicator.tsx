@@ -75,8 +75,8 @@ const StepIndicator: React.FC<{ steps: IStep[] }> = ({ steps }) => {
                                     ) : (step.status === "approved") ? (
                                         <Check className="w-4 h-4 text-white" />
                                     ) : (
-                                        <span className={`text-[26px] d-flex items-center justify-center ${((step.status === "pending" && (index == 0 || steps[index - 1].status == "approved"))) ? "text-white" : "text-gray-400"}`}>
-                                            •
+                                        <span className={`text-[26px] flex items-center justify-center pb-[2.3px] ${((step.status === "pending" && (index == 0 || steps[index - 1].status == "approved"))) ? "text-white" : "text-gray-400"}`}>
+                                            {"•"}
                                         </span>
                                     )}
 

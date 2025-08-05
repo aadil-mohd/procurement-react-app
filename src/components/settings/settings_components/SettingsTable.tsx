@@ -189,18 +189,18 @@ const SettingsTable: React.FC<TableProps> = ({
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="w-full pl-10 pr-3 py-1.5 rounded bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
+                                className="w-full pl-10 pr-3 py-1.5 rounded-[6px] bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                         {filter && setIsFilterModalOpen && <button
-                            className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+                            className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
                             onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
                         >
                             <FilterIcon className="size-6 mr-2" /> Filter
                         </button>}
                         <button
-                            className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded hover:bg-blue-200"
+                            className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
                             onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
                         >
                             <SortIcon className="size-3 mr-2" /> Sort
