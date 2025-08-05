@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
+import { DocumentIcon, DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
 import { convertCurrencyLabel, getUserCredentials } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
@@ -136,7 +136,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
         try {
             if (requestData) {
                 const documents_to_display = requestData.rfpGeneralDocuments.map((d: any) =>
-                    ({ ...d, attachmentComponent: <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
+                    ({ ...d, attachmentComponent: <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileTitle}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
                 )
                 setRfpDocuments(documents_to_display);
             }
