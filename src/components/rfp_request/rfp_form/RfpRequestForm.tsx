@@ -75,10 +75,10 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
       setMasterData({
         users: (users as any)?.items, departments: departments.data, categories, companies, documentTypes
       })
-       if (id && !isNaN(Number(id))) {
+      if (id && !isNaN(Number(id))) {
         try {
           const rfpRequest = await getRfpByIdAsync(Number(id));
-          // setRequestData({ ...rfpRequest, rfpDocuments: [] });
+          setRequestData({ ...rfpRequest, buyer: [{ name: getUserCredentials().name, id: getUserCredentials().userId }], rfpDocuments: [] });
 
           const ownersTemp: any = { technical: [], commercial: [] };
           rfpRequest.rfpOwners.forEach((item: any) => {
@@ -89,13 +89,23 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
             }
           });
           setOwners(ownersTemp);
+          // ✅ Load previously uploaded files
           const filesArray: any = [];
-          for (let filedetail of rfpRequest.rfpGeneralDocuments) {
-            const file = await fetchAndConvertToFile(filedetail?.filePath);
-            filesArray.push({ ...file, documentName: filedetail?.fileTitle });
-          }
-          setAttachments(filesArray);
+          for (let fileDetail of rfpRequest.rfpGeneralDocuments || []) {
+            const { document, documentName } = await fetchAndConvertToFile(
+              fileDetail?.filePath,
+              fileDetail?.fileTitle // ✅ This is the original name stored in DB
+            );
 
+            filesArray.push({
+              name: documentName,
+              type: fileDetail?.documentTypeId,
+              attachment: document,
+              previewPath: fileDetail?.filePath,
+            });
+          }
+
+          setAttachments(filesArray);
           console.log(requestData, "RequestData")
           console.log(ownersTemp, "ownersTemp")
           console.log(attachments, "attachements")
