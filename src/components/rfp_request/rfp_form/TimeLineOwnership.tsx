@@ -4,6 +4,7 @@ import PeoplePicker from "../../basic_components/PeoplePicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import DateTimePicker from "../../basic_components/date_time_picker/DateTimePicker";
 import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 interface TimeLineOwnershipProps {
   requestData: any;
@@ -41,43 +42,63 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               <label className="block text-sm font-medium mb-1">
                 Express Interest LastDate <span className="text-red-500">*</span>
               </label>
-              <DatePicker value={requestData.expressInterestLastDate ?? ""} 
-              id="expressInterestLastDate" className="w-full h-[41px]" required={true} 
-              onChange={(value) => setRequestData((prev: IRfp) => ({
-                ...prev,
-                expressInterestLastDate: value,
-              }))} />
+              <DatePicker
+                value={requestData.expressInterestLastDate ? dayjs(requestData.expressInterestLastDate) : null}
+                id="expressInterestLastDate"
+                className="w-full h-[41px]"
+                onChange={(value) =>
+                  setRequestData((prev: IRfp) => ({
+                    ...prev,
+                    expressInterestLastDate: value ? value.toISOString() : null,
+                  }))
+                }
+              />
             </div>
 
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-1">
                 Clarification End Date <span className="text-red-500">*</span>
               </label>
-              <DatePicker value={requestData.clarificationDate ?? ""} 
-              id="clarificationDate" className="w-full h-[41px]" required={true} 
-              onChange={(value) => setRequestData((prev: IRfp) => ({
-                ...prev,
-                clarificationDate: value,
-              }))} />
+              <DatePicker
+                value={requestData.clarificationDate ? dayjs(requestData.clarificationDate) : null}
+                id="clarificationDate"
+                className="w-full h-[41px]"
+                onChange={(value) =>
+                  setRequestData((prev: IRfp) => ({
+                    ...prev,
+                    clarificationDate: value ? value.toISOString() : null,
+                  }))
+                }
+              />
             </div>
 
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-1">
                 Publish Date <span className="text-red-500">*</span>
               </label>
-              <DatePicker value={requestData.publishDate ?? ""} id="buyerReplyEndDate" className="w-full h-[41px]" required={true} onChange={(value) => setRequestData((prev: IRfp) => ({
-                ...prev,
-                publishDate: value,
-              }))} />
+              <DatePicker
+                value={requestData.publishDate ? dayjs(requestData.publishDate) : null}
+                id="buyerReplyEndDate"
+                className="w-full h-[41px]"
+                onChange={(value) =>
+                  setRequestData((prev: IRfp) => ({
+                    ...prev,
+                    publishDate: value ? value.toISOString() : null,
+                  }))
+                }
+              />
             </div>
 
             <div className="w-full mb-4">
               <DateTimePicker
                 required={true}
                 label="Closing Time & Date"
-                value={requestData.closingDate}
+                value={requestData.closingDate || null}
                 setValue={(val) =>
-                  setRequestData((prev: any) => ({ ...prev, closingDate: val }))
+                  setRequestData((prev: any) => ({
+                    ...prev,
+                    closingDate: val,
+                  }))
                 }
               />
             </div>
@@ -112,7 +133,6 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
       </div>
     </div>
   );
-
 };
 
 export default TimeLineOwnership;
