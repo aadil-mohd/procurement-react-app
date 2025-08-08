@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 // import PageLoader from '../../basic_components/PageLoader';
 // import { notification } from 'antd';
 import { IRfp } from '../../../types/rfpTypes';
-import { GeneralDetailIcon } from '../../../utils/Icons';
 import Table from '../../basic_components/Table';
 import { IFilterDto } from '../../../types/commonTypes';
 import Modal from '../../basic_components/Modal';
 import ProposalSubmissionModal from './ProposalSubmissionModal';
 import { getAllProposalsByFilterAsync } from '../../../services/rfpService';
+import ClarificationList from './ClarificationList';
 
 // interface User {
 //     name: string;
@@ -73,7 +73,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
         <>
             <div className="w-full bg-white">
                 <div className="w-full space-y-2 desktop:max-w-[700px] mx-auto rounded-lg h-full px-6 max-h-[900px] overflow-y-auto scrollbar">
-                    <div className="relative flex items-center sticky top-0 bg-white z-10">
+                    <div className="flex items-center sticky top-0 bg-white z-10">
                         <div className="overflow-x-auto py-4 flex-1 scroll-smooth no-scrollbar">
                             <div className="pt-[24px] flex justify-start border-b ml-[10px]">
                                 {tabs.map((tab, index) => (
@@ -118,7 +118,9 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                             />
                         )}
                         {activeTab === "Clarifications" && (
-                            <div></div>
+                            <div>
+                                <ClarificationList rfpId={rfp?.id as number} />
+                            </div>
                         )}
                     </div>
                 </div>

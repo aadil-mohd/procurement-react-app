@@ -95,3 +95,29 @@ export const deleteRfpByIdAsync = async(id:any)=>{
         console.log(err);
     }
 }
+
+export const sendRfpClarificationRequestAsync = async(data:any)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/SendVendorClarificationRequest`,data,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+export const getAllRfpsClarification = async(rfpId:number,vendorId:number)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/GetVendorClarification?rfpId=${rfpId}&vendorId=${vendorId}`,null,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}

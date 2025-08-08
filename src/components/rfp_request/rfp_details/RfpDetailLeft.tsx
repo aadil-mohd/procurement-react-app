@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DocumentIcon, DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
+import { DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
 import { convertCurrencyLabel, getUserCredentials } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
@@ -7,7 +7,6 @@ import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
 import { publishRfpAsync } from "../../../services/rfpService";
 import { useNavigate, useParams } from "react-router-dom";
-import { Tag } from 'antd';
 import { PenIcon } from "lucide-react";
 
 interface RfpDetailLeftProp {

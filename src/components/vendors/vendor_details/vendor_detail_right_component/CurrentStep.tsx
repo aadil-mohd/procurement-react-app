@@ -5,8 +5,7 @@ import { Spin } from "antd";
 import { IStep } from "../../../../types/approvalflowTypes";
 import { approveVendorAsync, rejectVendorAsync } from "../../../../services/flowService";
 import { getVendorCriteriasAsync } from "../../../../services/vendorService";
-import { CrossIcon } from "lucide-react";
-import { TickIcon } from "../../../../utils/Icons";
+import { Check, X } from "lucide-react";
 
 
 // const checklistData: ChecklistItem[] = [
@@ -100,7 +99,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                   className={`pl-4 pr-5 py-1.5 text-sm rounded flex ${selectedAction === "approved" ? "text-white bg-[#0F9670]" : "bg-[#0F96701A]"}`}
                   onClick={() => handleActionClick("approved")}
                 >
-                  <TickIcon className="w-5 h-5 mr-1" />
+                  <Check className="w-5 h-5 mr-1"/>
                   Approve
                 </button>
                 <button
@@ -109,7 +108,7 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
                   className={`pl-4 pr-5 py-1.5 text-sm rounded flex hover:bg-red-00 ${selectedAction === "rejected" ? "text-white bg-[#DB5A63]" : "bg-[#DB5A631A]"}`}
                   onClick={() => handleActionClick("rejected")}
                 >
-                  <CrossIcon className="w-5 h-5 mr-1" />
+                  <X className="w-5 h-5 mr-1" />
                   Reject
                 </button>
               </>

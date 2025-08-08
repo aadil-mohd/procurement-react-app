@@ -2,7 +2,7 @@ import React from "react";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { Vendor } from "../../../types/vendorTypes";
 import ViewTable from "../../basic_components/ViewTable";
-import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
+import { DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
 
 interface VendorDetailLeftProp {
     vendorDetails: Vendor
@@ -242,7 +242,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    {vendorDetails?.vendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{vendorDetails?.vendorDocuments.map(d => <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a>)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
+                    {vendorDetails?.vendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{vendorDetails?.vendorDocuments.map(d => <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a>)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
         </div>

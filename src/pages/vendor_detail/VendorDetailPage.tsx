@@ -100,7 +100,7 @@ Embedded Systems`,
         if (id) {
             console.log(id, "requestId")
             const response = await getVendorsDetailsByIdAsync(Number(id));
-            setVendorData((prev)=>({...prev,...response}));
+            setVendorData((prev) => ({ ...prev, ...response }));
             // setRfpData(response);
         }
     }
@@ -113,14 +113,13 @@ Embedded Systems`,
     return (
         <div className="desktop-wide:flex desktop-wide:justify-center">
             <div>
-                <CommonTitleCard/>
+                <CommonTitleCard />
                 <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
-                {true ? <>
-                    <VendorDetailLeft vendorDetails={vendorData} />
-                    <VendorDetailRight vendorDetails={vendorData as any} trigger={() => { }} /></> : <PageLoader />}
+                    {true ? <>
+                        <VendorDetailLeft vendorDetails={vendorData} />
+                        <VendorDetailRight vendorDetails={vendorData as any} trigger={() => { }} /></> : <PageLoader />}
+                </div>
             </div>
-            </div>
-            
         </div>
     )
 }
