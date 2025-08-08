@@ -27,6 +27,7 @@ const RfpAttachments: React.FC<RfpAttachmentsProps> = ({
         type: 0,
         attachment: null
     });
+    
     const [errors, setErrors] = useState({
         type: false,
         attachment: false,

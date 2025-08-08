@@ -68,31 +68,32 @@ export const getUserCredentials = (): { userId: string, roleId: string, name: st
 }
 
 
-export const fetchAndConvertToFile = async (fileUrl: string): Promise<{ document: File, documentName: string }> => {
-    try {
-        console.log("Fetching file from:", fileUrl);
+export const fetchAndConvertToFile = async (
+  fileUrl: string,
+  originalFileName: string
+): Promise<{ document: File; documentName: string }> => {
+  try {
+    console.log("Fetching file from:", fileUrl);
 
-        const response = await axios.get(fileUrl, {
-            responseType: "blob", // THIS IS IMPORTANT
-            withCredentials: true, // For CORS + cookies
-        });
+    const response = await axios.get(fileUrl, {
+      responseType: "blob",
+      withCredentials: true,
+    });
 
-        console.log("Blob fetched successfully");
+    console.log("Blob fetched successfully");
 
-        // Extract filename from URL or set fallback
-        const urlParts = fileUrl.split('/');
-        const fileName = urlParts[urlParts.length - 1] || `downloaded-${Date.now()}`;
-        console.log("File name:", fileName);
+    const blob = response.data;
 
-        const blob = response.data;
-        const file = new File([blob], fileName, { type: blob.type });
+    // ✅ Use the provided filename instead of extracting from the URL
+    const file = new File([blob], originalFileName, { type: blob.type });
 
-        return { document: file, documentName: fileName };
-    } catch (error) {
-        console.error("Error in fetchAndConvertToFile:", error);
-        throw new Error("Something went wrong during file fetch.");
-    }
+    return { document: file, documentName: originalFileName };
+  } catch (error) {
+    console.error("Error in fetchAndConvertToFile:", error);
+    throw new Error("Something went wrong during file fetch.");
+  }
 };
+
 
 export const getUserInitials = (name: string): string => {
     if (!name) return "U";
