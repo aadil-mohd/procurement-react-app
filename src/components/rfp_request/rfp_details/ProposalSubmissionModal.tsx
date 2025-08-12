@@ -1,31 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { KeyValueGrid } from "./RfpDetailLeft";
-import { DocumentIcon, GeneralDetailIcon } from "../../../utils/Icons";
-import { updateProposalStatusAsync } from "../../../services/rfpService";
+import { DocumentIconByExtension, GeneralDetailIcon, TickIcon } from "../../../utils/Icons";
+import { getAllProposalDocuments, updateProposalStatusAsync } from "../../../services/rfpService";
+import { documentTypeConst } from "../../../utils/constants";
+import { getUserCredentials } from "../../../utils/common";
 
 type ProposalSubmissionModalProps = {
+  rfp: any;
   trigger: () => void
   proposal?: any
 };
 
-const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ trigger, proposal }) => {
+const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, trigger, proposal }) => {
+  const [attachments, setAttachments] = useState<any[]>([]);
+  const [ownerIn, setOwnerIn] = useState<{ technical: boolean, commercial: boolean }>({
+    technical: false, commercial: false
+  })
 
-  const handleSubmit = async (e: React.FormEvent,type : "Approved" | "Rejected" ) => {
+  const handleSubmit = async (e: React.FormEvent, type: "Approved" | "Rejected") => {
     e.preventDefault();
 
-    await updateProposalStatusAsync(proposal?.id ?? 0 , type);
+    await updateProposalStatusAsync(proposal?.id ?? 0, type);
     trigger();
   };
 
 
+  const setupProposalModal = async () => {
+    try {
+      const response = await getAllProposalDocuments(proposal.rfpId, proposal.id);
+      setAttachments(response);
 
+      const tempOwnerIn = {
+        technical: false, commercial: false
+      };
+
+      (rfp?.rfpOwners as any[])?.forEach(ow => {
+        if (ow.ownerId.toString() == getUserCredentials().userId && ow.ownerType == documentTypeConst.technical) tempOwnerIn.technical = true;
+        else if (ow.ownerId.toString() == getUserCredentials().userId && ow.ownerType == documentTypeConst.commercial) tempOwnerIn.commercial = true;
+      })
+      setOwnerIn(tempOwnerIn);
+    } catch (err) {
+
+    }
+  }
+
+
+  useEffect(() => {
+    setupProposalModal();
+  }, [proposal])
 
   return (
-    <div className="w-full h-full flex flex-col" >
+    <div className="w-full h-full flex flex-col relative" >
       {/* Left Section */}
       <form
         onSubmit={() => { }}
-        className="flex flex-col w-full h-full bg-white rounded overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-rounded scrollbar-track-blue-100"
+        className="flex flex-col w-full h-full bg-white rounded overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-rounded scrollbar-track-blue-100"
       >
         <div className="bg-white w-full pt-3 pl-3 mb-[8px]">
           <div>
@@ -44,7 +73,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ trigg
             />
             <KeyValueGrid className="mb-[16px]"
               data={[
-                { label: "Tax Included", value: proposal?.isTaxIncluded ? "Yes" : "No"},
+                { label: "Tax Included", value: proposal?.isTaxIncluded ? "Yes" : "No" },
                 { label: "Included Delivery/Logistics", value: proposal?.isShippingIncluded ? "Yes" : "No" },
               ]}
             />
@@ -60,32 +89,42 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ trigg
               <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{proposal?.escalationTerms}</p>
             </div>
 
-            <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Documents</span></span>
-            <div className="flex flex-col mb-[16px]">
-              <a className="text-[13px] flex" href={""} download={""}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{"temp.pdf"}</p></a>
-              <a className="text-[13px] flex" href={""} download={""}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{"temp.pdf"}</p></a>
-              <a className="text-[13px] flex" href={""} download={""}><DocumentIcon className="size-4" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{"temp.pdf"}</p></a>
-            </div>
+            {ownerIn.technical &&<>
+              <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Technical Documents</span></span>
+              <div className="flex flex-col mb-[16px]">
+                {attachments.map((doc) => doc.documentTypeId == documentTypeConst.technical ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
+              </div></>}
+            {ownerIn.commercial && <>
+              <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Commercial Documents</span></span>
+              <div className="flex flex-col mb-[16px]">
+                {attachments.map((doc) => doc.documentTypeId == documentTypeConst.commercial ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
+              </div>
+            </>}
           </div>
         </div>
-        <div className="flex justify-start items-center pl-4 h-[84px] space-x-2">
+
+        <div className="w-full flex flex-col items-center space-y-1">
+          {proposal?.isTechnicalTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Technical team Approved</div>}
+          {proposal?.isCommercialTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Commercial team Approved</div>}
+        </div>
+        {proposal?.status != "Approved" && proposal?.status != "Rejected" && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
           <button
-            onClick={(e) => handleSubmit(e,"Approved")}
+            onClick={(e) => handleSubmit(e, "Approved")}
             type="submit"
             // disabled={showLoaderOnButton || budgetLoader ? true : false}
-            className={`bg-blue-500 w-full h-[36px] bg-blue-500 hover:bg-blue-400 text-sm pr-2 py-1 text-white rounded px-1 py-1`}
+            className={`h-[36px] bg-blue-500 hover:bg-blue-400 text-sm py-1 px-2 text-white rounded`}
           >
             Approve
           </button>
           <button
-            onClick={(e) => handleSubmit(e,"Rejected")}
+            onClick={(e) => handleSubmit(e, "Rejected")}
             type="submit"
             // disabled={showLoaderOnButton || budgetLoader ? true : false}
-            className={`bg-blue-500 w-full h-[36px] bg-red-500 hover:bg-red-400 text-sm py-1 text-white rounded px-1 py-1`}
+            className={`h-[36px] bg-red-500 hover:bg-red-400 text-sm py-1 px-2 text-white rounded`}
           >
             Reject
           </button>
-        </div>
+        </div>}
       </form>
     </div>
   );

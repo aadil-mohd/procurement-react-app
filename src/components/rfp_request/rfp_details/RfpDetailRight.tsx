@@ -125,7 +125,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                     </div>
                 </div>
             </div>
-            <Modal content={<ProposalSubmissionModal proposal={isModalOpenItem} trigger={() => { setIsModalOpenItem(null) }} />} isOpen={isModalOpenItem} onClose={() => setIsModalOpenItem(null)} modalPosition='end' width="w-full md:w-2/5" />
+            <Modal content={<ProposalSubmissionModal rfp={rfp} proposal={isModalOpenItem} trigger={() => { setIsModalOpenItem(null) }} />} isOpen={isModalOpenItem} onClose={() => setIsModalOpenItem(null)} modalPosition='end' width="w-full md:w-2/5" />
         </>)
 };
 

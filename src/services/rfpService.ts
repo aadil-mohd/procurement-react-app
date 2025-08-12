@@ -70,6 +70,19 @@ export const getAllProposalsByFilterAsync = async(filterDto:IFilterDto)=>{
     }
 }
 
+export const getAllProposalDocuments = async(rfpId : number, proposalId : number)=>{
+    try{
+        const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/GetVendorProposalsDocuments?rfpId=${rfpId}&vendorProposalId=${proposalId}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
 export const updateProposalStatusAsync = async(proposalId : number,status : "Pending" | "Approved" | "Rejected")=>{
     try{
         const response = await axios.put(`${Urls.defaultUrl}/api/Rfps/UpdateProposalStatus?proposalId=${proposalId}&status=${status}`,null,{

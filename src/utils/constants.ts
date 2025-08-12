@@ -93,3 +93,9 @@ export const rfpStatuses = [
     { label: "Closed", value: 6 },
     
 ]
+
+export const documentTypeConst = {
+    technical : 1,
+    commercial : 2,
+    general: 3
+}
