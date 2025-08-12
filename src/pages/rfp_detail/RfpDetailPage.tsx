@@ -16,7 +16,7 @@ const RequestDetailPage: React.FC = () => {
     const { id } = useParams();
     const [rfpData, setRfpData] = useState<any>();
     const [updateRfpTrigger, setUpdateRfpTrigger] = useState(false);
-    const [masterData, setMasterData] = useState<{categories:any[]}>({categories:[]});
+    const [masterData, setMasterData] = useState<{ categories: any[] }>({ categories: [] });
 
     const getRequestDetailData = async () => {
         if (id) {
@@ -26,7 +26,7 @@ const RequestDetailPage: React.FC = () => {
             console.log(response);
             setRfpData(response);
             const categoriesResponse = await getAllCategoriesAsync();
-            setMasterData(prev=>({...prev,categories:categoriesResponse}));
+            setMasterData(prev => ({ ...prev, categories: categoriesResponse }));
         }
     }
 
@@ -40,8 +40,8 @@ const RequestDetailPage: React.FC = () => {
                 <CommonTitleCard />
                 <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
                     {rfpData ? <><RfpDetailLeft masterData={masterData} requestData={rfpData} trigger={() => { getRequestDetailData(); }} />
-                        {rfpData.isPublished ? <RfpDetailRight rfp={rfpData} trigger={() => { }} /> :
-                            <RfpApproveReject rfpDetails={rfpData} trigger={() => { }} />}
+                        {rfpData.isPublished ? <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} /> :
+                            <RfpApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} />}
                     </> : <PageLoader />}
                 </div>
             </div>

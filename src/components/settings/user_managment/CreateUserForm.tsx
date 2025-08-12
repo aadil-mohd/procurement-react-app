@@ -200,7 +200,7 @@ const CreateUserForm: React.FC<ICreateUserForm> = ({
                     tenantId:Cookies.get("tenantId"),
                     companyId:Cookies.get("companyId"),
                     branchId:Cookies.get("branchId"),                                        
-                    isActive: false,
+                    isActive: true,
                     isEmailSent: false,
                     isVendor: false,
                     

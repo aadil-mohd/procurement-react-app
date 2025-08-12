@@ -107,7 +107,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
           {proposal?.isTechnicalTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Technical team Approved</div>}
           {proposal?.isCommercialTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Commercial team Approved</div>}
         </div>
-        {proposal?.status != "Approved" && proposal?.status != "Rejected" && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
+        {proposal?.status != "Approved" && proposal?.status != "Rejected" && (ownerIn.technical && !proposal?.isTechnicalTeamApproved  || ownerIn.commercial && !proposal?.isCommercialTeamApproved) && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
           <button
             onClick={(e) => handleSubmit(e, "Approved")}
             type="submit"
