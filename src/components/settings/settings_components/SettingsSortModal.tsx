@@ -10,37 +10,37 @@ interface SettingsSortModalProps {
 
 const sortColumns = {
   user: [
-    { key: "CreatedAt", label: "Date Added" },
-    { key: "UpdatedAt", label: "Last Updated" },
-    { key: "Name", label: "Name" },
+    { key: "createdAt", label: "Date Added" },
+    { key: "updatedAt", label: "Last Updated" },
+    { key: "name", label: "Name" },
     { key: "roleId", label: "Role" },
     { key: "departmentId", label: "Department" },
     { key: "isActive", label: "Status" },
   ],
   department: [
-    { key: "CreatedAt", label: "Date Added" },
-    { key: "UpdatedAt", label: "Last Updated" },
+    { key: "createdAt", label: "Date Added" },
+    { key: "updatedAt", label: "Last Updated" },
     { key: "departmentCode", label: "Department ID" },
     { key: "departmentName", label: "Department Name" },
   ],
   workflow: [
-    { key: "CreatedAt", label: "Date Added" },
-    { key: "UpdatedAt", label: "Last Updated" },
+    { key: "createdAt", label: "Date Added" },
+    { key: "updatedAt", label: "Last Updated" },
     { key: "expendituretypeId", label: "Expenditure Type" },
     { key: "departmentId", label: "Department" },
     { key: "minAmount", label: "Amount" }
   ],
   budgetallocation: [
-    { key: "CreatedAt", label: "Date Added" },
-    { key: "UpdatedAt", label: "Last Updated" },
+    { key: "createdAt", label: "Date Added" },
+    { key: "updatedAt", label: "Last Updated" },
     { key: "departmentId", label: "Department" }
   ],
-  role:[{ key: "CreatedAt", label: "Date Added" },
-    { key: "UpdatedAt", label: "Last Updated" },
+  role:[{ key: "createdAt", label: "Date Added" },
+    { key: "updatedAt", label: "Last Updated" },
     { key: "roleName", label: "Role" }],
     
-  category:[{ key: "CreatedAt", label: "Date Added" },
-    { key: "UpdatedAt", label: "Last Updated" },
+  category:[{ key: "createdAt", label: "Date Added" },
+    { key: "updatedAt", label: "Last Updated" },
     { key: "categoryId", label: "Category" }]
 };
 
@@ -59,7 +59,7 @@ const SettingsSortModal: React.FC<SettingsSortModalProps> = ({
     const newDirection =
       sortOptions.field === column && sortOptions.direction === "ASC" ? "DESC" : "ASC";
     setSortOptions({ field: column, direction: newDirection });
-    setFilter((prev) => ({ ...prev, sortColumn: column, sortOrder: newDirection }));
+    setFilter((prev) => ({ ...prev, sortColumn: column, sortDirection: newDirection }));
     setIsSettingsSortModalOpen(false);
   };
 

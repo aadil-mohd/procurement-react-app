@@ -228,7 +228,7 @@ const SettingsTable: React.FC<TableProps> = ({
                                                 {col.key === "status" ? getStatusBadge(item[col.key]) : item[col.key]}
                                             </td>
                                         ))}
-                                        {dots && (
+                                        {( dots|| item["dot"]) &&  (
                                             <td className={`px-6 py-2 ${index < data.length - 1 && "border-b"} text-xs`} onClick={(e) => e.stopPropagation()}>
                                                 <button onClick={(e) => toggleDropdown(index, e)} className="focus:outline-none">
                                                     <EllipsisVerticalIcon className="w-4 h-4 stroke-gray-600" />

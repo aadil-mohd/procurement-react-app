@@ -157,7 +157,7 @@ const Table: React.FC<TableProps> = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>}
-            {filter && <button
+            {setIsFilterModalOpen && <button
               className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
               onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
             >

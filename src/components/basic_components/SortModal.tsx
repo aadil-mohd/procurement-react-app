@@ -32,7 +32,7 @@ const SortModal: React.FC<SortModalProp> = ({ columns, setFilter, setIsSortModal
                         return (
                             <button
                                 key={column}
-                                className={`w-full relative px-4 py-2 text-left text-sm border-b hover:bg-blue-100 text-sm ${isSelected ? 'bg-blue-200' : ''}`}
+                                className={`w-full relative px-4 py-2 text-left border-b hover:bg-blue-100 text-sm ${isSelected ? 'bg-blue-200' : ''}`}
                                 onClick={() => {
                                     let sortingColumn: { name: string, order: 'ASC' | 'DESC' } = { name: column, order: 'ASC' };
                                     if (sortOptions.field === column) {

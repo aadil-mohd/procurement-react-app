@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import PageLoader from "../../components/basic_components/PageLoader";
 import VendorDetailLeft from "../../components/vendors/vendor_details/VendorDetailLeft";
 import VendorDetailRight from "../../components/vendors/vendor_details/VendorDetailRight";
-import { getVendorsDetailsByIdAsync } from "../../services/vendorService";
+import { getVendorDocumentsAsync, getVendorsDetailsByIdAsync } from "../../services/vendorService";
 import { Vendor } from "../../types/vendorTypes";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 
@@ -87,11 +87,7 @@ Embedded Systems`,
             },
         ],
         vendorDocuments: [
-            {
-                id: 0,
-                filePath: "",
-                fileTitle: ""
-            }
+            
         ]
     }
     );
@@ -100,6 +96,8 @@ Embedded Systems`,
         if (id) {
             console.log(id, "requestId")
             const response = await getVendorsDetailsByIdAsync(Number(id));
+            const vendorDocuments = await getVendorDocumentsAsync(Number(id));
+            response.vendorDocuments = vendorDocuments;
             setVendorData((prev) => ({ ...prev, ...response }));
             // setRfpData(response);
         }

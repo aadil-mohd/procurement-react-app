@@ -5,7 +5,7 @@ import { IDepartment } from "../types/departmentTypes";
 import { IFilterDto } from "../types/commonTypes";
 export const getAllDepartmentsAsync=async(filterData:IFilterDto = {fields:[],pageNo:0,pageSize:0}):Promise<{data:IDepartment[]; count:number}>=>{
     try{
-        let response = await axios.post(`${Urls.defaultUrl}/api/Department/GetAllDepartmentAsync`,filterData,{
+        let response = await axios.post(`${Urls.defaultUrl}/api/Department/filter`,filterData,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }

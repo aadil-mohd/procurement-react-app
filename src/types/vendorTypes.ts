@@ -21,6 +21,7 @@ interface VendorDocument {
   id: number;
   filePath: string;
   fileTitle: string;
+  fileName?: string;
 }
 
 export interface Vendor {

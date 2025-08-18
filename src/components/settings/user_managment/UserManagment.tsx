@@ -89,7 +89,7 @@ const UserManagement: React.FC = () => {
                     )
                 };
             });
-            setUsers(users_list.filter((x) => x.roleName !== "Admin"));
+            setUsers(users_list.map(u=>({...u,dot:(u.roleName !== "Admin" && !u.roleName.includes("Admin"))})));
             setUsersCount(users.length);
 
 
@@ -131,7 +131,7 @@ const UserManagement: React.FC = () => {
                 // const formData = new FormData();
                 // formData.append("id", confirmAction.user.id as string);
                 // formData.append("isActive", (!confirmAction.user.isActive).toString());
-                const formData = {};
+                const formData:User = {...confirmAction.user,isActive:!confirmAction.user.isActive}
                 const response = await createOrUpdateUserAsync(formData)
                 if (response) {
                     setTrigger(true);
@@ -187,7 +187,6 @@ const UserManagement: React.FC = () => {
                     setIsSortModalOpen={setSortModalOpen}
                     totalCount={usersCount}
                     setSearchQuery={setSearchQuery}
-                    dots
                     setEditOption={(user) => handleThreeDots("edit", user)}
                     setDeleteOption={(user) => handleThreeDots("delete", user)}
                     setBlockOption={(user) => handleThreeDots("block", user)}

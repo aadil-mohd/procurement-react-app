@@ -9,6 +9,7 @@ import { Modal as AntdModal } from 'antd';
 import CreateDepartmentForm from './CreateDepartmentForm';
 import { deleteDepartmentAsync, getAllDepartmentsAsync } from '../../../services/departmentService';
 import { IDepartment } from '../../../types/departmentTypes';
+import { defaultFilter } from '../../../utils/constants';
 
 const columns = [
   { key: 'departmentCode', label: 'Department Code' },
@@ -29,14 +30,7 @@ const DepartmentManagment: React.FC = () => {
     count: 0
   });
 
-  const [filter, setFilter] = useState<any>({
-    nameFilter:"",
-    phoneFilter:"",
-    emailFilter:"",
-    id:undefined,
-    fromDate:undefined,
-    toDate:undefined
-  });
+  const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
 
   const handleThreeDots = (type: "edit" | "delete", department: IDepartment) => {
     console.log(department)
@@ -81,7 +75,7 @@ const DepartmentManagment: React.FC = () => {
     }
   }
   useEffect(() => {
-    setFilter({ ...filter, nameFilter: searchQuery })
+    setFilter({ ...filter, globalSearch: searchQuery })
   }, [searchQuery]);
 
   useEffect(() => {

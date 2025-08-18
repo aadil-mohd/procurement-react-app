@@ -104,3 +104,6 @@ export const getUserInitials = (name: string): string => {
     return parts[0][0].toUpperCase(); // Only first letter
 };
 
+export const getKeyByValue = (obj: any, value: number) => {
+  return Object.keys(obj).find(key => obj[key] === value);
+};

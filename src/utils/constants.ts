@@ -58,7 +58,13 @@ export const rfp_sorting_fields = {
     rfpTitle: 'RFP Title',
     buyerName: 'Buyer',
     bidValue: 'Bid Value',
-    isOpen: 'Status',
+    status: 'Status',
+}
+
+export const vendor_sorting_fields = {
+    vendorCode: 'ID',
+    organisationName: 'Organization Name',
+    status: 'Status',
 }
 
 export const project_sorting_fields = {

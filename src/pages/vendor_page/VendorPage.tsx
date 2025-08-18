@@ -7,10 +7,9 @@ import PageLoader from "../../components/basic_components/PageLoader";
 import { getAllVendorsAsync } from "../../services/vendorService";
 import { getUserPendingApprovalsAsync } from "../../services/flowService";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
-
-const tempfilter = {
-  nameFilter: ""
-}
+import { defaultFilter, vendor_sorting_fields } from "../../utils/constants";
+import { IFilterDto } from "../../types/commonTypes";
+import SortModal from "../../components/basic_components/SortModal";
 
 function VendorPage() {
   const commonColumns = ['vendorCode', 'organisationName', 'ownerName', "status"]
@@ -29,9 +28,10 @@ function VendorPage() {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [tableName, setTableName] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filter, setFilter] = useState<any>(tempfilter);
+  const [filter, setFilter] = useState<any>(defaultFilter);
   const [showLoader] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string>("All vendors");
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   // const requestStatuses = [
   //   { label: "Approved", value: "approved" },
   //   { label: "Rejected", value: "rejected" },
@@ -107,9 +107,9 @@ function VendorPage() {
   }, [searchQuery])
 
   const handleSearch = async () => {
-    const updatedFilter = {
+    const updatedFilter:IFilterDto = {
       ...filter,
-      nameFilter: searchQuery
+      globalSearch: searchQuery
     };
     await getAllVendors(updatedFilter);
     console.log(searchQuery, "searchquery after fetch")
@@ -162,8 +162,9 @@ function VendorPage() {
 
 
             <div className="ml-[10px]">
-              <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
+              <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
             </div></> : <PageLoader />}
+            {isSortModalOpen && <SortModal filter={filter} columns={vendor_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
         </div>
       </div>
 

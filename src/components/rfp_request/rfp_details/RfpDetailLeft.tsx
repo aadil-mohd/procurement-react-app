@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
-import { convertCurrencyLabel, getUserCredentials } from "../../../utils/common";
+import { convertCurrencyLabel, getKeyByValue, getUserCredentials } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
@@ -8,6 +8,8 @@ import { getAllUsersByFilterAsync } from "../../../services/userService";
 import { publishRfpAsync } from "../../../services/rfpService";
 import { useNavigate, useParams } from "react-router-dom";
 import { PenIcon } from "lucide-react";
+import ViewTable from "../../basic_components/ViewTable";
+import { documentTypeConst } from "../../../utils/constants";
 
 interface RfpDetailLeftProp {
     masterData: any;
@@ -135,7 +137,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
         try {
             if (requestData) {
                 const documents_to_display = requestData.rfpGeneralDocuments.map((d: any) =>
-                    ({ ...d, attachmentComponent: <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileTitle}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
+                    ({ ...d, type: getKeyByValue(documentTypeConst, d.documentTypeId), attachmentComponent: <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileTitle}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a> })
                 )
                 setRfpDocuments(documents_to_display);
             }
@@ -164,7 +166,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                         <>
                             <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.rfpTitle}</span>
                             <div>
-                                <span onClick={onEditRequest}><PenIcon className="text-gray-500" size={"1.2rem"}/></span>
+                                <span onClick={onEditRequest}><PenIcon className="text-gray-500" size={"1.2rem"} /></span>
                             </div>
                         </>
                     </div>
@@ -187,7 +189,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                                         (c: any) => c.id === item.categoryId
                                     );
                                     return (
-                                        <div key={item.categoryId} className={"py-1 px-2 text-xs border rounded-full flex justify-center bg-blue-100 text-blue-700 border-blue-500"}>{category?.name || 'Unknown'}</div>                    
+                                        <div key={item.categoryId} className={"py-1 px-2 text-xs border rounded-full flex justify-center bg-blue-100 text-blue-700 border-blue-500"}>{category?.name || 'Unknown'}</div>
                                     );
                                 })}
                             </div>
@@ -241,12 +243,12 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                 </div>
 
                 {/* Ownership Details */}
-                <div className="h-full" style={{ width: "504px" }}>
+                <div className="h-full pb-6" style={{ width: "504px" }}>
                     <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Ownership</span></span>
                     <UserBadges title="Technical Owners" users={owners.technical} />
                     <UserBadges title="Commercial Owners" users={owners.commercial} />
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    {rfpDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{rfpDocuments.map(d => d.attachmentComponent)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
+                    <ViewTable columns={["attachmentComponent","type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={rfpDocuments} />
                 </div>
             </>}
             {requestData?.status == 1 && getUserCredentials().userId == requestData?.createdBy.toString() && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">

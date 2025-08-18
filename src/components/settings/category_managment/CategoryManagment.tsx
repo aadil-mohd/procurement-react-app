@@ -8,6 +8,9 @@ import CreateCategoryForm from './CreateCategoryForm';
 import { deleteCategoryAsync, getAllCategoriesAsync } from '../../../services/categoryService';
 import { ICategory } from '../../../types/categoryTypes';
 import SettingsTable from '../settings_components/SettingsTable';
+import { IFilterDto } from '../../../types/commonTypes';
+import { defaultFilter } from '../../../utils/constants';
+import SettingsSortModal from '../settings_components/SettingsSortModal';
 
 const columns = [
   { key: 'name', label: 'Category Name' },
@@ -15,14 +18,15 @@ const columns = [
 ];
 
 const CategoryManagment: React.FC = () => {
-  const [, setSortModalOpen] = useState(false);
-  const [, setSearchQuery] = useState("");
+  const [sortModalOpen, setSortModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ICategory>();
   const [confirmAction, setConfirmAction] = useState<{ type: "delete", category: ICategory } | null>(null);
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
 
   const handleThreeDots = (type: "edit" | "delete", category: ICategory) => {
     setSelectedCategory(category);
@@ -51,9 +55,9 @@ const CategoryManagment: React.FC = () => {
     }
   };
 
-  const setupCategories = async () => {
+  const setupCategories = async (filterData: IFilterDto = defaultFilter) => {
     try {
-      const response = await getAllCategoriesAsync();
+      const response = await getAllCategoriesAsync(filterData);
       console.log(response)
       setCategories(response || []);
     } catch (err: any) {
@@ -65,8 +69,9 @@ const CategoryManagment: React.FC = () => {
   };
 
   useEffect(() => {
-    setupCategories();
-  }, []);
+    setupCategories({ ...filter, globalSearch: searchQuery });
+  }, [searchQuery,filter]);
+
 
   return (
     <div className="bg-bgBlue">
@@ -86,9 +91,10 @@ const CategoryManagment: React.FC = () => {
           dots
           setEditOption={(category) => handleThreeDots("edit", category)}
           setDeleteOption={(category) => handleThreeDots("delete", category)}
-          setFilter={()=>{}}
+          setFilter={() => { }}
         />
       </div>
+      {sortModalOpen && <SettingsSortModal filter={filter} setFilter={setFilter} setIsSettingsSortModalOpen={setSortModalOpen} type="department"/>}
 
       <Modal
         content={<CreateCategoryForm type='create' category={{ id: 0, name: '', description: '', clientId: 0, createdAt: '', createdBy: 0, updatedAt: '', updatedBy: 0, isdeleted: false, deletedBy: 0, tenantId: 0, companyId: 0, branchId: 0 }} closeModal={() => setIsCreateModalOpen(false)} trigger={setupCategories} />}

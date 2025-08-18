@@ -242,7 +242,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    {vendorDetails?.vendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{vendorDetails?.vendorDocuments.map(d => <a className="text-[13px] flex" href={d.filePath} download={d.fileTitle}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileTitle}</p></a>)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
+                    {vendorDetails?.vendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{vendorDetails?.vendorDocuments.map(d => <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileName}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileName}</p></a>)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
                 </div>
             </>}
         </div>
