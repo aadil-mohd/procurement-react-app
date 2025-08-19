@@ -89,7 +89,7 @@ const UserManagement: React.FC = () => {
                     )
                 };
             });
-            setUsers(users_list.map(u=>({...u,dot:(u.roleName !== "Admin" && !u.roleName.includes("Admin"))})));
+            setUsers(users_list.map(u=>({...u,dot:(!u.roleName.includes("Admin"))})));
             setUsersCount(users.length);
 
 

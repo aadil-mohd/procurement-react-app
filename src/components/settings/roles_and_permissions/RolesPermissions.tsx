@@ -33,9 +33,9 @@ const RolesPermissions: React.FC = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
     const [trigger, setTrigger] = useState<boolean>(false);
     const [selectedRole, setSelectedRole] = useState<any>();
-    const [editData, ] = useState<{ roleId: string, roleName: string }>();
+    const [editData,] = useState<{ roleId: string, roleName: string }>();
     const [roles, setRoles] = useState<RoleData[]>([]);
-    const [rolesPermissions, ] = useState<number[]>([]);
+    const [rolesPermissions,] = useState<number[]>([]);
     const [changesDone, setChangesDone] = useState(false);
     const [permissions, setPermissions] = useState<any[]>([]);
     const userId = Cookies.get("userId");
@@ -85,7 +85,7 @@ const RolesPermissions: React.FC = () => {
 
             // Fetch roles and users
             const { data: allRoles } = await getAllRolesFilterAsync(filter);
-            const users:any = await getAllUsersByFilterAsync(filter);
+            const users: any = await getAllUsersByFilterAsync(filter);
             // const permissionss = await getAllPermissionsAsync();
             const permissionss = [
                 { "permissionId": 1, "permissionName": "CanCreateUser" },
@@ -118,11 +118,11 @@ const RolesPermissions: React.FC = () => {
             console.log("Roles:", allRoles);
 
             // Map roles to RoleData array
-            const currentUser: IUserDetails | undefined = users?.items.find((user:any) => user.id === userId);
+            const currentUser: IUserDetails | undefined = users?.items.find((user: any) => user.id === userId);
             const currentUserRole = currentUser?.roleName; // assuming role is a string like "Manager"
 
             const roleData: any[] = allRoles.map(role => {
-                const userCount = users?.items.filter((user:any) => user.roleId === role.id).length;
+                const userCount = users?.items.filter((user: any) => user.roleId === role.id).length;
 
                 console.log({
                     roleid: role.id,
@@ -138,7 +138,7 @@ const RolesPermissions: React.FC = () => {
                     createdAt: formatDate(role.createdAt ?? "") || "N/A"
                 };
 
-            }).filter((role) =>  role.roleName !== currentUserRole);
+            }).filter((role) => role.roleName !== currentUserRole);
 
             const permission = await getPermissionsByRoleIdAsync(roleData[0]?.roleid)
             console.log({
@@ -159,10 +159,10 @@ const RolesPermissions: React.FC = () => {
 
 
     const handlePermissionToggle = (permission: any) => {
-        console.log(permission,"permissionpermissionpermissionpermission")
-        const exists = selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId);
+        console.log(permission, "permissionpermissionpermissionpermission")
+        const exists = selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId);
         const updatedPermissions = exists
-            ? selectedRole?.permissions?.filter((p:any) => p.permissionId !== permission.permissionId) // remove
+            ? selectedRole?.permissions?.filter((p: any) => p.permissionId !== permission.permissionId) // remove
             : [...selectedRole?.permissions, permission]; // add
 
         // setRolesPermissions((prevPermissions) =>
@@ -188,11 +188,11 @@ const RolesPermissions: React.FC = () => {
         //         return permission;
         //     })
         // );
-        setSelectedRole((prev:any) => ({
+        setSelectedRole((prev: any) => ({
             ...prev!,
             permissions: updatedPermissions,
         }));
-                console.log(selectedRole);
+        console.log(selectedRole);
         // setRolesPermissions(prev => [...(prev || []), id])
         console.log(rolesPermissions, "addded");
 
@@ -209,10 +209,10 @@ const RolesPermissions: React.FC = () => {
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const [confirmAction, ] = useState<{ type: "delete" | "block", role: RoleData } | null>(null);
+    const [confirmAction,] = useState<{ type: "delete" | "block", role: RoleData } | null>(null);
     // const [_, setFilterModalOpen] = useState(false);
     const [sortModalOpen, setSortModalOpen] = useState(false);
-    const [searchQuery, ] = useState("");
+    const [searchQuery,] = useState("");
     const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
 
     // const handleThreeDots = (type: "edit" | "delete", role: RoleData) => {
@@ -258,9 +258,9 @@ const RolesPermissions: React.FC = () => {
         // if (!roleId) return;
 
         try {
-            const response = await assignPermissionsToRoleAsync({roleId:roleId,permissionIds:selectedRole?.permissions.map((p:any) => p.permissionId)});
-                console.log(response);
-                
+            const response = await assignPermissionsToRoleAsync({ roleId: roleId, permissionIds: selectedRole?.permissions.map((p: any) => p.permissionId) });
+            console.log(response);
+
             setChangesDone(false)
             // console.log(rolesPermissions)
             // let roleData = roles.filter((x) => x.roleid == selectedRole?.roleid);
@@ -306,8 +306,8 @@ const RolesPermissions: React.FC = () => {
     return (
         <div className="bg-bgBlue">
             <div className="pr-8 py-6 border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-semibold"></h2>
-                <CreateButton name='Add role' onClick={() => setIsCreateModalOpen(true)} />
+                {/* <h2 className="text-lg font-semibold"></h2>
+                <CreateButton name='Add role' onClick={() => setIsCreateModalOpen(true)} /> */}
             </div>
 
             {/* {!selectedRole && <div className="px-8">
@@ -380,10 +380,10 @@ const RolesPermissions: React.FC = () => {
                                         <td className="py-3 text-center">
                                             <div className="flex justify-center">
                                                 <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId) ? 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => handlePermissionToggle(permission)}
+                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) ? selectedRole?.roleName?.toLowerCase() == "superadmin" ? 'bg-blue-400' : 'bg-blue-600' : 'border border-gray-300'}`}
+                                                    onClick={() => selectedRole.roleName != "SuperAdmin" && handlePermissionToggle(permission)}
                                                 >
-                                                    {selectedRole?.permissions?.some((p:any) => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
+                                                    {selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
                                                 </div>
                                             </div>
                                         </td>
