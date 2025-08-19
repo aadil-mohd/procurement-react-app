@@ -50,8 +50,8 @@ const UserManagement: React.FC = () => {
 
     const defaultFilterData = {
         fields: [{ columnName: "id", operator: "!=", value: getUserCredentials().userId }],
-        pageNo: 1,
-        pageSize: 10,
+        pageNo: 0,
+        pageSize: 0,
         sortColumn: "CreatedAt",
         sortOrder: "DESC",
     }

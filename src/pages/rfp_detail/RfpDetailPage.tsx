@@ -15,13 +15,11 @@ const RequestDetailPage: React.FC = () => {
 
     const { id } = useParams();
     const [rfpData, setRfpData] = useState<any>();
-    const [updateRfpTrigger, setUpdateRfpTrigger] = useState(false);
     const [masterData, setMasterData] = useState<{ categories: any[] }>({ categories: [] });
 
     const getRequestDetailData = async () => {
         if (id) {
             console.log(id, "requestId")
-            setUpdateRfpTrigger(false);
             const response = await getRfpByIdAsync(Number(id));
             console.log(response);
             setRfpData(response);
@@ -33,7 +31,8 @@ const RequestDetailPage: React.FC = () => {
 
     useEffect(() => {
         getRequestDetailData();
-    }, [updateRfpTrigger, id])
+    }, [])
+
     return (
         <div className="desktop-wide:flex desktop-wide:justify-center">
             <div>

@@ -7,9 +7,8 @@ import { getAllUsersByFilterAsync } from '../../../services/userService';
 import { assignPermissionsToRoleAsync, deleteRoleAsync, getAllRolesFilterAsync, getPermissionsByRoleIdAsync } from '../../../services/roleService';
 import { Button, notification } from 'antd';
 import { IFilterDto } from '../../../types/commonTypes';
-import { formatDate } from '../../../utils/common';
+import { formatDate, getUserCredentials } from '../../../utils/common';
 import { Modal as AntdModal } from 'antd';
-import Cookies from "js-cookie";
 import SettingsSortModal from '../settings_components/SettingsSortModal';
 import { IUserDetails } from '../../../types/userTypes';
 
@@ -38,7 +37,21 @@ const RolesPermissions: React.FC = () => {
     const [rolesPermissions,] = useState<number[]>([]);
     const [changesDone, setChangesDone] = useState(false);
     const [permissions, setPermissions] = useState<any[]>([]);
-    const userId = Cookies.get("userId");
+    const [userInfo, setUserInfo] = useState<{
+        userId: string;
+        roleId: string;
+        name: string;
+        departmentId: string;
+        companyId: string;
+        role: string;
+    }>({
+        userId: "0",
+        roleId: "0",
+        name: "0",
+        departmentId: "0",
+        companyId: "0",
+        role: "0",
+    })
 
     const fetchRolePermissions = async (role: RoleData) => {
         try {
@@ -82,7 +95,8 @@ const RolesPermissions: React.FC = () => {
     const setupRolesAndPermissions = async () => {
         try {
             setTrigger(false);
-
+            const tempUserInfo = getUserCredentials();
+            setUserInfo(tempUserInfo);
             // Fetch roles and users
             const { data: allRoles } = await getAllRolesFilterAsync(filter);
             const users: any = await getAllUsersByFilterAsync(filter);
@@ -118,7 +132,7 @@ const RolesPermissions: React.FC = () => {
             console.log("Roles:", allRoles);
 
             // Map roles to RoleData array
-            const currentUser: IUserDetails | undefined = users?.items.find((user: any) => user.id === userId);
+            const currentUser: IUserDetails | undefined = users?.items.find((user: any) => user.id === userInfo.userId);
             const currentUserRole = currentUser?.roleName; // assuming role is a string like "Manager"
 
             const roleData: any[] = allRoles.map(role => {
@@ -380,8 +394,8 @@ const RolesPermissions: React.FC = () => {
                                         <td className="py-3 text-center">
                                             <div className="flex justify-center">
                                                 <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) ? selectedRole?.roleName?.toLowerCase() == "superadmin" ? 'bg-blue-400' : 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => selectedRole.roleName != "SuperAdmin" && handlePermissionToggle(permission)}
+                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) ? selectedRole?.roleName?.toLowerCase() == "superadmin" || userInfo?.role == selectedRole?.roleName ? 'bg-blue-400' : 'bg-blue-600' : 'border border-gray-300'}`}
+                                                    onClick={() => selectedRole.roleName != "SuperAdmin" && userInfo.role != selectedRole?.roleName && handlePermissionToggle(permission)}
                                                 >
                                                     {selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
                                                 </div>

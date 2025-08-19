@@ -85,7 +85,7 @@ const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) =>
     useEffect(() => {
         setupRfpApproveReject()
         trigger && trigger()
-    }, [rfpDetails])
+    }, [rfpDetails.id])
 
     return (
         <div className="w-full space-y-2 desktop:max-w-[712px] mx-auto rounded-lg h-full px-6 max-h-[890px] overflow-y-auto scrollbar">

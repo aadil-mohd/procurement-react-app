@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '../../basic_components/TextField';
 import { IModalProps } from '../../../types/commonTypes';
-import { notification } from 'antd';
+import { notification } from "antd";
 import { Loader2 } from 'lucide-react';
 import { ICategory } from '../../../types/categoryTypes';
 import { createOrUpdateCategoryAsync } from '../../../services/categoryService';
@@ -21,20 +21,20 @@ const CreateCategoryForm: React.FC<ICreateCategoryForm> = ({ type = 'create', ca
   const [formData, setFormData] = useState<ICategory>(
     type === 'create'
       ? {
-          id: 0,
-          name: '',
-          description: '',
-          clientId: 0,
-          createdAt: new Date().toISOString(),
-          createdBy: 0,
-          updatedAt: new Date().toISOString(),
-          updatedBy: 0,
-          isdeleted: false,
-          deletedBy: 0,
-          tenantId: 0,
-          companyId: 0,
-          branchId: 0
-        }
+        id: 0,
+        name: '',
+        description: '',
+        clientId: 0,
+        createdAt: new Date().toISOString(),
+        createdBy: 0,
+        updatedAt: new Date().toISOString(),
+        updatedBy: 0,
+        isdeleted: false,
+        deletedBy: 0,
+        tenantId: 0,
+        companyId: 0,
+        branchId: 0
+      }
       : category
   );
 
@@ -79,10 +79,16 @@ const CreateCategoryForm: React.FC<ICreateCategoryForm> = ({ type = 'create', ca
       closeModal();
       trigger();
     } catch (err: any) {
-      notification.error({
-        message: 'Error',
-        description: err?.message || 'Failed to submit form'
+      console.log(err, "errerrerrerr")
+      if (err.status && err.status == 403) notification.error({
+        message: 'Access denied',
+        description: "You don't have access"
       });
+      else
+        notification.error({
+          message: 'Error',
+          description: err?.message || 'Failed to submit form'
+        });
     } finally {
       setIsLoading(false);
     }
