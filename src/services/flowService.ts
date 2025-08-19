@@ -14,7 +14,7 @@ export const getApprovalFlowAsync= async (type:string): Promise<any> => {
         })
         return response.data;
     }catch(err:any){
-        throw err.response.data
+        throw err;
     }
 }
 

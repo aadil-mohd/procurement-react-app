@@ -22,7 +22,7 @@ const ApprovalWorkflow: React.FC = () => {
   // const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [usersData, setUsersData] = useState<IUserDetails[] | null>(null);
   const [workflow, setWorkflow] = useState<any>();
-  const [viewType, seViewType] = useState<"view" | "edit" | "create">("view");
+  const [viewType, seViewType] = useState<"view" | "edit" | "create" | "no-access">("view");
   const [statusFilter, setStatusFilter] = useState<string>("Vendor Approvalflow");
 
   const setWorkflowsData = async () => {
@@ -31,8 +31,13 @@ const ApprovalWorkflow: React.FC = () => {
         const response = await getApprovalFlowAsync(statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp");
         console.log(response, "response-approv")
         setWorkflow(response);
-      } catch (err) {
-        seViewType("create");
+      } catch (err: any) {
+        console.log(err)
+        if (err.status && err.status == 403) {
+          seViewType("no-access");
+          return;
+        }
+        else seViewType("create");
       }
       let users: any = await getAllUsersByFilterAsync();
       setUsersData(users.items);
@@ -61,7 +66,7 @@ const ApprovalWorkflow: React.FC = () => {
   return (
     <div className="bg-bgBlue">
       {/* Header */}
-      
+
 
       <div className="pt-[24px] flex justify-start mb-[16px] ml-[20px] border-b">
         {tabs.map((tab, index) => (
@@ -88,19 +93,19 @@ const ApprovalWorkflow: React.FC = () => {
         ))}
       </div>
 
-      {viewType == "view" ? <ViewApprovalFlow label={statusFilter} seViewType={seViewType} flowDetails={workflow as any} usersData={usersData || []}
+      {viewType == "view" ? <ViewApprovalFlow label={statusFilter} seViewType={seViewType as any} flowDetails={workflow as any} usersData={usersData || []}
         closeModal={() => setIsCreateModalOpen(false)}
         trigger={() => { }}
       />
-        :
-        <ApprovalWorkflowForm
-          flowType={statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp"}
-          seViewType={seViewType}
-          type={viewType as any}
-          closeModal={() => setIsCreateModalOpen(false)}
-          trigger={() => { setTrigger(true) }}
-          initialData={workflow}
-        />
+        : viewType == "no-access" ? <p className='px-4 py-3 text-sm'>You don't have access to view</p> :
+          <ApprovalWorkflowForm
+            flowType={statusFilter == "Vendor Approvalflow" ? "vendor" : "rfp"}
+            seViewType={seViewType as any}
+            type={viewType as any}
+            closeModal={() => setIsCreateModalOpen(false)}
+            trigger={() => { setTrigger(true) }}
+            initialData={workflow}
+          />
       }
     </div>
   );
