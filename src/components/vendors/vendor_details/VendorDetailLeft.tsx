@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { Vendor } from "../../../types/vendorTypes";
 import ViewTable from "../../basic_components/ViewTable";
@@ -83,7 +83,22 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
 };
 
 const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: VendorDetailLeftProp) => {
+    const [vendorDocuments,setvendorDocuments] = useState<any[]>([]);
+ const setDocuments = async () => {
+        try {
+            if (vendorDetails) {
+                console.log(vendorDetails?.vendorDocuments,'vendorDetails?.vendorDocuments');
+                const documents_to_display = vendorDetails?.vendorDocuments.map((d: any) =>
+                    ({ ...d, type: d.documentType, attachmentComponent: <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileName}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileName}</p></a> })
+                )
+                setvendorDocuments(documents_to_display);
+            }
+        } catch (err) { }
+    }
 
+    useEffect(()=>{
+        setDocuments()
+    },[vendorDetails])
 
     return (
         <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200">
@@ -242,7 +257,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    {vendorDetails?.vendorDocuments.length > 0 ? <div className="flex flex-col mb-[16px]">{vendorDetails?.vendorDocuments.map(d => <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileName}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileName}</p></a>)}</div> : <div className="text-xs mb-[16px]">No documents found</div>}
+                    <ViewTable columns={["attachmentComponent","type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={vendorDocuments} />
                 </div>
             </>}
         </div>

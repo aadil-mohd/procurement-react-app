@@ -217,8 +217,8 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
         }
       }
 
-      const isCreated = await createOrUpdateRfpAsync(formData);
-      if (isCreated) navigate("/rfps");
+      const isCreatedOrUpdated = await createOrUpdateRfpAsync(formData);
+      if (isCreatedOrUpdated) navigate(id ? `/rfps/${id}` : "/rfps")
     } catch (err) {
       console.log(err)
     }
@@ -249,11 +249,11 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
         </div>
 
         <div className="fixed right-5 bottom-5 flex justify-end space-x-4">
-          <Button onClick={() => { }} className="bg-gray-100">
+          <Button onClick={() => { navigate(id ? `/rfps/${id}` : "/rfps") }} className="bg-gray-100">
             Cancel
           </Button>
           <Button type="primary" htmlType="submit">
-            Send for Approval
+            {id ? "Update" : "Send for Approval"}
           </Button>
         </div>
       </form>

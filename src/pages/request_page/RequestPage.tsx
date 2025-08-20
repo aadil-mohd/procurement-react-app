@@ -15,6 +15,7 @@ import { createOrUpdateRfpAsync, deleteRfpByIdAsync, getAllRfpsByFilterAsync } f
 import { convertCurrencyLabel, getUserCredentials } from "../../utils/common";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
 import { IRfp } from "../../types/rfpTypes";
+import RfpFilterModal from "../../components/rfp_request/RfpFilterModal";
 
 const tempfilter = {
   fields: [],
@@ -43,6 +44,7 @@ function RequestPage() {
   const [, setSelectedRfp] = useState<IRfp>();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "block", rfp: IRfp } | null>(null);
+  const [filterModalOpen, setFilterModal] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // const requestStatuses = [
@@ -177,7 +179,7 @@ function RequestPage() {
     getRfpRequestFilter();
   }, [filter, trigger]);
 
-  const tabs = ["All RFPs", "My RFPs", "Assigned","Draft RFPs"];
+  const tabs = ["All RFPs", "My RFPs", "Assigned", "Draft RFPs"];
 
   return (
     <div className="desktop-wide:flex desktop-wide:justify-center">
@@ -220,8 +222,12 @@ function RequestPage() {
 
 
             <div className="ml-[10px]">
-              <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={() => { }} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} dots setEditOption={(user) => handleThreeDots("edit", user)}
+              <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={setFilterModal} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} dots setEditOption={(user) => handleThreeDots("edit", user)}
                 setDeleteOption={(user) => handleThreeDots("delete", user)} setBlockOption={(user) => handleThreeDots("block", user)} />
+              {filterModalOpen && <RfpFilterModal filter={filter} defaultFilter={defaultFilter} setFilter={setFilter} setIsFilterModalOpen={setFilterModal} status={[
+                { label: "Open", value: true },
+                { label: "Closed", value: false },
+              ]} />}
               {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
 
               <AntdModal
