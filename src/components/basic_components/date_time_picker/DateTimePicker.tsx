@@ -6,9 +6,10 @@ interface IDateTimePicker {
     value: string;
     setValue: (val: string) => void;
     required?:boolean;
+    format?:string;
 }
 
-export default function DateTimePicker({ label, value, setValue ,required = false}: IDateTimePicker) {
+export default function DateTimePicker({ label, value, setValue ,required = false, format}: IDateTimePicker) {
     return (
         <div className="w-full">
             <label className="block text-sm font-medium mb-2">{label} <span className="text-red-500">*</span></label>
@@ -20,9 +21,9 @@ export default function DateTimePicker({ label, value, setValue ,required = fals
                     if (val) setValue(val.toISOString());
                     else setValue('');
                 }}
-                format="YYYY-MM-DD hh:mm A" // Note lowercase `hh` and uppercase `A`
+                format={format ? format :"YYYY-MM-DD hh:mm A"} // Note lowercase `hh` and uppercase `A`
                 className="w-full p-2"
-                placeholder="yyyy-mm-dd hh:mm a"
+                placeholder="Select date & time"
             />
         </div>
     );

@@ -85,7 +85,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             </div>
 
             {/* Bid Amount */}
-            <div className="w-full mb-4">
+            {/* <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
                 Bid Amount
               </label>
@@ -112,7 +112,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Estimated Contract Value */}
             <div className="w-full mb-4">
@@ -150,7 +150,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
           <div className="flex flex-col items-start w-full max-w-[400px]">
 
             {/* Hide Contract Value From Vendor */}
-            <div className="w-full mb-4">
+            {/* <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-2">
                 Hide Contract Value From Vendor <span className="text-red-500">*</span>
               </label>
@@ -173,7 +173,7 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
                   }))
                 }
               />
-            </div>
+            </div> */}
 
             {/* Is Tender Fee Applicable */}
             <div className="w-full mb-4">

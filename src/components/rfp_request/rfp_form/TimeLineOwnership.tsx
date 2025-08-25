@@ -45,6 +45,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               <DatePicker
                 value={requestData.expressInterestLastDate ? dayjs(requestData.expressInterestLastDate) : null}
                 id="expressInterestLastDate"
+                format="DD-MM-YYYY"
                 className="w-full h-[41px]"
                 onChange={(value) =>
                   setRequestData((prev: IRfp) => ({
@@ -63,6 +64,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
                 value={requestData.clarificationDate ? dayjs(requestData.clarificationDate) : null}
                 id="clarificationDate"
                 className="w-full h-[41px]"
+                format="DD-MM-YYYY"
                 onChange={(value) =>
                   setRequestData((prev: IRfp) => ({
                     ...prev,
@@ -80,6 +82,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
                 value={requestData.publishDate ? dayjs(requestData.publishDate) : null}
                 id="buyerReplyEndDate"
                 className="w-full h-[41px]"
+                format="DD-MM-YYYY"
                 onChange={(value) =>
                   setRequestData((prev: IRfp) => ({
                     ...prev,
@@ -92,7 +95,8 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
             <div className="w-full mb-4">
               <DateTimePicker
                 required={true}
-                label="Closing Time & Date"
+                label="Closing Date & Time"
+                format="DD-MM-YYYY hh:mm A"
                 value={requestData.closingDate || null}
                 setValue={(val) =>
                   setRequestData((prev: any) => ({

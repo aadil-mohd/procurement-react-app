@@ -192,7 +192,7 @@ const Sidebar = ({ notifications,trigger }: SidebarProp) => {
       {/* Desktop Sidebar */}
       <main
         id="sidebar-main"
-        className="flex w-[78px] z-10 h-screen fixed left-0 top-0 border-r flex-col items-center justify-between"
+        className="flex w-[78px] z-10 h-screen fixed left-0 top-0 border-r flex-col items-center justify-between bg-white"
       >
         <section className="space-y-2">
           {/* Logo */}

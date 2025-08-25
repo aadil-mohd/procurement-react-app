@@ -248,7 +248,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
           <RfpAttachments attachments={attachments} setAttachments={setAttachments} setAttachmentsToDelete={() => { }} documentTypes={masterData.documentTypes} />
         </div>
 
-        <div className="fixed right-5 bottom-5 flex justify-end space-x-4">
+        <div className="fixed right-5 bottom-0 py-3 flex justify-end space-x-4 bg-white w-full border-t">
           <Button onClick={() => { navigate(id ? `/rfps/${id}` : "/rfps") }} className="bg-gray-100">
             Cancel
           </Button>
