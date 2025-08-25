@@ -6,7 +6,7 @@ import { IStep } from "../../../../types/approvalflowTypes";
 
 
 
-const StepCard: React.FC<{ step: IStep, trigger: () => void }> = ({ step, trigger }) => {
+const StepCard: React.FC<{ step: IStep, trigger: () => void, flowType:"rfp" | "rfpproposal" }> = ({ step, trigger, flowType }) => {
     console.log(step)
     return (
         <div className="bg-white rounded-lg p-4 mb-4">
@@ -23,7 +23,7 @@ const StepCard: React.FC<{ step: IStep, trigger: () => void }> = ({ step, trigge
                     </div>
                 </div>
             </div>
-            {step.current && step.status == "pending" && <CurrentStep step={step} trigger={trigger} />}
+            {step.current && step.status == "pending" && <CurrentStep step={step} trigger={trigger} flowType={flowType} />}
             {(step.status == "rejected" || step.status == "approved" || step.status == "initiated") && <CompletedStep step={step} />}
             {/* {step. && <ClarificationStep step={step} trigger={trigger} requestData={requestData} setUpdateRequestTrigger={setUpdateRequestTrigger}/>} */}
         </div>

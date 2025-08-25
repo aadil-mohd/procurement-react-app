@@ -10,6 +10,7 @@ import { getRpfApprovalFlowsByIdAsync } from '../../../services/flowService';
 import { getUserCredentials } from '../../../utils/common';
 import StepIndicator from './rfp_approve-reject_right_component/StepIndicator';
 import StepCard from './rfp_approve-reject_right_component/StepCard';
+import { GeneralDetailIcon } from '../../../utils/Icons';
 
 
 interface IRfpDetailRight {
@@ -73,23 +74,28 @@ interface IRfpDetailRight {
 //     comments: ""
 // }]
 
-const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) => {
+const RfpProposalApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) => {
     const [stepsList, setStepsList] = useState<any[]>([])
 
-    const setupRfpApproveReject = async () => {
-        const response: any[] = await getRpfApprovalFlowsByIdAsync(rfpDetails?.id);
+    const setupRfpProposalApproveReject = async () => {
+        const response: any[] = await getRpfApprovalFlowsByIdAsync(rfpDetails?.id, "rfpproposal");
         const formatedSteps = response.map((item: any, i) => ({ ...item, current: (getUserCredentials().userId == item.approverId && (i == 0 || response[i - 1].status == 1)), status: item.status == 0 ? "pending" : item.status == 1 ? "approved" : "rejected" }));
         setStepsList(formatedSteps);
     }
 
     useEffect(() => {
-        setupRfpApproveReject()
+        setupRfpProposalApproveReject()
         trigger && trigger()
     }, [rfpDetails.id])
 
     return (
         <div className="w-full space-y-2 desktop:max-w-[712px] mx-auto rounded-lg h-full px-6 max-h-[890px] overflow-y-auto scrollbar">
             <StepIndicator steps={stepsList} />
+
+
+            <div className="w-full">
+                <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Approval for Open Vendor Proposals</span></span>
+            </div>
 
             <div className="w-full">
                 {stepsList.map((step, index) => {
@@ -107,11 +113,11 @@ const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) =>
                     if (index <= currentIndex) {
                         return (
                             <StepCard
-                                flowType='rfp'
+                                flowType='rfpproposal'
                                 key={index}
                                 step={step || []}
                                 trigger={() => {
-                                    setupRfpApproveReject();
+                                    setupRfpProposalApproveReject();
                                 }}
                             />
                         );
@@ -121,11 +127,11 @@ const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) =>
                     return (
                         (rfpDetails.status == 1 || rfpDetails.status == 2) && (rfpDetails.createdBy == getUserCredentials().userId) ?
                             <StepCard
-                                flowType='rfp'
+                                flowType="rfpproposal"
                                 key={index}
                                 step={step || []}
                                 trigger={() => {
-                                    setupRfpApproveReject();
+                                    setupRfpProposalApproveReject();
                                 }}
                             /> :
                             <div key={index} className="text-gray-500 mb-4 bg-white px-2 py-2 rounded-md flex-col items-center justify-center">
@@ -138,4 +144,4 @@ const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) =>
     );
 };
 
-export default RfpApproveReject;
+export default RfpProposalApproveReject;

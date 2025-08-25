@@ -39,18 +39,15 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
           {/* Column 1 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Express Interest LastDate <span className="text-red-500">*</span>
-              </label>
-              <DatePicker
-                value={requestData.expressInterestLastDate ? dayjs(requestData.expressInterestLastDate) : null}
+              <DateTimePicker
+                value={requestData.expressInterestLastDate || null}
+                label="Express Interest Last Date"
+                format="DD-MM-YYYY hh:mm A"
                 id="expressInterestLastDate"
-                format="DD-MM-YYYY"
-                className="w-full h-[41px]"
-                onChange={(value) =>
-                  setRequestData((prev: IRfp) => ({
+                setValue={(val) =>
+                  setRequestData((prev: any) => ({
                     ...prev,
-                    expressInterestLastDate: value ? value.toISOString() : null,
+                    expressInterestLastDate: val,
                   }))
                 }
               />
@@ -111,7 +108,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
           {/* Column 2 */}
           <div className="flex flex-col items-start w-full max-w-[400px]">
             <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">Technical Owners</label>
+              <label className="block text-sm font-medium mb-1">Technical Owners <span className="text-red-500">*</span></label>
               <PeoplePicker
                 setValue={(value: any) =>
                   setOwners((prev: IRfp) => ({ ...prev, technical: value }))
@@ -122,7 +119,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               />
             </div>
             <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">Commercial Owners</label>
+              <label className="block text-sm font-medium mb-1">Commercial Owners <span className="text-red-500">*</span></label>
               <PeoplePicker
                 setValue={(value: any) =>
                   setOwners((prev: IRfp) => ({ ...prev, commercial: value }))

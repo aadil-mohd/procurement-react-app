@@ -78,7 +78,7 @@ const RequestDetailRight: React.FC<IVendorDetailRight> = ({ vendorDetails, trigg
 
     const setupRequestDetailRight = async()=>{
         const response:any[] = await getVendorApprovalFlowsByVendorIdAsync(vendorDetails?.id);
-        const formatedSteps = response.map((item:any,i)=>({...item,current:(item.status == 0 && getUserCredentials().userId == item.approverId && (i == 0 || response[i-1].status == 1)),status:item.status == 0 ? "pending" : item.status == 1 ? "approved" : "rejected"  }));
+        const formatedSteps = response.map((item:any,i)=>({...item,current:(getUserCredentials().userId == item.approverId && (i == 0 || response[i-1].status == 1)),status:item.status == 0 ? "pending" : item.status == 1 ? "approved" : "rejected"  }));
         setStepsList(formatedSteps);
     }
 

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
-import { convertCurrencyLabel, getKeyByValue, getUserCredentials } from "../../../utils/common";
+import { convertCurrencyLabel, getKeyByValue } from "../../../utils/common";
 import ShowStatus from "../../buttons/ShowStatus";
 import dayjs from "dayjs";
 import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { getAllUsersByFilterAsync } from "../../../services/userService";
-import { publishRfpAsync } from "../../../services/rfpService";
 import { useNavigate, useParams } from "react-router-dom";
 import { PenIcon } from "lucide-react";
 import ViewTable from "../../basic_components/ViewTable";
@@ -92,7 +91,7 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
     );
 };
 
-const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, trigger }: RfpDetailLeftProp) => {
+const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }: RfpDetailLeftProp) => {
     const [rfpDocuments, setRfpDocuments] = useState<any[]>([]);
     const [owners, setOwners] = useState<{ technical: any[], commercial: any[] }>({ technical: [], commercial: [] })
     const navigate = useNavigate();
@@ -208,14 +207,26 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                     />
                     <KeyValueGrid className="mb-[16px]"
                         data={[
-                            { label: "Estimated Contract Value", value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.estimatedContractValue}` },
-                            { label: "Contract Value Hidden From Vendor", value: requestData?.hideContractValueFromVendor ? "Yes" : "No" },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Bid Value", value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.bidValue}` },
-                            { label: "Tender Fee", value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.tenderFee}` },
+                            {
+                                label: "Estimated Contract Value",
+                                value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.estimatedContractValue}`,
+                            },
+                            ...(requestData?.bidValue
+                                ? [
+                                    {
+                                        label: "Bid Value",
+                                        value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.bidValue}`,
+                                    },
+                                ]
+                                : []),
+                            {
+                                label: "Tender Fee",
+                                value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.tenderFee}`,
+                            },
+                            // {
+                            //   label: "Contract Value Hidden From Vendor",
+                            //   value: requestData?.hideContractValueFromVendor ? "Yes" : "No",
+                            // },
                         ]}
                     />
                 </div>
@@ -248,17 +259,9 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData, t
                     <UserBadges title="Technical Owners" users={owners.technical} />
                     <UserBadges title="Commercial Owners" users={owners.commercial} />
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    <ViewTable columns={["attachmentComponent","type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={rfpDocuments} />
+                    <ViewTable columns={["attachmentComponent", "type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={rfpDocuments} />
                 </div>
             </>}
-            {requestData?.status == 1 && getUserCredentials().userId == requestData?.createdBy.toString() && !requestData?.isPublished && <div className="w-[504px] flex justify-end sticky bottom-2 right-0">
-                <button className="bg-customBlue h-[36px] hover:bg-blue-400 text-sm text-white rounded px-1 py-1  w-[200px]" onClick={() => {
-                    (async () => {
-                        await publishRfpAsync(requestData?.id)
-                        trigger();
-                    })();
-                }}>Publish now</button>
-            </div>}
         </div>
     )
 }

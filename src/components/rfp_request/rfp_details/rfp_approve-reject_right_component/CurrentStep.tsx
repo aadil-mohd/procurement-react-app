@@ -21,9 +21,10 @@ import { Check, X } from "lucide-react";
 //   { id: 9, criteria: "Site visit", isChecked: true },
 //   { id: 10, criteria: "Factory inspection", isChecked: true },
 // ];
-const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
+const CurrentStep: React.FC<{ step: IStep; trigger: () => void, flowType:"rfp" | "rfpproposal" }> = ({
   step,
-  trigger
+  trigger,
+  flowType
 }) => {
   const currentUserId = Cookies.get("userId") || "";
   const [selectedAction, setSelectedAction] = useState<"approved" | "rejected">("approved");
@@ -61,10 +62,10 @@ const CurrentStep: React.FC<{ step: IStep; trigger: () => void }> = ({
       if (hasError) return;
       setShowLoaderOnButton(true)
       if (selectedAction === "approved") {
-        await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData }, 'rfp')
+        await approveVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData }, flowType)
 
       } else if (selectedAction === "rejected") {
-        await rejectVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData }, 'rfp')
+        await rejectVendorAsync({ stepId: step.id, approverEmail: step.approverEmail, comments: approveComment, vendorId: Number(id), criteriasCheckChanges: checklistData }, flowType)
       }
       setShowLoaderOnButton(false)
       trigger();

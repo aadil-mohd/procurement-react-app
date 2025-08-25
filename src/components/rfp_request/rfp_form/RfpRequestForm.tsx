@@ -167,7 +167,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
     try {
       const formData = new FormData();
       const formDataTemp: Record<string, any> = requestData;
-      formDataTemp.bidValue = Number(requestData.bidValue);
+      formDataTemp.bidValue = Number(requestData.bidValue) || undefined;
       formDataTemp.estimatedContractValue = Number(requestData.estimatedContractValue);
       for (var key in formDataTemp) {
         if (formDataTemp.hasOwnProperty(key)) {
