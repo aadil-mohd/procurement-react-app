@@ -4,7 +4,7 @@ import { Button } from "antd";
 // import RequestDetailRight from "../../components/requests/RequestDetailRight";
 // import { ICapexRequestDetail } from "../../types/capexTypes";
 import { useParams } from "react-router-dom";
-import { getRfpByIdAsync, publishRfpAsync } from "../../services/rfpService";
+import { getRfpByIdAsync, openRfpProposalsAsync, publishRfpAsync } from "../../services/rfpService";
 import PageLoader from "../../components/basic_components/PageLoader";
 import RfpDetailRight from "../../components/rfp_request/rfp_details/RfpDetailRight";
 import RfpApproveReject from "../../components/rfp_request/rfp_details/RfpApproveReject";
@@ -42,25 +42,25 @@ const RequestDetailPage: React.FC = () => {
                 <CommonTitleCard />
                 <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
                     {rfpData ? <><RfpDetailLeft masterData={masterData} requestData={rfpData} trigger={() => { getRequestDetailData(); }} />
-                        {rfpData.status == 5 ? <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} /> :
-                            rfpData.status == 8 ? <RfpProposalApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }}/> : <RfpApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} />}
+                        {(rfpData.status == 5 || rfpData.status == 9) ? <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} /> :
+                            rfpData.status == 8 ? <RfpProposalApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} /> : <RfpApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} />}
                     </> : <PageLoader />}
                 </div>
             </div>
 
-            {rfpData?.status == 1 && getUserCredentials().userId == rfpData?.createdBy.toString() && !rfpData?.isPublished &&
+            {(rfpData?.status == 1 || rfpData?.status == 5) && getUserCredentials().userId == rfpData?.createdBy.toString() &&
                 <div className="mt-10">
-                <form onSubmit={() => {
-                    (async () => {
-                        await publishRfpAsync(rfpData?.id)
-                        getRequestDetailData();
-                    })();
-                }} className="fixed right-0 bottom-0 py-3 px-3 flex justify-end space-x-4 bg-white w-full border-t">
+                    <form onSubmit={() => {
+                        (async () => {
+                            rfpData?.status == 1 ? await publishRfpAsync(rfpData?.id) : await openRfpProposalsAsync(rfpData?.id);
+                            getRequestDetailData();
+                        })();
+                    }} className="fixed right-0 bottom-0 py-3 px-3 flex justify-end space-x-4 bg-white w-full border-t">
 
-                    <Button type="primary" htmlType="submit">
-                        Publish now
-                    </Button>
-                </form>
+                        <Button type="primary" htmlType="submit">
+                            {rfpData?.status == 1 ? "Publish now" : "Sent for Open proposals"}
+                        </Button>
+                    </form>
                 </div>
             }
         </div>

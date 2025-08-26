@@ -30,6 +30,19 @@ export const publishRfpAsync = async(rfpId:number)=>{
     }
 }
 
+export const openRfpProposalsAsync = async(rfpId:number)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/OpenRfpProposal?rfpId=${rfpId}`,null,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
 export const getRfpByIdAsync = async(id:number)=>{
     try{
         const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/${id}`,{
@@ -125,6 +138,19 @@ export const sendRfpClarificationRequestAsync = async(data:any)=>{
 export const getAllRfpsClarification = async(rfpId:number,vendorId:number)=>{
     try{
         const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/GetVendorClarification?rfpId=${rfpId}&vendorId=${vendorId}`,null,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+export const getAllRfpIntrestByFilterAsync = async(filterDto:IFilterDto)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/GetAllRfpIntrestsAsync`,filterDto,{
             headers:{
                 Authorization:`Bearer ${getUserToken()}`
             }

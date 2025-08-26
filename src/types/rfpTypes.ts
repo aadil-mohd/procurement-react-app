@@ -26,5 +26,6 @@ export interface IRfp {
     rfpTechnicalDocuments?:any[]
     rfpGeneralDocuments?:any[]
     rfpOwners: any[],
-    rfpCategories:any[]
+    rfpCategories:any[],
+    status?:number,
 }

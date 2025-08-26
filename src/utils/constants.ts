@@ -90,14 +90,15 @@ export const milestoneStatuses = [
 
 export const rfpStatuses = [
     { label: "Pending", value: 0 },
-    { label: "Pending", value: 7 },
     { label: "Approved", value: 1 },
     { label: "Rejected", value: 2 },
     { label: "Under Clarification", value: 3 },
     { label: "Under Approval", value: 4 },
     { label: "Published", value: 5 },
     { label: "Closed", value: 6 },
-    
+    { label: "Pending", value: 7 },
+    { label: "Under RFP Open", value: 8 },
+    { label: "Open", value: 9 }, 
 ]
 
 export const documentTypeConst = {

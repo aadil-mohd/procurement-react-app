@@ -9,30 +9,35 @@ interface ShowStatusProps {
 const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
   const getStatusClass = () => {
     switch (status) {
-      // Common Statuses
-
-      // case 'on_hold':
-      // case 'delayed':
-      //   return 'bg-red-500/50 text-red-900 min-w-16';
-      // case 'on_track':
-      case 1:
-        return 'bg-blue-100 text-blue-700 border-blue-500 max-w-16';
-      // case 'not_started':
-      // case 'open':
-      //   return 'bg-orange-500/40 text-orange-900 min-w-16';
-      
       case 0:
         return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
-      case 7:
-        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
-      case 4:
-        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
+      //approved
+      case 1:
+        return 'bg-blue-100 text-blue-700 border-blue-500 max-w-16';
+      //rejected
       case 2:
         return 'bg-red-100 text-red-700 border-red-500';
+      //sent for clarification
+      case 3:
+        return 'bg-yellow-100 text-orange-700 border-orange-500 max-w-32';
+      //sent for approval   
+      case 4:
+        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
+      //published
       case 5:
         return 'bg-green-100 text-green-700 border-green-500';
+      //closed
       case 6:
         return 'bg-green-100 text-green-700 border-green-500';
+      //pending
+      case 7:
+        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
+      //sent for open proposal
+      case 8:
+        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
+      //open
+      case 9:
+        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-500';
     }

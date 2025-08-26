@@ -8,8 +8,9 @@ import Table from '../../basic_components/Table';
 import { IFilterDto } from '../../../types/commonTypes';
 import Modal from '../../basic_components/Modal';
 import ProposalSubmissionModal from './ProposalSubmissionModal';
-import { getAllProposalsByFilterAsync } from '../../../services/rfpService';
+import { getAllProposalsByFilterAsync, getAllRfpIntrestByFilterAsync } from '../../../services/rfpService';
 import ClarificationList from './ClarificationList';
+import { IntrestedIcon, OpenMainIcon } from '../../../utils/Icons';
 
 // interface User {
 //     name: string;
@@ -32,10 +33,23 @@ interface IRfpDetailRight {
     trigger: () => void
 }
 
+const ItemCountCard: React.FC<{ item: { icon: any, label: string, bgColor: string, count: number }, className?: string }> = ({ item, className }) => {
+    return (
+        <div
+            className={`w-full h-[64px] border border-gray-200 rounded-xl shadow-sm flex justify-between items-center px-[21px] ${className}`}>
+            <div className="flex items-center"><div className="w-[32px] h-[32px] rounded-full mr-3 flex justify-center items-center" style={{ backgroundColor: item.bgColor }}>{item?.icon}</div>
+                <span className="text-sm font-semibold text-black">{item.label}</span>
+            </div>
+            <span className="text-xl font-bold text-[#0B1F49]">{item.count}</span>
+        </div>
+    )
+}
+
 const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
 
     const [isModalOpenItem, setIsModalOpenItem] = useState<any>(null);
     const [vendorProposals, setVendorProposals] = useState<any[]>([]);
+    const [vendorIntrestCount, setVendorIntrestCount] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [activeTab, setActiveTab] = useState("Proposals");
     const tabs = ["Proposals", "Clarifications"];
@@ -45,6 +59,13 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
             if (activeTab == "Proposals") {
                 const filtered_proposals = await getAllProposalsByFilterAsync(filter);
                 setVendorProposals(filtered_proposals);
+                const intrestOnRfp = await getAllRfpIntrestByFilterAsync({
+                    fields: [{
+                        columnName: "RfpId",
+                        value: rfp?.id ?? 0
+                    }]
+                })
+                setVendorIntrestCount(intrestOnRfp.length);
             } else if (activeTab == "Clarifications") {
 
             }
@@ -103,20 +124,37 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                     </div>
 
                     <div className="w-full">
-                        {activeTab === "Proposals" && (
-                            <Table
-                                columnLabels={columnLabels}
-                                items={vendorProposals}
-                                columns={proposalTableColumns}
-                                title="Proposals"
-                                type="proposal"
-                                setIsModalOpenItem={setIsModalOpenItem}
-                                filter={filter}
-                                setFilter={setFilter}
-                                setSearchQuery={setSearchQuery}
-                                totalCount={10}
-                            />
-                        )}
+                        {activeTab === "Proposals" && <>
+                            {rfp.status == 5 ?
+                                <>
+                                    <ItemCountCard className="mb-[16px]" item={{
+                                        icon: <OpenMainIcon className='w-[16px] h-[16px] text-white' />,
+                                        bgColor: "#314DA0",
+                                        count: vendorProposals?.length || 0,
+                                        label: "Total Proposals Received"
+                                    }} />
+                                    <ItemCountCard item={{
+                                        icon: <IntrestedIcon className='w-[16px] h-[16px] text-white' />,
+                                        bgColor: "#BFDC1A",
+                                        count: vendorIntrestCount,
+                                        label: "Total Interest Submitted"
+                                    }} />
+                                </> :
+                                <Table
+                                    columnLabels={columnLabels}
+                                    items={vendorProposals}
+                                    columns={proposalTableColumns}
+                                    title="Proposals"
+                                    type="proposal"
+                                    setIsModalOpenItem={setIsModalOpenItem}
+                                    filter={filter}
+                                    setFilter={setFilter}
+                                    setSearchQuery={setSearchQuery}
+                                    totalCount={10}
+                                />
+                            }
+                        </>
+                        }
                         {activeTab === "Clarifications" && (
                             <div>
                                 <ClarificationList rfpId={rfp?.id as number} />
@@ -125,7 +163,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                     </div>
                 </div>
             </div>
-            <Modal content={<ProposalSubmissionModal rfp={rfp} proposal={isModalOpenItem} trigger={() => { setIsModalOpenItem(null); trigger();  }} />} isOpen={isModalOpenItem} onClose={() => setIsModalOpenItem(null)} modalPosition='end' width="w-full md:w-2/5" />
+            <Modal content={<ProposalSubmissionModal rfp={rfp} proposal={isModalOpenItem} trigger={() => { setIsModalOpenItem(null); trigger(); }} />} isOpen={isModalOpenItem} onClose={() => setIsModalOpenItem(null)} modalPosition='end' width="w-full md:w-2/5" />
         </>)
 };
 
