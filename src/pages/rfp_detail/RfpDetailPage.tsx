@@ -42,13 +42,13 @@ const RequestDetailPage: React.FC = () => {
                 <CommonTitleCard />
                 <div className="flex flex-col h-full desktop:flex-row desktop:justify-between desktop-wide:justify-center">
                     {rfpData ? <><RfpDetailLeft masterData={masterData} requestData={rfpData} trigger={() => { getRequestDetailData(); }} />
-                        {(rfpData.status == 5 || rfpData.status == 9) ? <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} /> :
+                        {(rfpData.status == 5 || rfpData?.status == 6 || rfpData.status == 9) ? <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} /> :
                             rfpData.status == 8 ? <RfpProposalApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} /> : <RfpApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} />}
                     </> : <PageLoader />}
                 </div>
             </div>
 
-            {(rfpData?.status == 1 || rfpData?.status == 5) && getUserCredentials().userId == rfpData?.createdBy.toString() &&
+            {(rfpData?.status == 1 || rfpData?.status == 5 || rfpData?.status == 6) && getUserCredentials().userId == rfpData?.createdBy.toString() &&
                 <div className="mt-10">
                     <form onSubmit={() => {
                         (async () => {

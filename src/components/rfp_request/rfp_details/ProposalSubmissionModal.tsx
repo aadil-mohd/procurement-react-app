@@ -4,6 +4,7 @@ import { DocumentIconByExtension, GeneralDetailIcon, TickIcon } from "../../../u
 import { getAllProposalDocuments, updateProposalStatusAsync } from "../../../services/rfpService";
 import { documentTypeConst } from "../../../utils/constants";
 import { getUserCredentials } from "../../../utils/common";
+import AddAttachment from "../../basic_components/AddAttachments";
 
 type ProposalSubmissionModalProps = {
   rfp: any;
@@ -13,6 +14,8 @@ type ProposalSubmissionModalProps = {
 
 const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, trigger, proposal }) => {
   const [attachments, setAttachments] = useState<any[]>([]);
+  const [remarksAttachment, setRemarksAttachment] = useState<any[]>([]);
+
   const [ownerIn, setOwnerIn] = useState<{ technical: boolean, commercial: boolean }>({
     technical: false, commercial: false
   })
@@ -67,29 +70,29 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
           <div className="mb-2">
             <KeyValueGrid className="mb-[16px]"
               data={[
-                { label: "Bid Amount", value: proposal?.bidAmount ?? 0 },
-                { label: "Bid Validity", value: `${proposal?.bidValidity ?? 0} days` },
+                { label: "Bid Amount", value: ownerIn.commercial ? proposal?.bidAmount ?? 0 : "*********" },
+                { label: "Bid Validity", value: ownerIn.commercial ? `${proposal?.bidValidity ?? 0} days` : "*********" },
               ]}
             />
             <KeyValueGrid className="mb-[16px]"
               data={[
-                { label: "Tax Included", value: proposal?.isTaxIncluded ? "Yes" : "No" },
-                { label: "Included Delivery/Logistics", value: proposal?.isShippingIncluded ? "Yes" : "No" },
+                { label: "Tax Included", value: ownerIn.commercial ? proposal?.isTaxIncluded ? "Yes" : "No" : "*********" },
+                { label: "Included Delivery/Logistics", value: ownerIn.commercial ? proposal?.isShippingIncluded ? "Yes" : "No" : "*********" },
               ]}
             />
             {/* Payment Terms */}
             <div className="mb-[16px]" style={{ width: "504px" }}>
               <span className="mb-[4px]" style={{ color: "gray", fontSize: "12px" }}>Payment Terms</span>
-              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{proposal?.paymentTerms}</p>
+              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{ownerIn.commercial ? proposal?.paymentTerms : "*********"}</p>
             </div>
 
             {/* Description */}
             <div className="mb-[16px]" style={{ width: "504px" }}>
               <span className="mb-[4px]" style={{ color: "gray", fontSize: "12px" }}>Escalation Clause / Price Revisions</span>
-              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{proposal?.escalationTerms}</p>
+              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{ownerIn.commercial ? proposal?.escalationTerms : "*********"}</p>
             </div>
 
-            {ownerIn.technical &&<>
+            {ownerIn.technical && <>
               <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Technical Documents</span></span>
               <div className="flex flex-col mb-[16px]">
                 {attachments.map((doc) => doc.documentTypeId == documentTypeConst.technical ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
@@ -107,7 +110,12 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
           {proposal?.isTechnicalTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Technical team Approved</div>}
           {proposal?.isCommercialTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Commercial team Approved</div>}
         </div>
-        {proposal?.status != "Approved" && proposal?.status != "Rejected" && (ownerIn.technical && !proposal?.isTechnicalTeamApproved  || ownerIn.commercial && !proposal?.isCommercialTeamApproved) && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
+        <div className="w-full flex flex-col items-center space-y-1">
+          <AddAttachment id={"file-upload-1"} attachments={remarksAttachment} setAttachments={(file)=>{setRemarksAttachment([file])
+            // uploadProposalRemarkAttachmentAsync
+          }} />
+        </div>     
+        {/* {proposal?.status != "Approved" && proposal?.status != "Rejected" && (ownerIn.technical && !proposal?.isTechnicalTeamApproved  || ownerIn.commercial && !proposal?.isCommercialTeamApproved) && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
           <button
             onClick={(e) => handleSubmit(e, "Approved")}
             type="submit"
@@ -124,7 +132,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
           >
             Reject
           </button>
-        </div>}
+        </div>} */}
       </form>
     </div>
   );
