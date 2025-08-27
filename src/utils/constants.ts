@@ -98,7 +98,7 @@ export const rfpStatuses = [
     { label: "Closed", value: 6 },
     { label: "Pending", value: 7 },
     { label: "Under RFP Open", value: 8 },
-    { label: "Open", value: 9 }, 
+    { label: "Under Evaluation", value: 9 }, 
 ]
 
 export const documentTypeConst = {

@@ -8,9 +8,11 @@ import Table from '../../basic_components/Table';
 import { IFilterDto } from '../../../types/commonTypes';
 import Modal from '../../basic_components/Modal';
 import ProposalSubmissionModal from './ProposalSubmissionModal';
-import { getAllProposalsByFilterAsync, getAllRfpIntrestByFilterAsync } from '../../../services/rfpService';
+import { getAllEvaluationReportsAsync, getAllProposalsByFilterAsync, getAllRfpIntrestByFilterAsync, uploadEvaluationReportAsync } from '../../../services/rfpService';
 import ClarificationList from './ClarificationList';
-import { IntrestedIcon, OpenMainIcon } from '../../../utils/Icons';
+import { DocumentIconByExtension, GeneralDetailIcon, IntrestedIcon, OpenMainIcon } from '../../../utils/Icons';
+import { Button, notification } from 'antd';
+import CreateButton from '../../buttons/CreateButton';
 
 // interface User {
 //     name: string;
@@ -52,6 +54,13 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
     const [vendorIntrestCount, setVendorIntrestCount] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [activeTab, setActiveTab] = useState("Proposals");
+    const [evaluationDocuments, setEvaluationDocuments] = useState<any>([
+        // {
+        //     fileTitle: "asjhads",
+        //     filePath: "sdhgfdsjhfdsk.png"
+        // }
+    ]);
+
     const tabs = ["Proposals", "Clarifications"];
 
     const setupTabsAsync = async () => {
@@ -66,6 +75,11 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                     }]
                 })
                 setVendorIntrestCount(intrestOnRfp.length);
+                if (rfp?.status != 5 && rfp?.status != 6) {
+                    const evaluationReports = await getAllEvaluationReportsAsync(Number(rfp?.id || "0"));
+                    const evalutionDocumentMapped = evaluationReports.map((d: any) => ({ documentUrl: d.filePath, documentName: d.fileTitle }));
+                    setEvaluationDocuments(evalutionDocumentMapped);
+                }
             } else if (activeTab == "Clarifications") {
 
             }
@@ -74,6 +88,20 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
 
         }
     }
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFiles = event.target.files ? event.target.files[0] : null;
+        if (selectedFiles) {
+            setEvaluationDocuments([{ document: selectedFiles, documentName: selectedFiles.name, documentUrl: URL.createObjectURL(selectedFiles) }]);
+            const formData = new FormData();
+            formData.append("rfpId", rfp?.id?.toString() ?? "0");
+            formData.append("file", selectedFiles);
+            await uploadEvaluationReportAsync(formData);
+            notification.success({
+                message: "document uploaded successfully"
+            })
+        }
+    };
 
     useEffect(() => {
         setupTabsAsync();
@@ -140,18 +168,48 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                                         label: "Total Interest Submitted"
                                     }} />
                                 </> :
-                                <Table
-                                    columnLabels={columnLabels}
-                                    items={vendorProposals}
-                                    columns={proposalTableColumns}
-                                    title="Proposals"
-                                    type="proposal"
-                                    setIsModalOpenItem={setIsModalOpenItem}
-                                    filter={filter}
-                                    setFilter={setFilter}
-                                    setSearchQuery={setSearchQuery}
-                                    totalCount={10}
-                                />
+                                <>
+                                    <div
+                                        className={`border border-lightblue p-4 flex text-sm rounded-lg bg-[#EDF4FD] mb-[16px] flex-col`}
+                                    >
+                                        <div className="pr-[55px] group relative">
+                                            <span className="font-bold text-[16px] mb-[17.5px] flex"><span>Evaluation Report</span></span>
+                                            <div className='flex flex-col'>
+                                                {
+                                                    evaluationDocuments.map((d: any) => (<span><a className="text-[13px] flex items-end mb-5" href={d.documentUrl ? d.documentUrl : d.document} target="blank" download={d.documentName} ><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.documentUrl} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.documentName}</p></a><label htmlFor="upload-eval-file"><span className='px-3 py-2 bg-white rounded-md border'>Reupload</span></label></span>))
+                                                }
+                                            </div>
+                                            {evaluationDocuments.length == 0 &&
+                                                <label htmlFor="upload-eval-file">
+                                                    <span className="text-gray-500 hover:underline cursor-pointer text-sm font-regular mb-1">
+                                                        Drag and drop your files here or
+                                                    </span>{" "}
+                                                    <span className="text-blue-600 hover:underline cursor-pointer text-sm font-medium mb-1">
+                                                        browse
+                                                    </span>
+                                                </label>}
+                                            <input
+                                                type="file"
+                                                id="upload-eval-file"
+                                                accept=".pdf,.docx,.jpg,.png"
+                                                onChange={handleFileChange}
+                                                className="hidden"
+                                            />
+                                        </div>
+                                    </div>
+                                    <Table
+                                        columnLabels={columnLabels}
+                                        items={vendorProposals}
+                                        columns={proposalTableColumns}
+                                        title="Proposals"
+                                        type="proposal"
+                                        setIsModalOpenItem={setIsModalOpenItem}
+                                        filter={filter}
+                                        setFilter={setFilter}
+                                        setSearchQuery={setSearchQuery}
+                                        totalCount={10}
+                                    />
+                                </>
                             }
                         </>
                         }

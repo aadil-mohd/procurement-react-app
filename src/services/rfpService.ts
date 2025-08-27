@@ -160,3 +160,55 @@ export const getAllRfpIntrestByFilterAsync = async(filterDto:IFilterDto)=>{
         console.log(err);
     }
 }
+
+export const uploadProposalRemarkAttachmentAsync = async(data:FormData)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/UploadProposalRemarkAttachment`,data,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+export const getAllProposalRemarkAttachmentsAsync = async(proposalId:number)=>{
+    try{
+        const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/GetAllProposalRemarkAttachments?proposalId=${proposalId}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+export const uploadEvaluationReportAsync = async(data:FormData)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/UploadRfpEvaluationReport`,data,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+export const getAllEvaluationReportsAsync = async(rfpId:number)=>{
+    try{
+        const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/GetAllRfpEvaluationReports?rfpId=${rfpId}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}

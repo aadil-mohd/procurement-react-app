@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { KeyValueGrid } from "./RfpDetailLeft";
 import { DocumentIconByExtension, GeneralDetailIcon, TickIcon } from "../../../utils/Icons";
-import { getAllProposalDocuments, updateProposalStatusAsync } from "../../../services/rfpService";
+import { getAllProposalDocuments, getAllProposalRemarkAttachmentsAsync, updateProposalStatusAsync, uploadProposalRemarkAttachmentAsync } from "../../../services/rfpService";
 import { documentTypeConst } from "../../../utils/constants";
 import { getUserCredentials } from "../../../utils/common";
 import AddAttachment from "../../basic_components/AddAttachments";
+import { notification } from "antd";
 
 type ProposalSubmissionModalProps = {
   rfp: any;
@@ -42,9 +43,11 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
         else if (ow.ownerId.toString() == getUserCredentials().userId && ow.ownerType == documentTypeConst.commercial) tempOwnerIn.commercial = true;
       })
       setOwnerIn(tempOwnerIn);
-    } catch (err) {
 
-    }
+      const proposalRemarkAttachments = await getAllProposalRemarkAttachmentsAsync(proposal.id);
+      const tempProposalRemarkAttachments = proposalRemarkAttachments.map((item: any) => ({ document: null, documentName: item?.fileTitle, documentUrl: item?.filePath }))
+      setRemarksAttachment(tempProposalRemarkAttachments);
+    } catch (err) { }
   }
 
 
@@ -53,68 +56,76 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
   }, [proposal])
 
   return (
-    <div className="w-full h-full flex flex-col relative" >
+    <div className="w-full h-full relative" >
       {/* Left Section */}
       <form
         onSubmit={() => { }}
-        className="flex flex-col w-full h-full bg-white rounded overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-rounded scrollbar-track-blue-100"
+        className="flex flex-col w-full h-full bg-white rounded overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-rounded scrollbar-track-blue-100 overflow-auto"
       >
-        <div className="bg-white w-full pt-3 pl-3 mb-[8px]">
-          <div>
-            <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{proposal?.vendorName}</span>
-            <span className="mb-[4px] block" style={{ color: "gray", fontSize: "14px" }}>Malappuuram, Kerala</span>
-            <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {proposal?.vendorCode}</span>
+        <div className="h-full flex flex-col">
+          <div className="bg-white w-full pt-3 pl-3 mb-[8px]">
+            <div>
+              <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{proposal?.vendorName}</span>
+              <span className="mb-[4px] block" style={{ color: "gray", fontSize: "14px" }}>Malappuuram, Kerala</span>
+              <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {proposal?.vendorCode}</span>
+            </div>
           </div>
-        </div>
-        <div className="p-4 rounded">
-          <div className="mb-2">
-            <KeyValueGrid className="mb-[16px]"
-              data={[
-                { label: "Bid Amount", value: ownerIn.commercial ? proposal?.bidAmount ?? 0 : "*********" },
-                { label: "Bid Validity", value: ownerIn.commercial ? `${proposal?.bidValidity ?? 0} days` : "*********" },
-              ]}
-            />
-            <KeyValueGrid className="mb-[16px]"
-              data={[
-                { label: "Tax Included", value: ownerIn.commercial ? proposal?.isTaxIncluded ? "Yes" : "No" : "*********" },
-                { label: "Included Delivery/Logistics", value: ownerIn.commercial ? proposal?.isShippingIncluded ? "Yes" : "No" : "*********" },
-              ]}
-            />
-            {/* Payment Terms */}
-            <div className="mb-[16px]" style={{ width: "504px" }}>
-              <span className="mb-[4px]" style={{ color: "gray", fontSize: "12px" }}>Payment Terms</span>
-              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{ownerIn.commercial ? proposal?.paymentTerms : "*********"}</p>
-            </div>
-
-            {/* Description */}
-            <div className="mb-[16px]" style={{ width: "504px" }}>
-              <span className="mb-[4px]" style={{ color: "gray", fontSize: "12px" }}>Escalation Clause / Price Revisions</span>
-              <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{ownerIn.commercial ? proposal?.escalationTerms : "*********"}</p>
-            </div>
-
-            {ownerIn.technical && <>
-              <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Technical Documents</span></span>
-              <div className="flex flex-col mb-[16px]">
-                {attachments.map((doc) => doc.documentTypeId == documentTypeConst.technical ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
-              </div></>}
-            {ownerIn.commercial && <>
-              <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Commercial Documents</span></span>
-              <div className="flex flex-col mb-[16px]">
-                {attachments.map((doc) => doc.documentTypeId == documentTypeConst.commercial ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
+          <div className="p-4 rounded">
+            <div className="mb-2">
+              <KeyValueGrid className="mb-[16px]"
+                data={[
+                  { label: "Bid Amount", value: ownerIn.commercial ? proposal?.bidAmount ?? 0 : "*********" },
+                  { label: "Bid Validity", value: ownerIn.commercial ? `${proposal?.bidValidity ?? 0} days` : "*********" },
+                ]}
+              />
+              <KeyValueGrid className="mb-[16px]"
+                data={[
+                  { label: "Tax Included", value: ownerIn.commercial ? proposal?.isTaxIncluded ? "Yes" : "No" : "*********" },
+                  { label: "Included Delivery/Logistics", value: ownerIn.commercial ? proposal?.isShippingIncluded ? "Yes" : "No" : "*********" },
+                ]}
+              />
+              {/* Payment Terms */}
+              <div className="mb-[16px]" style={{ width: "504px" }}>
+                <span className="mb-[4px]" style={{ color: "gray", fontSize: "12px" }}>Payment Terms</span>
+                <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{ownerIn.commercial ? proposal?.paymentTerms : "*********"}</p>
               </div>
-            </>}
-          </div>
-        </div>
 
-        <div className="w-full flex flex-col items-center space-y-1">
-          {proposal?.isTechnicalTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Technical team Approved</div>}
-          {proposal?.isCommercialTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Commercial team Approved</div>}
-        </div>
-        <div className="w-full flex flex-col items-center space-y-1">
-          <AddAttachment id={"file-upload-1"} attachments={remarksAttachment} setAttachments={(file)=>{setRemarksAttachment([file])
-            // uploadProposalRemarkAttachmentAsync
+              {/* Description */}
+              <div className="mb-[16px]" style={{ width: "504px" }}>
+                <span className="mb-[4px]" style={{ color: "gray", fontSize: "12px" }}>Escalation Clause / Price Revisions</span>
+                <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">{ownerIn.commercial ? proposal?.escalationTerms : "*********"}</p>
+              </div>
+
+              {ownerIn.technical && <>
+                <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Technical Documents</span></span>
+                <div className="flex flex-col mb-[16px]">
+                  {attachments.map((doc) => doc.documentTypeId == documentTypeConst.technical ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
+                </div></>}
+              {ownerIn.commercial && <>
+                <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Commercial Documents</span></span>
+                <div className="flex flex-col mb-[16px]">
+                  {attachments.map((doc) => doc.documentTypeId == documentTypeConst.commercial ? <a className="text-[13px] flex" href={doc?.filePath} download={doc?.fileTitle}><DocumentIconByExtension filePath={doc?.filePath} className="w-5 h-5" /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{doc?.fileTitle}</p></a> : <></>)}
+                </div>
+              </>}
+            </div>
+          </div>
+
+          <div className="w-full flex flex-col items-center space-y-1">
+            {proposal?.isTechnicalTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Technical team Approved</div>}
+            {proposal?.isCommercialTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Commercial team Approved</div>}
+          </div></div>
+        <div className="w-full p-4">
+          <span className="font-bold text-[16px] mb-[12px] flex"><span className="">Remarks</span></span>
+          <AddAttachment id={"file-upload-1"} attachments={remarksAttachment} setAttachments={async (file) => {
+            setRemarksAttachment([file])
+            const formData = new FormData();
+            formData.append("File", file.document);
+            formData.append("VendorRfpProposalId", proposal?.id);
+            await uploadProposalRemarkAttachmentAsync(formData)
+            notification.success({ message: "Attachment uploaded successfully" });
+            setupProposalModal();
           }} />
-        </div>     
+        </div>
         {/* {proposal?.status != "Approved" && proposal?.status != "Rejected" && (ownerIn.technical && !proposal?.isTechnicalTeamApproved  || ownerIn.commercial && !proposal?.isCommercialTeamApproved) && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
           <button
             onClick={(e) => handleSubmit(e, "Approved")}

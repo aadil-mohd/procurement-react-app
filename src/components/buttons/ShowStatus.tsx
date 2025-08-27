@@ -35,7 +35,7 @@ const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
       //sent for open proposal
       case 8:
         return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
-      //open
+      //under evaluation
       case 9:
         return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
       default:
