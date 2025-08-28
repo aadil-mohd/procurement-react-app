@@ -183,7 +183,7 @@ export default function RfpDecisionForm() {
                         rules={[{ required: true, message: "Please enter the RFP number/title" }]}
                     >
                         <Select placeholder="Select the type" allowClear showSearch optionFilterProp="label" onChange={(val) => { setSelectedRfp(val) }}>
-                            {masterDatas.rfps.map((d) => (
+                            {masterDatas.rfps.map((d: any) => (
                                 <Option key={d.id} value={d.id} label={d.rfpTitle}>{d.rfpTitle}</Option>
                             ))}
                         </Select>
@@ -209,13 +209,21 @@ export default function RfpDecisionForm() {
                         name="vendorRfpProposalId"
                         rules={[{ required: true, message: "Please select the proposal" }]}
                     >
-                        <Select placeholder="Select the proposal" showSearch optionFilterProp="label" allowClear>
-                            {masterDatas.proposals.map((p) => (
-                                <Option key={p.id} value={p.id} label={p.vendorName}>
-                                    <div><p className="font-bold">{p.vendorName}</p>
-                                        <p><span>Bid amount: </span>{p.bidAmount}</p>
-                                    </div></Option>
-                            ))}
+                        <Select placeholder="Select the proposal" showSearch optionFilterProp="labelName" allowClear options={
+                            masterDatas.proposals.map((p: any) => ({
+                                value: p.id,
+                                labelName: p.vendorName,
+                                label:p.vendorName
+                                // label: (
+                                //     <div>
+                                //         <p className="font-bold">{p.vendorName}</p>
+                                //         <p>
+                                //             <span>Bid amount: </span>{p.bidAmount}
+                                //         </p>
+                                //     </div>
+                                // ),p.
+                            }))}>
+
                         </Select>
                     </Form.Item>
 
@@ -237,7 +245,7 @@ export default function RfpDecisionForm() {
                     {/* Contract type */}
                     <Form.Item label="Contract type" name="contractTypeId" rules={[{ required: true, message: "Please select the type" }]}>
                         <Select placeholder="Select the type" allowClear>
-                            {masterDatas.contractTypes.map((c) => (
+                            {masterDatas.contractTypes.map((c: any) => (
                                 <Option key={c.id} value={c.id}>{c.contractTypeName}</Option>
                             ))}
                         </Select>
@@ -246,7 +254,7 @@ export default function RfpDecisionForm() {
                     {/* Budget type */}
                     <Form.Item label="Budget type" name="budgetTypeId" rules={[{ required: true, message: "Please select the type" }]}>
                         <Select placeholder="Select the type" allowClear>
-                            {masterDatas.budgetTypes.map((b) => (
+                            {masterDatas.budgetTypes.map((b: any) => (
                                 <Option key={b.id} value={b.id}>{b.budgetTypeName}</Option>
                             ))}
                         </Select>
