@@ -17,6 +17,7 @@ import RequestDetailPage from '../pages/rfp_detail/RfpDetailPage';
 import VendorPage from '../pages/vendor_page/VendorPage';
 import VendorDetailPage from '../pages/vendor_detail/VendorDetailPage';
 import UserProfilePage from '../pages/profile/UserProfilePage';
+import RfpDecisionForm from '../pages/rfp_decision_form/RfpDecisionForm';
 
 interface procurementContextProp {
   countryCodes: ICountryCode[] | null;
@@ -129,6 +130,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/rfps/:id" element={<RequestDetailPage />} />
                     <Route path="/rfps/create-rfp" element={<RfpRequestFormComponent />} />
                     <Route path="/rfps/edit-rfp/:id" element={<RfpRequestFormComponent type='edit' />} />
+                    <Route path="/decision-form" element={<RfpDecisionForm />} />
                     <Route path="/vendors" element={<VendorPage />} />
                     <Route path="/vendors/:id" element={<VendorDetailPage />} />
                     <Route path="/settings/user-managment" element={<SettingsPage />} />

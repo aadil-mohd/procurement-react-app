@@ -30,3 +30,31 @@ export const getAllDocumentTypesAsync = async () => {
         throw err.response.data;
     }
 }
+
+export const getAllContractTypesAsync = async () => {
+    try {
+        let response = await axios.get(`${Urls.defaultUrl}/api/Common/GetAllContractTypesAsync`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+
+    }catch (err: any) {
+        throw err.response.data;
+    }
+}
+
+export const getAllBudgetTypesAsync = async () => {
+    try {
+        let response = await axios.get(`${Urls.defaultUrl}/api/Common/GetAllBudgetTypesAsync`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+
+    }catch (err: any) {
+        throw err.response.data;
+    }
+}

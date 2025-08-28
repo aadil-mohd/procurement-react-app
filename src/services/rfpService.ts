@@ -212,3 +212,16 @@ export const getAllEvaluationReportsAsync = async(rfpId:number)=>{
         console.log(err);
     }
 }
+
+export const createOrUpdateRfpDecisionPaperAsync = async(data:any)=>{
+    try{
+        const response = await axios.post(`${Urls.defaultUrl}/api/Rfps/RfpDecisionPapers`,data,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}
