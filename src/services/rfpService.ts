@@ -225,3 +225,16 @@ export const createOrUpdateRfpDecisionPaperAsync = async(data:any)=>{
         console.log(err);
     }
 }
+
+export const getRfpDecisionPapersAsync = async(id:number)=>{
+    try{
+        const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/RfpDecisionPapers/${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}

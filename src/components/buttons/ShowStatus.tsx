@@ -38,6 +38,9 @@ const ShowStatus: React.FC<ShowStatusProps> = ({ status, type }) => {
       //under evaluation
       case 9:
         return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
+      //under evaluation
+      case 10:
+        return 'bg-orange-100 text-orange-700 border-orange-500 max-w-32';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-500';
     }

@@ -99,6 +99,7 @@ export const rfpStatuses = [
     { label: "Pending", value: 7 },
     { label: "Under RFP Open", value: 8 },
     { label: "Under Evaluation", value: 9 }, 
+    { label: "Under Award", value: 10 }, 
 ]
 
 export const documentTypeConst = {

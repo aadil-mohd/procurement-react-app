@@ -1,35 +1,17 @@
 import { useEffect, useState } from "react";
 import { Form, Input, Select, DatePicker, Upload, Button, Space, message } from "antd";
+import dayjs from "dayjs";
 import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import { InboxOutlined } from "@ant-design/icons";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
-import { createOrUpdateRfpDecisionPaperAsync, getAllProposalsByFilterAsync, getAllRfpsByFilterAsync } from "../../services/rfpService";
+import { createOrUpdateRfpDecisionPaperAsync, getAllProposalsByFilterAsync, getAllRfpsByFilterAsync, getRfpDecisionPapersAsync } from "../../services/rfpService";
 import { getAllBudgetTypesAsync, getAllContractTypesAsync } from "../../services/commonService";
+import { useParams } from "react-router-dom";
 
 const { TextArea } = Input;
 const { Option } = Select;
 const { Dragger } = Upload;
-// --- Example option lists (replace with API data as needed) ---
-// const contractTypes = [
-//     { value: "one-time-supply", label: "One Time Supply" },
-//     { value: "annual-rate", label: "Annual Rate Contract" },
-//     { value: "framework", label: "Framework Agreement" },
-//     { value: "service", label: "Service Contract" },
-//     { value: "work", label: "Work Contract" },
-//     { value: "lease", label: "Lease / Rental Contract" },
-//     { value: "maintenance", label: "Maintenance Contract" },
-//     { value: "turnkey", label: "Turnkey Contract" },
-//     { value: "bot", label: "Build-Operate-Transfer" },
-// ];
 
-// const budgetTypes = [
-//     { value: "capex", label: "CAPEX" },
-//     { value: "opex", label: "OPEX" },
-//     { value: "grant", label: "Grant / Sponsored" },
-//     { value: "mixed", label: "Mixed" },
-// ];
-
-// Allowed file types & size (2 MB)
 const ACCEPT = ".pdf,.doc,.docx,.xls,.xlsx";
 const MAX_MB = 2;
 
@@ -53,7 +35,13 @@ const dummyRequest: UploadProps["customRequest"] = ({ onSuccess }) => {
 };
 
 export default function RfpDecisionForm() {
-    const [selectedRfp, setSelectedRfp] = useState<number>(0);
+    const [form] = Form.useForm();
+    const [actionType, setActionType] = useState<"create" | "edit">("create")
+    const { rfpId, id } = useParams();
+    const [selectedRfp, setSelectedRfp] = useState<number>();
+    const [initialData, setInitialData] = useState<any>({
+        decisionType: "Decision Paper for Award"
+    });
     const [masterDatas, setMasterDatas] = useState<any>({
         rfps: [],
         budgetTypes: [],
@@ -149,184 +137,207 @@ export default function RfpDecisionForm() {
                 }
             ))
 
+            if (rfpId || id) {
+                if (rfpId && id) {
+                    setActionType("edit")
+                    const decission_paper = await getRfpDecisionPapersAsync(Number(id));
+                    setInitialData((prev: any) => ({ ...prev, ...decission_paper }));
+                }
+                setSelectedRfp(Number(rfpId));
+                setInitialData((prev: any) => ({ ...prev, rfpId: Number(rfpId) }))
+            }
         } catch (err) {
 
         }
     }
 
     useEffect(() => {
-        proposalsSetup();
+        if (selectedRfp)
+            proposalsSetup();
     }, [selectedRfp])
 
     useEffect(() => {
         setupDecisionForm();
     }, [])
 
+    useEffect(() => {
+        console.log(initialData, "initialData")
+    }, [initialData])
+
+    useEffect(() => {
+        if (!initialData) return;
+        const values: any = { ...initialData };
+        if (values.floatedOn) values.floatedOn = dayjs(values.floatedOn);
+        if (values.closedOn) values.closedOn = dayjs(values.closedOn);
+        if (values.openedOn) values.openedOn = dayjs(values.openedOn);
+        form.setFieldsValue(values);
+    }, [initialData, form])
+
     return (
         <div>
             <CommonTitleCard />
-            <Form
-                layout="vertical"
-                onFinish={onFinish}
-                requiredMark={false}
-                className="w-full h-full mx-auto p-6 bg-white shadow relative"
-                initialValues={{
-                    decisionType: "Decision Paper for Award"
-                }}
-            >
-                <h1 className="text-2xl font-bold mb-6">Decision Paper for Award</h1>
-                {/* RFP title */}
-                <div className="w-full grid grid-cols-1 gap-y-0 gap-x-6 md:grid-cols-3">
-                    <Form.Item
-                        label="RFP No./Title"
-                        name="rfpId"
-                        rules={[{ required: true, message: "Please enter the RFP number/title" }]}
-                    >
-                        <Select placeholder="Select the type" allowClear showSearch optionFilterProp="label" onChange={(val) => { setSelectedRfp(val) }}>
-                            {masterDatas.rfps.map((d: any) => (
-                                <Option key={d.id} value={d.id} label={d.rfpTitle}>{d.rfpTitle}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+            {initialData ?
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    requiredMark={false}
+                    className="w-full h-full mx-auto p-6 bg-white shadow relative"
+                    initialValues={initialData}
+                >
+                    <h1 className="text-2xl font-bold mb-6">Decision Paper for Award</h1>
+                    {/* RFP title */}
+                    <div className="w-full grid grid-cols-1 gap-y-0 gap-x-6 md:grid-cols-3">
+                        <Form.Item
+                            label="RFP No./Title"
+                            name="rfpId"
+                            rules={[{ required: true, message: "Please enter the RFP number/title" }]}
+                        >
+                            <Select placeholder="Select the type" allowClear showSearch optionFilterProp="label" onChange={(val) => { setSelectedRfp(val) }}>
+                                {masterDatas.rfps.map((d: any) => (
+                                    <Option key={d.id} value={d.id} label={d.rfpTitle}>{d.rfpTitle}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                    {/* Type of decision */}
-                    <Form.Item
-                        label="Type of decision"
-                        name="decisionType"
-                        rules={[{ required: true, message: "Please select the type" }]}
-                    >
-                        <Input placeholder="Enter the RFP No./Title" disabled />
-                        {/* <Select placeholder="Select the type" allowClear showSearch optionFilterProp="label">
+                        {/* Type of decision */}
+                        <Form.Item
+                            label="Type of decision"
+                            name="decisionType"
+                            rules={[{ required: true, message: "Please select the type" }]}
+                        >
+                            <Input placeholder="Enter the RFP No./Title" disabled />
+                            {/* <Select placeholder="Select the type" allowClear showSearch optionFilterProp="label">
                             {decisionTypes.map((d) => (
                                 <Option key={d.id} value={d.id} label={d.label}>{d.label}</Option>
                             ))}
                         </Select> */}
-                    </Form.Item>
+                        </Form.Item>
 
-                    {/* Proposal */}
-                    <Form.Item
-                        label="Proposal"
-                        name="vendorRfpProposalId"
-                        rules={[{ required: true, message: "Please select the proposal" }]}
-                    >
-                        <Select placeholder="Select the proposal" showSearch optionFilterProp="labelName" allowClear options={
-                            masterDatas.proposals.map((p: any) => ({
-                                value: p.id,
-                                labelName: p.vendorName,
-                                label:p.vendorName
-                                // label: (
-                                //     <div>
-                                //         <p className="font-bold">{p.vendorName}</p>
-                                //         <p>
-                                //             <span>Bid amount: </span>{p.bidAmount}
-                                //         </p>
-                                //     </div>
-                                // ),p.
-                            }))}>
+                        {/* Proposal */}
+                        <Form.Item
+                            label="Proposal from vendor"
+                            name="vendorRfpProposalId"
+                            rules={[{ required: true, message: "Please select the proposal" }]}
+                        >
+                            <Select placeholder="Select the proposal" showSearch optionFilterProp="labelName" allowClear options={
+                                masterDatas.proposals.map((p: any) => ({
+                                    value: p.id,
+                                    labelName: p.vendorName,
+                                    label: p.vendorName
+                                    // label: (
+                                    //     <div>
+                                    //         <p className="font-bold">{p.vendorName}</p>
+                                    //         <p>
+                                    //             <span>Bid amount: </span>{p.bidAmount}
+                                    //         </p>
+                                    //     </div>
+                                    // ),p.
+                                }))}>
 
-                        </Select>
-                    </Form.Item>
+                            </Select>
+                        </Form.Item>
 
-                    {/* Floated on */}
-                    <Form.Item label="Floated on" name="floatedOn" rules={[{ required: true, message: "Select the date" }]}>
-                        <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
-                    </Form.Item>
+                        {/* Floated on */}
+                        <Form.Item label="Floated on" name="floatedOn" rules={[{ required: true, message: "Select the date" }]}>
+                            <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
+                        </Form.Item>
 
-                    {/* Closed on */}
-                    <Form.Item label="Closed on" name="closedOn" rules={[{ required: true, message: "Select the date" }]}>
-                        <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
-                    </Form.Item>
+                        {/* Closed on */}
+                        <Form.Item label="Closed on" name="closedOn" rules={[{ required: true, message: "Select the date" }]}>
+                            <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
+                        </Form.Item>
 
-                    {/* Opened on */}
-                    <Form.Item label="Opened on" name="openedOn" rules={[{ required: true, message: "Select the date" }]}>
-                        <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
-                    </Form.Item>
+                        {/* Opened on */}
+                        <Form.Item label="Opened on" name="openedOn" rules={[{ required: true, message: "Select the date" }]}>
+                            <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
+                        </Form.Item>
 
-                    {/* Contract type */}
-                    <Form.Item label="Contract type" name="contractTypeId" rules={[{ required: true, message: "Please select the type" }]}>
-                        <Select placeholder="Select the type" allowClear>
-                            {masterDatas.contractTypes.map((c: any) => (
-                                <Option key={c.id} value={c.id}>{c.contractTypeName}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                        {/* Contract type */}
+                        <Form.Item label="Contract type" name="contractTypeId" rules={[{ required: true, message: "Please select the type" }]}>
+                            <Select placeholder="Select the type" allowClear>
+                                {masterDatas.contractTypes.map((c: any) => (
+                                    <Option key={c.id} value={c.id}>{c.contractTypeName}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                    {/* Budget type */}
-                    <Form.Item label="Budget type" name="budgetTypeId" rules={[{ required: true, message: "Please select the type" }]}>
-                        <Select placeholder="Select the type" allowClear>
-                            {masterDatas.budgetTypes.map((b: any) => (
-                                <Option key={b.id} value={b.id}>{b.budgetTypeName}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </div>
-                <div className="w-full grid grid-cols-2 gap-y-0">
-                    {/* Background */}
+                        {/* Budget type */}
+                        <Form.Item label="Budget type" name="budgetTypeId" rules={[{ required: true, message: "Please select the type" }]}>
+                            <Select placeholder="Select the type" allowClear>
+                                {masterDatas.budgetTypes.map((b: any) => (
+                                    <Option key={b.id} value={b.id}>{b.budgetTypeName}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </div>
+                    <div className="w-full grid grid-cols-2 gap-y-0">
+                        {/* Background */}
+                        <div className="md:col-span-2">
+                            <Form.Item label="Background" name="background" rules={[{ required: true, message: "Please enter the background" }]}>
+                                <TextArea placeholder="Enter the background" rows={3} />
+                            </Form.Item>
+                        </div>
+
+                        {/* Technical evaluation */}
+                        <div className="md:col-span-2">
+                            <Form.Item label="Technical evaluation" name="technicalEvaluationComments" rules={[{ required: true, message: "Enter the technical evaluation" }]}>
+                                <TextArea placeholder="Enter the technical evaluation" rows={3} />
+                            </Form.Item>
+                        </div>
+
+                        {/* Technical evaluation attachments */}
+                        <div className="md:col-span-1">
+                            <Form.Item label="Technical evaluation attachments" tooltip="PDF, DOC or XLS (max. 2MB)">
+                                <Dragger
+                                    multiple
+                                    fileList={techFiles}
+                                    onChange={({ fileList }) => setTechFiles(fileList)}
+                                    beforeUpload={beforeUploadValidate}
+                                    customRequest={dummyRequest}
+                                    accept={ACCEPT}
+                                >
+                                    <p className="ant-upload-drag-icon"><InboxOutlined style={{ color: 'gray' }} /></p>
+                                    <p className="ant-upload-text">Click to upload</p>
+                                    <p className="ant-upload-hint">or drag and drop<br />PDF, DOC or XLS (max. 2MB)</p>
+                                </Dragger>
+                            </Form.Item>
+                        </div>
+
+                        {/* Commercial evaluation */}
+                        <div className="md:col-span-2">
+                            <Form.Item label="Commercial evaluation" name="commercialEvaluationComments" rules={[{ required: true, message: "Enter the commercial evaluation" }]}>
+                                <TextArea placeholder="Enter the commercial evaluation" rows={3} />
+                            </Form.Item>
+                        </div>
+
+                        {/* Commercial evaluation attachments */}
+                        <div className="md:col-span-1">
+                            <Form.Item label="Commercial evaluation attachments" tooltip="PDF, DOC or XLS (max. 2MB)">
+                                <Dragger
+                                    multiple
+                                    fileList={commFiles}
+                                    onChange={({ fileList }) => setCommFiles(fileList)}
+                                    beforeUpload={beforeUploadValidate}
+                                    customRequest={dummyRequest}
+                                    accept={ACCEPT}
+                                >
+                                    <p className="ant-upload-drag-icon"><InboxOutlined style={{ color: 'gray' }} /></p>
+                                    <p className="ant-upload-text">Click to upload</p>
+                                    <p className="ant-upload-hint">or drag and drop<br />PDF, DOC or XLS (max. 2MB)</p>
+                                </Dragger>
+                            </Form.Item>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
                     <div className="md:col-span-2">
-                        <Form.Item label="Background" name="background" rules={[{ required: true, message: "Please enter the background" }]}>
-                            <TextArea placeholder="Enter the background" rows={3} />
-                        </Form.Item>
+                        <Space>
+                            <Button type="primary" htmlType="submit">Sent for award</Button>
+                            <Button htmlType="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top</Button>
+                        </Space>
                     </div>
-
-                    {/* Technical evaluation */}
-                    <div className="md:col-span-2">
-                        <Form.Item label="Technical evaluation" name="technicalEvaluationComments" rules={[{ required: true, message: "Enter the technical evaluation" }]}>
-                            <TextArea placeholder="Enter the technical evaluation" rows={3} />
-                        </Form.Item>
-                    </div>
-
-                    {/* Technical evaluation attachments */}
-                    <div className="md:col-span-1">
-                        <Form.Item label="Technical evaluation attachments" tooltip="PDF, DOC or XLS (max. 2MB)">
-                            <Dragger
-                                multiple
-                                fileList={techFiles}
-                                onChange={({ fileList }) => setTechFiles(fileList)}
-                                beforeUpload={beforeUploadValidate}
-                                customRequest={dummyRequest}
-                                accept={ACCEPT}
-                            >
-                                <p className="ant-upload-drag-icon"><InboxOutlined style={{ color: 'gray' }} /></p>
-                                <p className="ant-upload-text">Click to upload</p>
-                                <p className="ant-upload-hint">or drag and drop<br />PDF, DOC or XLS (max. 2MB)</p>
-                            </Dragger>
-                        </Form.Item>
-                    </div>
-
-                    {/* Commercial evaluation */}
-                    <div className="md:col-span-2">
-                        <Form.Item label="Commercial evaluation" name="commercialEvaluationComments" rules={[{ required: true, message: "Enter the commercial evaluation" }]}>
-                            <TextArea placeholder="Enter the commercial evaluation" rows={3} />
-                        </Form.Item>
-                    </div>
-
-                    {/* Commercial evaluation attachments */}
-                    <div className="md:col-span-1">
-                        <Form.Item label="Commercial evaluation attachments" tooltip="PDF, DOC or XLS (max. 2MB)">
-                            <Dragger
-                                multiple
-                                fileList={commFiles}
-                                onChange={({ fileList }) => setCommFiles(fileList)}
-                                beforeUpload={beforeUploadValidate}
-                                customRequest={dummyRequest}
-                                accept={ACCEPT}
-                            >
-                                <p className="ant-upload-drag-icon"><InboxOutlined style={{ color: 'gray' }} /></p>
-                                <p className="ant-upload-text">Click to upload</p>
-                                <p className="ant-upload-hint">or drag and drop<br />PDF, DOC or XLS (max. 2MB)</p>
-                            </Dragger>
-                        </Form.Item>
-                    </div>
-                </div>
-
-                {/* Actions */}
-                <div className="md:col-span-2">
-                    <Space>
-                        <Button type="primary" htmlType="submit">Sent for award</Button>
-                        <Button htmlType="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top</Button>
-                    </Space>
-                </div>
-            </Form>
+                </Form> : <div></div>}
         </div>
     );
 }

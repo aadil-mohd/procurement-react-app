@@ -10,9 +10,8 @@ import Modal from '../../basic_components/Modal';
 import ProposalSubmissionModal from './ProposalSubmissionModal';
 import { getAllEvaluationReportsAsync, getAllProposalsByFilterAsync, getAllRfpIntrestByFilterAsync, uploadEvaluationReportAsync } from '../../../services/rfpService';
 import ClarificationList from './ClarificationList';
-import { DocumentIconByExtension, GeneralDetailIcon, IntrestedIcon, OpenMainIcon } from '../../../utils/Icons';
-import { Button, notification } from 'antd';
-import CreateButton from '../../buttons/CreateButton';
+import { DocumentIconByExtension, IntrestedIcon, OpenMainIcon } from '../../../utils/Icons';
+import { notification } from 'antd';
 
 // interface User {
 //     name: string;
