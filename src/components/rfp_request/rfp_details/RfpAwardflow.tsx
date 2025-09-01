@@ -148,7 +148,7 @@ const RfpAwardflow: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) => {
                         if (index <= currentIndex) {
                             return (
                                 <StepCard
-                                    flowType='rfpproposal'
+                                    flowType='rfpaward'
                                     key={index}
                                     step={step || []}
                                     trigger={() => {
@@ -162,7 +162,7 @@ const RfpAwardflow: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) => {
                         return (
                             (rfpDetails.status == 1 || rfpDetails.status == 2) && (rfpDetails.createdBy == getUserCredentials().userId) ?
                                 <StepCard
-                                    flowType="rfpproposal"
+                                    flowType="rfpaward"
                                     key={index}
                                     step={step || []}
                                     trigger={() => {

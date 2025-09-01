@@ -154,7 +154,7 @@ export default function RfpDecisionForm({ type, rfpIdFromParent }: RfpDecisionFo
             }
 
             if (type == "edit" || type == "view") {
-                const decission_paper = await getRfpDecisionPaperByRfpIdAsync((type == "view" && rfpIdFromParent)  ? rfpIdFromParent : Number(rfpId));
+                const decission_paper = await getRfpDecisionPaperByRfpIdAsync((type == "view" && rfpIdFromParent) ? rfpIdFromParent : Number(rfpId));
                 setInitialData((prev: any) => ({ ...prev, ...decission_paper }));
             }
 
@@ -345,7 +345,7 @@ export default function RfpDecisionForm({ type, rfpIdFromParent }: RfpDecisionFo
                     {/* Actions */}
                     {type != "view" && <div className="md:col-span-2">
                         <Space>
-                            <Button type="primary" htmlType="submit">Sent for award</Button>
+                            <Button type="primary" htmlType="submit">{type == "create" ? "Sent for award" : "Update"}</Button>
                             <Button htmlType="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top</Button>
                         </Space>
                     </div>}

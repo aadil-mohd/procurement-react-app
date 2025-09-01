@@ -152,7 +152,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
 
                     <div className="w-full">
                         {activeTab === "Proposals" && <>
-                            {rfp?.status == 5 || rfp?.status == 6 ?
+                            {rfp?.status == 5 ?
                                 <>
                                     <ItemCountCard className="mb-[16px]" item={{
                                         icon: <OpenMainIcon className='w-[16px] h-[16px] text-white' />,

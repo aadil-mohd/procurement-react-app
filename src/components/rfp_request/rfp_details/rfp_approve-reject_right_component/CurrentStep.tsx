@@ -21,7 +21,7 @@ import { Check, X } from "lucide-react";
 //   { id: 9, criteria: "Site visit", isChecked: true },
 //   { id: 10, criteria: "Factory inspection", isChecked: true },
 // ];
-const CurrentStep: React.FC<{ step: IStep; trigger: () => void, flowType:"rfp" | "rfpproposal" }> = ({
+const CurrentStep: React.FC<{ step: IStep; trigger: () => void, flowType:"rfp" | "rfpproposal" | "rfpaward" }> = ({
   step,
   trigger,
   flowType
