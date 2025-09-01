@@ -4,9 +4,9 @@ import dayjs from "dayjs";
 import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import { InboxOutlined } from "@ant-design/icons";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
-import { createOrUpdateRfpDecisionPaperAsync, getAllProposalsByFilterAsync, getAllRfpsByFilterAsync, getRfpDecisionPapersAsync } from "../../services/rfpService";
+import { createOrUpdateRfpDecisionPaperAsync, getAllProposalsByFilterAsync, getAllRfpsByFilterAsync, getRfpDecisionPaperByRfpIdAsync, getRfpDecisionPapersAsync } from "../../services/rfpService";
 import { getAllBudgetTypesAsync, getAllContractTypesAsync } from "../../services/commonService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -34,10 +34,14 @@ const dummyRequest: UploadProps["customRequest"] = ({ onSuccess }) => {
     setTimeout(() => onSuccess && onSuccess("ok" as any), 400);
 };
 
-export default function RfpDecisionForm() {
+interface RfpDecisionFormType {
+    type: "edit" | "create" | "view"
+    rfpIdFromParent?: number
+}
+
+export default function RfpDecisionForm({ type, rfpIdFromParent }: RfpDecisionFormType = { type: "create", rfpIdFromParent: 0 }) {
     const [form] = Form.useForm();
-    const [actionType, setActionType] = useState<"create" | "edit">("create")
-    const { rfpId, id } = useParams();
+    const { rfpId } = useParams();
     const [selectedRfp, setSelectedRfp] = useState<number>();
     const [initialData, setInitialData] = useState<any>({
         decisionType: "Decision Paper for Award"
@@ -48,47 +52,54 @@ export default function RfpDecisionForm() {
         contractTypes: [],
         proposals: []
     });
+    const navigate = useNavigate();
 
     const [techFiles, setTechFiles] = useState<UploadFile[]>([]);
     const [commFiles, setCommFiles] = useState<UploadFile[]>([]);
 
     const onFinish = async (values: any) => {
-        const payload = {
-            ...values,
-            floatedOn: values.floatedOn?.format?.("YYYY-MM-DD"),
-            closedOn: values.closedOn?.format?.("YYYY-MM-DD"),
-            openedOn: values.openedOn?.format?.("YYYY-MM-DD"),
-            // technicalEvaluationFiles: techFiles.map((f) => ({ name: f.name, uid: f.uid })),
-            // commercialEvaluationFiles: commFiles.map((f) => ({ name: f.name, uid: f.uid })),
-        };
-        console.log(payload, "technicalEvaluationFiles");
+        try {
+            const payload = {
+                ...values,
+                floatedOn: values.floatedOn?.format?.("YYYY-MM-DD"),
+                closedOn: values.closedOn?.format?.("YYYY-MM-DD"),
+                openedOn: values.openedOn?.format?.("YYYY-MM-DD"),
+                // technicalEvaluationFiles: techFiles.map((f) => ({ name: f.name, uid: f.uid })),
+                // commercialEvaluationFiles: commFiles.map((f) => ({ name: f.name, uid: f.uid })),
+            };
+            console.log(payload, "technicalEvaluationFiles");
 
-        const formFile = new FormData();
-        for (let x in payload) {
-            formFile.append(x, payload[x]);
+            const formFile = new FormData();
+            for (let x in payload) {
+                formFile.append(x, payload[x]);
+            }
+            let i = 0;
+            // Append technical evaluation files
+            techFiles.forEach((file) => {
+                formFile.append(`Attachments[${i}].Document`, file.originFileObj as any); // Here, send the file itself
+                formFile.append(`Attachments[${i}].DocumentTypeId`, "1");
+                i++;
+            });
+
+            // Append commercial evaluation files
+            commFiles.forEach((file) => {
+                formFile.append(`Attachments[${i}].Document`, file.originFileObj as any); // Send the file object here
+                formFile.append(`Attachments[${i}].DocumentTypeId`, "2");
+                i++;
+            });
+
+            await createOrUpdateRfpDecisionPaperAsync(formFile);
+            // Send payload to API here
+            // await api.saveDecisionPaper(payload)
+            message.success("Decision paper saved (check console for payload)");
+            // For demo
+            // eslint-disable-next-line no-console
+            console.log("Decision Paper Payload:", payload);
+
+            if (rfpId) navigate(`/rfps/${rfpId}`)
+        } catch (err) {
+
         }
-        let i = 0;
-        // Append technical evaluation files
-        techFiles.forEach((file) => {
-            formFile.append(`Attachments[${i}].Document`, file.originFileObj as any); // Here, send the file itself
-            formFile.append(`Attachments[${i}].DocumentTypeId`, "1");
-            i++;
-        });
-
-        // Append commercial evaluation files
-        commFiles.forEach((file) => {
-            formFile.append(`Attachments[${i}].Document`, file.originFileObj as any); // Send the file object here
-            formFile.append(`Attachments[${i}].DocumentTypeId`, "2");
-            i++;
-        });
-
-        await createOrUpdateRfpDecisionPaperAsync(formFile);
-        // Send payload to API here
-        // await api.saveDecisionPaper(payload)
-        message.success("Decision paper saved (check console for payload)");
-        // For demo
-        // eslint-disable-next-line no-console
-        console.log("Decision Paper Payload:", payload);
     };
 
     const proposalsSetup = async () => {
@@ -121,7 +132,7 @@ export default function RfpDecisionForm() {
                 pageNo: 0,
                 pageSize: 0,
                 fields: [
-                    { columnName: "status", value: 9 }
+                    ...(type == "create" ? [{ columnName: "status", value: 9 }] : [])
                 ],
                 sortColumn: "TenderNumber",
                 sortDirection: "ASC"
@@ -137,15 +148,16 @@ export default function RfpDecisionForm() {
                 }
             ))
 
-            if (rfpId || id) {
-                if (rfpId && id) {
-                    setActionType("edit")
-                    const decission_paper = await getRfpDecisionPapersAsync(Number(id));
-                    setInitialData((prev: any) => ({ ...prev, ...decission_paper }));
-                }
+            if (rfpId) {
                 setSelectedRfp(Number(rfpId));
                 setInitialData((prev: any) => ({ ...prev, rfpId: Number(rfpId) }))
             }
+
+            if (type == "edit" || type == "view") {
+                const decission_paper = await getRfpDecisionPaperByRfpIdAsync((type == "view" && rfpIdFromParent)  ? rfpIdFromParent : Number(rfpId));
+                setInitialData((prev: any) => ({ ...prev, ...decission_paper }));
+            }
+
         } catch (err) {
 
         }
@@ -175,7 +187,7 @@ export default function RfpDecisionForm() {
 
     return (
         <div>
-            <CommonTitleCard />
+            {type != "view" && <CommonTitleCard />}
             {initialData ?
                 <Form
                     form={form}
@@ -185,7 +197,7 @@ export default function RfpDecisionForm() {
                     className="w-full h-full mx-auto p-6 bg-white shadow relative"
                     initialValues={initialData}
                 >
-                    <h1 className="text-2xl font-bold mb-6">Decision Paper for Award</h1>
+                    {type != "view" && <h1 className="text-2xl font-bold mb-6">Decision Paper for Award</h1>}
                     {/* RFP title */}
                     <div className="w-full grid grid-cols-1 gap-y-0 gap-x-6 md:grid-cols-3">
                         <Form.Item
@@ -193,7 +205,7 @@ export default function RfpDecisionForm() {
                             name="rfpId"
                             rules={[{ required: true, message: "Please enter the RFP number/title" }]}
                         >
-                            <Select placeholder="Select the type" allowClear showSearch optionFilterProp="label" onChange={(val) => { setSelectedRfp(val) }}>
+                            <Select disabled={type == "view" || type == "edit"} placeholder="Select the type" allowClear showSearch optionFilterProp="label" onChange={(val) => { setSelectedRfp(val) }}>
                                 {masterDatas.rfps.map((d: any) => (
                                     <Option key={d.id} value={d.id} label={d.rfpTitle}>{d.rfpTitle}</Option>
                                 ))}
@@ -220,7 +232,7 @@ export default function RfpDecisionForm() {
                             name="vendorRfpProposalId"
                             rules={[{ required: true, message: "Please select the proposal" }]}
                         >
-                            <Select placeholder="Select the proposal" showSearch optionFilterProp="labelName" allowClear options={
+                            <Select disabled={type == "view"} placeholder="Select the proposal" showSearch optionFilterProp="labelName" allowClear options={
                                 masterDatas.proposals.map((p: any) => ({
                                     value: p.id,
                                     labelName: p.vendorName,
@@ -240,22 +252,22 @@ export default function RfpDecisionForm() {
 
                         {/* Floated on */}
                         <Form.Item label="Floated on" name="floatedOn" rules={[{ required: true, message: "Select the date" }]}>
-                            <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
+                            <DatePicker disabled={type == "view"} className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
                         </Form.Item>
 
                         {/* Closed on */}
                         <Form.Item label="Closed on" name="closedOn" rules={[{ required: true, message: "Select the date" }]}>
-                            <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
+                            <DatePicker disabled={type == "view"} className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
                         </Form.Item>
 
                         {/* Opened on */}
                         <Form.Item label="Opened on" name="openedOn" rules={[{ required: true, message: "Select the date" }]}>
-                            <DatePicker className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
+                            <DatePicker disabled={type == "view"} className="w-full" format="DD/MM/YY" placeholder="DD/MM/YY" />
                         </Form.Item>
 
                         {/* Contract type */}
                         <Form.Item label="Contract type" name="contractTypeId" rules={[{ required: true, message: "Please select the type" }]}>
-                            <Select placeholder="Select the type" allowClear>
+                            <Select disabled={type == "view"} placeholder="Select the type" allowClear>
                                 {masterDatas.contractTypes.map((c: any) => (
                                     <Option key={c.id} value={c.id}>{c.contractTypeName}</Option>
                                 ))}
@@ -264,7 +276,7 @@ export default function RfpDecisionForm() {
 
                         {/* Budget type */}
                         <Form.Item label="Budget type" name="budgetTypeId" rules={[{ required: true, message: "Please select the type" }]}>
-                            <Select placeholder="Select the type" allowClear>
+                            <Select disabled={type == "view"} placeholder="Select the type" allowClear>
                                 {masterDatas.budgetTypes.map((b: any) => (
                                     <Option key={b.id} value={b.id}>{b.budgetTypeName}</Option>
                                 ))}
@@ -275,19 +287,19 @@ export default function RfpDecisionForm() {
                         {/* Background */}
                         <div className="md:col-span-2">
                             <Form.Item label="Background" name="background" rules={[{ required: true, message: "Please enter the background" }]}>
-                                <TextArea placeholder="Enter the background" rows={3} />
+                                <TextArea disabled={type == "view"} placeholder="Enter the background" rows={3} />
                             </Form.Item>
                         </div>
 
                         {/* Technical evaluation */}
                         <div className="md:col-span-2">
                             <Form.Item label="Technical evaluation" name="technicalEvaluationComments" rules={[{ required: true, message: "Enter the technical evaluation" }]}>
-                                <TextArea placeholder="Enter the technical evaluation" rows={3} />
+                                <TextArea disabled={type == "view"} placeholder="Enter the technical evaluation" rows={3} />
                             </Form.Item>
                         </div>
 
                         {/* Technical evaluation attachments */}
-                        <div className="md:col-span-1">
+                        {type != "view" && <div className="md:col-span-1">
                             <Form.Item label="Technical evaluation attachments" tooltip="PDF, DOC or XLS (max. 2MB)">
                                 <Dragger
                                     multiple
@@ -302,17 +314,17 @@ export default function RfpDecisionForm() {
                                     <p className="ant-upload-hint">or drag and drop<br />PDF, DOC or XLS (max. 2MB)</p>
                                 </Dragger>
                             </Form.Item>
-                        </div>
+                        </div>}
 
                         {/* Commercial evaluation */}
                         <div className="md:col-span-2">
                             <Form.Item label="Commercial evaluation" name="commercialEvaluationComments" rules={[{ required: true, message: "Enter the commercial evaluation" }]}>
-                                <TextArea placeholder="Enter the commercial evaluation" rows={3} />
+                                <TextArea disabled={type == "view"} placeholder="Enter the commercial evaluation" rows={3} />
                             </Form.Item>
                         </div>
 
                         {/* Commercial evaluation attachments */}
-                        <div className="md:col-span-1">
+                        {type != "view" && <div className="md:col-span-1">
                             <Form.Item label="Commercial evaluation attachments" tooltip="PDF, DOC or XLS (max. 2MB)">
                                 <Dragger
                                     multiple
@@ -327,16 +339,16 @@ export default function RfpDecisionForm() {
                                     <p className="ant-upload-hint">or drag and drop<br />PDF, DOC or XLS (max. 2MB)</p>
                                 </Dragger>
                             </Form.Item>
-                        </div>
+                        </div>}
                     </div>
 
                     {/* Actions */}
-                    <div className="md:col-span-2">
+                    {type != "view" && <div className="md:col-span-2">
                         <Space>
                             <Button type="primary" htmlType="submit">Sent for award</Button>
                             <Button htmlType="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top</Button>
                         </Space>
-                    </div>
+                    </div>}
                 </Form> : <div></div>}
         </div>
     );

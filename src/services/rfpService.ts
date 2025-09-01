@@ -238,3 +238,16 @@ export const getRfpDecisionPapersAsync = async(id:number)=>{
         console.log(err);
     }
 }
+
+export const getRfpDecisionPaperByRfpIdAsync = async(id:number)=>{
+    try{
+        const response = await axios.get(`${Urls.defaultUrl}/api/Rfps/RfpDecisionPapers?rfpId=${id}`,{
+            headers:{
+                Authorization:`Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+    }catch(err){
+        console.log(err);
+    }
+}

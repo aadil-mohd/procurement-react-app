@@ -52,7 +52,7 @@ const Modal = ({
         </div>
 
         {/* Modal Content */}
-        <div className={`w-full h-full z-20 ${title ? "mt-10" : ""}`}>
+        <div className={`w-full h-full z-20 ${title ? "mt-10" : ""} overflow-auto`}>
           {content}
         </div>
       </div>
