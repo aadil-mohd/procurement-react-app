@@ -116,7 +116,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
           </div></div>
         <div className="w-full p-4">
           <span className="font-bold text-[16px] mb-[12px] flex"><span className="">Remarks</span></span>
-          <AddAttachment id={"file-upload-1"} attachments={remarksAttachment} setAttachments={async (file) => {
+          <AddAttachment viewOnly={rfp.status == 6} id={"file-upload-1"} attachments={remarksAttachment} setAttachments={async (file) => {
             setRemarksAttachment([file])
             const formData = new FormData();
             formData.append("File", file.document);

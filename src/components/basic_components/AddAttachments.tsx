@@ -1,22 +1,24 @@
 import React from "react";
 
 interface AddAttachmentProps {
-  setAttachments: (file:any)=>void;
+  setAttachments: (file: any) => void;
   attachments: any[];
   required?: boolean;
   id?: string
+  viewOnly?: boolean
 }
 
 const AddAttachment: React.FC<AddAttachmentProps> = ({
   setAttachments,
   attachments,
   required = false,
-  id = "file-upload"
+  id = "file-upload",
+  viewOnly = false
 }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files ? event.target.files[0] : null;
     if (selectedFiles) {
-      setAttachments({ document: selectedFiles, documentName: selectedFiles.name, documentUrl:URL.createObjectURL(selectedFiles) }); // Add new files to the current list
+      setAttachments({ document: selectedFiles, documentName: selectedFiles.name, documentUrl: URL.createObjectURL(selectedFiles) }); // Add new files to the current list
     }
   };
 
@@ -40,7 +42,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
       </div>
 
       {/* File input section */}
-      <div
+      {!viewOnly && <div
         className="flex flex-col items-center justify-center border"
         style={{ borderWidth: "1px", borderStyle: "dashed", borderColor: "#D1D5DB", height: "100px" }}
       >
@@ -61,7 +63,7 @@ const AddAttachment: React.FC<AddAttachmentProps> = ({
           className="hidden"
         />
         <span className="text-xs text-gray-500">Max. file size : 20MB</span>
-      </div>
+      </div>}
     </div>
   );
 };
