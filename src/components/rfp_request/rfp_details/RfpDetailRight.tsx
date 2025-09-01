@@ -74,7 +74,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                     }]
                 })
                 setVendorIntrestCount(intrestOnRfp.length);
-                if (rfp?.status != 5 && rfp?.status != 6) {
+                if (rfp?.status != 5 ) {
                     const evaluationReports = await getAllEvaluationReportsAsync(Number(rfp?.id || "0"));
                     const evalutionDocumentMapped = evaluationReports.map((d: any) => ({ documentUrl: d.filePath, documentName: d.fileTitle }));
                     setEvaluationDocuments(evalutionDocumentMapped);
