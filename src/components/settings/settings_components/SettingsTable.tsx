@@ -25,8 +25,8 @@ interface TableProps extends Partial<IDot> {
     filter?: IFilterDto;
     dots?: boolean;
     setIsFilterModalOpen?: (open: boolean) => void;
-    setIsSortModalOpen: (open: boolean) => void;
-    setSearchQuery: (query: string) => void;
+    setIsSortModalOpen?: (open: boolean) => void;
+    setSearchQuery?: (query: string) => void;
     setFilter: React.Dispatch<React.SetStateAction<IFilterDto>>;
     totalCount?: number;
 }
@@ -184,7 +184,7 @@ const SettingsTable: React.FC<TableProps> = ({
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-[18px] font-semibold mr-4">{title}</h2>
                     <div className="flex space-x-2">
-                        <div className="relative w-[219px] h-[30px] flex items-center">
+                        {setSearchQuery && <div className="relative w-[219px] h-[30px] flex items-center">
                             <MagnifyingGlass className="absolute size-4 left-3 top-1/2 transform -translate-y-1/2 text-[#1E1F21] z-10" />
                             <input
                                 type="text"
@@ -192,19 +192,19 @@ const SettingsTable: React.FC<TableProps> = ({
                                 className="w-full pl-10 pr-3 py-1.5 rounded-[6px] bg-[#EFF4F9] text-sm focus:outline-none flex items-center"
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                        </div>
+                        </div>}
                         {filter && setIsFilterModalOpen && <button
                             className="px-3 py-2 w-[75px] h-[30px] flex text-xs items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
                             onClick={() => setIsFilterModalOpen && setIsFilterModalOpen(true)}
                         >
                             <FilterIcon className="size-6 mr-2" /> Filter
                         </button>}
-                        <button
+                        {filter && setIsSortModalOpen && <button
                             className="px-3 py-2 w-[75px] h-[30px] text-xs flex items-center justify-center bg-[#EFF4F9] rounded-[6px] hover:bg-blue-200"
                             onClick={() => setIsSortModalOpen && setIsSortModalOpen(true)}
                         >
                             <SortIcon className="size-3 mr-2" /> Sort
-                        </button>
+                        </button>}
                     </div>
                 </div>
                 <div ref={tableContainerRef} className="overflow-auto max-h-[380px]">
@@ -228,7 +228,7 @@ const SettingsTable: React.FC<TableProps> = ({
                                                 {col.key === "status" ? getStatusBadge(item[col.key]) : item[col.key]}
                                             </td>
                                         ))}
-                                        {( dots|| item["dot"]) &&  (
+                                        {(dots || item["dot"]) && (
                                             <td className={`px-6 py-2 ${index < data.length - 1 && "border-b"} text-xs`} onClick={(e) => e.stopPropagation()}>
                                                 <button onClick={(e) => toggleDropdown(index, e)} className="focus:outline-none">
                                                     <EllipsisVerticalIcon className="w-4 h-4 stroke-gray-600" />

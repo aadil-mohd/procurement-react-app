@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { KeyValueGrid } from "./RfpDetailLeft";
 import { DocumentIconByExtension, GeneralDetailIcon, TickIcon } from "../../../utils/Icons";
-import { getAllProposalDocuments, getAllProposalRemarkAttachmentsAsync, updateProposalStatusAsync, uploadProposalRemarkAttachmentAsync } from "../../../services/rfpService";
+import { getAllProposalDocuments, getAllProposalRemarkAttachmentsAsync, uploadProposalRemarkAttachmentAsync } from "../../../services/rfpService";
 import { documentTypeConst } from "../../../utils/constants";
 import { getUserCredentials } from "../../../utils/common";
 import AddAttachment from "../../basic_components/AddAttachments";
@@ -13,7 +13,7 @@ type ProposalSubmissionModalProps = {
   proposal?: any
 };
 
-const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, trigger, proposal }) => {
+const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, proposal }) => {
   const [attachments, setAttachments] = useState<any[]>([]);
   const [remarksAttachment, setRemarksAttachment] = useState<any[]>([]);
 
@@ -21,12 +21,12 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
     technical: false, commercial: false
   })
 
-  const handleSubmit = async (e: React.FormEvent, type: "Approved" | "Rejected") => {
-    e.preventDefault();
+  // const handleSubmit = async (e: React.FormEvent, type: "Approved" | "Rejected") => {
+  //   e.preventDefault();
 
-    await updateProposalStatusAsync(proposal?.id ?? 0, type);
-    trigger();
-  };
+  //   await updateProposalStatusAsync(proposal?.id ?? 0, type);
+  //   trigger();
+  // };
 
 
   const setupProposalModal = async () => {
