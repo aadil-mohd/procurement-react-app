@@ -62,11 +62,20 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
 
     const tabs = ["Proposals", "Clarifications"];
 
+    const handleProposalFilter = async (filterDto:IFilterDto=filter) => {
+        try {
+            if (activeTab == "Proposals") {
+                const filtered_proposals = await getAllProposalsByFilterAsync(filterDto);
+                setVendorProposals(filtered_proposals);
+            }
+        } catch (err) {
+
+        }
+    }
+
     const setupTabsAsync = async () => {
         try {
             if (activeTab == "Proposals") {
-                const filtered_proposals = await getAllProposalsByFilterAsync(filter);
-                setVendorProposals(filtered_proposals);
                 const intrestOnRfp = await getAllRfpIntrestByFilterAsync({
                     fields: [{
                         columnName: "RfpId",
@@ -88,6 +97,10 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
         }
     }
 
+    useEffect(()=>{
+        handleProposalFilter({...filter,globalSearch:searchQuery});
+    },[searchQuery])
+
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files ? event.target.files[0] : null;
         if (selectedFiles) {
@@ -105,7 +118,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
     useEffect(() => {
         setupTabsAsync();
         console.log(searchQuery)
-    }, [activeTab])
+    }, [activeTab, searchQuery])
 
     const [filter, setFilter] = useState<IFilterDto>({
         fields: [{ columnName: "RfpId", value: rfp?.id ?? 0 }],
