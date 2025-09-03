@@ -274,29 +274,7 @@ const RolesPermissions: React.FC = () => {
         try {
             const response = await assignPermissionsToRoleAsync({ roleId: roleId, permissionIds: selectedRole?.permissions.map((p: any) => p.permissionId) });
             console.log(response);
-
-            setChangesDone(false)
-            // console.log(rolesPermissions)
-            // let roleData = roles.filter((x) => x.roleid == selectedRole?.roleid);
-            // if (roleData.length > 0) {
-            //     const updatedData = { ...roleData[0], createdAt: null, permissions: rolesPermissions };
-            //     // Use updatedData as needed
-            //     console.log("Updated role data:", updatedData);
-            //     const response = await updatePermissionsByRoleIdAsync(roleId, updatedData);
-
-            //     console.log(response)
-            //     console.log('Permissions updated successfully');
-            //     notification.success({
-            //         message: `Permission updated for ${updatedData.roleName}`
-            //     })
-            //     setChangesDone(false)
-            // } else {
-            //     console.error(`Role with id ${selectedRole} not found.`);
-            //     notification.error({
-            //         message: `Role with id ${selectedRole} not found.`
-            //     })
-            // }
-
+            setChangesDone(false);
         } catch (error: any) {
             console.error('Error updating permissions:', error);
             notification.error({
@@ -324,34 +302,17 @@ const RolesPermissions: React.FC = () => {
                 <CreateButton name='Add role' onClick={() => setIsCreateModalOpen(true)} /> */}
             </div>
 
-            {/* {!selectedRole && <div className="px-8">
-        <SettingsTable
-          title="Roles"
-          columns={columns}
-          onRowClick={handleRowClick}
-          data={roles}
-          filter={filter}
-          setFilter={setFilter}
-          setIsSortModalOpen={setSortModalOpen}
-          // totalCount={roles.count}
-          setSearchQuery={setSearchQuery}
-          dots
-          setEditOption={(role) => handleThreeDots("edit", role)}
-          setDeleteOption={(role) => handleThreeDots("delete", role)}
-        />
-      </div>} */}
-
-            {selectedRole && <div className='px-8'>
+            <div className='px-8'>
                 <div className="w-full bg-white p-3 rounded-md shadow">
                     <div className="flex justify-between items-center pb-3">
                         <h2 className="flex justify-center items-center text-[18px] font-semibold">Roles & Permissions</h2>
-                        <button
+                        {selectedRole &&<button
                             className={`px-4 py-2 text-white rounded-md text-sm font-medium ${changesDone ? "bg-blue-600" : "bg-blue-100"}`}
                             disabled={!changesDone}
                             onClick={() => handleSaveChangesForRole(selectedRole.roleid)}
                         >
                             Save changes
-                        </button>
+                        </button>}
                     </div>
 
 
@@ -381,10 +342,6 @@ const RolesPermissions: React.FC = () => {
                                 <tr className="text-xs font-semibold text-gray-500">
                                     <th className="text-left py-3 w-1/3">Permissions</th>
                                     <th className="text-center py-3 w-[13%]">Grant access</th>
-                                    {/* <th className="text-center py-3 w-[13%]">View</th>
-                                    <th className="text-center py-3 w-[13%]">Edit</th>
-                                    <th className="text-center py-3 w-[13%]">Add</th>
-                                    <th className="text-center py-3 w-[13%]">Delete</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -401,46 +358,6 @@ const RolesPermissions: React.FC = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        {/* <td className="py-3 text-center">
-                                            <div className="flex justify-center">
-                                                <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${permission.canView ? 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => handlePermissionToggle(permission.permissionName, 'canView')}
-                                                >
-                                                    {permission.canView && <Check className="w-3 h-3 text-white" />}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-3 text-center">
-                                            <div className="flex justify-center">
-                                                <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${permission.canEdit ? 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => handlePermissionToggle(permission.permissionName, 'canEdit')}
-                                                >
-                                                    {permission.canEdit && <Check className="w-3 h-3 text-white" />}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-3 text-center">
-                                            <div className="flex justify-center">
-                                                <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${permission.canAdd ? 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => handlePermissionToggle(permission.permissionName, 'canAdd')}
-                                                >
-                                                    {permission.canAdd && <Check className="w-3 h-3 text-white" />}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-3 text-center">
-                                            <div className="flex justify-center">
-                                                <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${permission.canDelete ? 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => handlePermissionToggle(permission.permissionName, 'canDelete')}
-                                                >
-                                                    {permission.canDelete && <Check className="w-3 h-3 text-white" />}
-                                                </div>
-                                            </div>
-                                        </td> */}
                                     </tr>
                                 ))}
                             </tbody>
@@ -448,7 +365,7 @@ const RolesPermissions: React.FC = () => {
                     </div>
 
                 </div>
-            </div>}
+            </div>
 
             <Modal
                 content={
