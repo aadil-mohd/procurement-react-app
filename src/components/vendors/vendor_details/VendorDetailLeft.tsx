@@ -83,11 +83,11 @@ export const UserBadges: React.FC<UserBadgesProps> = ({ title, users }) => {
 };
 
 const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: VendorDetailLeftProp) => {
-    const [vendorDocuments,setvendorDocuments] = useState<any[]>([]);
- const setDocuments = async () => {
+    const [vendorDocuments, setvendorDocuments] = useState<any[]>([]);
+    const setDocuments = async () => {
         try {
             if (vendorDetails) {
-                console.log(vendorDetails?.vendorDocuments,'vendorDetails?.vendorDocuments');
+                console.log(vendorDetails?.vendorDocuments, 'vendorDetails?.vendorDocuments');
                 const documents_to_display = vendorDetails?.vendorDocuments.map((d: any) =>
                     ({ ...d, type: d.documentType, attachmentComponent: <a className="text-[13px] flex items-end" href={d.filePath} download={d.fileName}><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.filePath} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.fileName}</p></a> })
                 )
@@ -96,9 +96,9 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
         } catch (err) { }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setDocuments()
-    },[vendorDetails])
+    }, [vendorDetails])
 
     return (
         <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200">
@@ -114,15 +114,15 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                     <div className="grid grid-cols-2 gap-6 p-4 rounded-md bg-bgBlue">
                         <div>
                             <p className="text-sm text-gray-500">Location</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.cityName}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.city?.name}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">State</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.stateName}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.state?.name}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Country</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.countryName}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.country?.countryName}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">PO Box / Postal Code</p>
@@ -148,17 +148,21 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                             <p className="text-sm text-gray-500">Business Grade</p>
                             <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.businessGrade}</p>
                         </div>
-                        <div>
+                        {/* <div>
                             <p className="text-sm text-gray-500">Commercial Reg No.</p>
                             <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.commercialRegNo}</p>
-                        </div>
-                        <div>
+                        </div> */}
+                        {/* <div>
                             <p className="text-sm text-gray-500">Way No.</p>
                             <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.wayNo}</p>
+                        </div> */}
+                        <div>
+                            <p className="text-sm text-gray-500">Address 1.</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.address1}</p>
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500">Building No.</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.buildingNo}</p>
+                            <p className="text-sm text-gray-500">Address 2.</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.address2}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Organisation Legal Structure</p>
@@ -174,7 +178,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Principle Activity of the Company</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.principleActivities}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails.activitiesOfCompany}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Date added</p>
@@ -189,7 +193,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
 
                 <div className="mb-[24px]" style={{ width: "504px" }}>
                     <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Categories</span>
-                    <ViewTable columnLabels={{ index: "No.", categoryName: "Category" }} columns={["index", "categoryName"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
+                    <ViewTable columnLabels={{ index: "No.", name: "Category" }} columns={["index", "name"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
                 </div>
 
                 {/* Vendor Details */}
@@ -206,7 +210,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                     </div>
                     <div className="mb-[24px]" style={{ width: "504px" }}>
                         <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Divissions</span>
-                        <ViewTable columnLabels={{ divisionName: "Division", location: "Location" }} columns={["divisionName", "location"]} items={vendorDetails?.vendorDivissions.map((x, i) => ({ ...x, index: i })) || []} />
+                        <ViewTable columnLabels={{ divisionName: "Division", contactDetails: "Contact Details" }} columns={["divisionName", "contactDetails"]} items={vendorDetails?.vendorDivissions.map((x, i) => ({ ...x, index: i })) || []} />
                     </div>
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>
@@ -222,15 +226,15 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">IFSC Code</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.ifscCode}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.bankIFSCCode}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Account Number</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.accountNumber}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.bankAccountNumber}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Beneficiary Name</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.accountBeneficiaryName}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.bankAccountHolderName}</p>
                         </div>
                     </div>
                 </div>
@@ -241,23 +245,20 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                             <p className="text-sm text-gray-500">Major Clients</p>
                             <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.majorClients}</p>
                         </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Awards & Recognitions</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.awardsAndRecognitions}</p>
-                        </div>
+
                         <div>
                             <p className="text-sm text-gray-500">{`Experience (in Years)`}</p>
                             <p className="text-sm font-medium text-gray-800 w-[220px]">{`${vendorDetails?.experienceYear} Years`}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Specializations</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.specializations}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.specialization}</p>
                         </div>
                     </div>
                 </div>
                 <div className="h-full mb-[16px]" style={{ width: "504px" }}>
                     <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    <ViewTable columns={["attachmentComponent","type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={vendorDocuments} />
+                    <ViewTable columns={["attachmentComponent", "type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={vendorDocuments} />
                 </div>
             </>}
         </div>

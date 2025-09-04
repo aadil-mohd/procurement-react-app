@@ -14,14 +14,14 @@ interface ApprovalflowUsers {
     defaultApproverEmail: string;
     approverRole: string;
     approverId: number;
-    approverName:string;
+    approverName: string;
 }
 
 interface ApprovalFlowData {
-    id?:number
+    id?: number
     flowName: string;
     steps: ApprovalflowUsers[];
-    flowType:number
+    flowType: number
 }
 
 interface FormErrors {
@@ -31,11 +31,12 @@ interface FormErrors {
 
 interface IApprovalWorkflowForm extends IModalProps {
     type?: "edit" | "create";
-    flowType: "vendor" | "rfp"
+    flowType: number;   
     initialData?: any;
     onSubmit?: (data: ApprovalFlowData) => void;
     seViewType: React.Dispatch<SetStateAction<"view" | "edit" | "create">>;
 }
+
 
 const defaultFilter = {
     fields: [],
@@ -54,11 +55,12 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     closeModal
 }) => {
     const [formData, setFormData] = useState<ApprovalFlowData>({
-        id:initialData?.id || 0,
+        id: initialData?.id || 0,
         flowName: initialData?.flowName || "",
         steps: initialData?.steps || [],
-        flowType: initialData?.flowType || flowType == "vendor" ? 1 : 2
+        flowType: initialData?.flowType ?? flowType
     });
+
     const [errors, setErrors] = useState<any>({});
     const [isLoading, setIsLoading] = useState(false);
     const [isButtonLoading, setIsButtonnLoading] = useState(false);
@@ -72,7 +74,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
             id: initialData?.id || 0,
             flowName: initialData?.flowName || "",
             steps: initialData?.steps || [],
-            flowType : initialData?.flowType
+            flowType: initialData?.flowType
         });
     }, [initialData])
     useEffect(() => {
@@ -90,7 +92,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
     const getApproversFilter = async (filterDto: IFilterDto = defaultFilter) => {
         try {
             setIsLoading(true);
-            let approvers:any = await getAllUsersByFilterAsync(filterDto)
+            let approvers: any = await getAllUsersByFilterAsync(filterDto)
             setUsersList(approvers?.items);
             // setTrigger(false);
         } catch (err: any) {
@@ -130,7 +132,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                 setIsButtonnLoading(true);
                 if (type == "create") {
                     console.log(formData)
-                    formData.flowType = initialData?.flowType || flowType == "vendor" ? 1 : 2
+                    formData.flowType = initialData?.flowType ?? flowType;
                     let response = await createWorkFlowAsync(formData)
                     console.log(response)
                     if (response) {
@@ -177,8 +179,8 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                     approverRole: "",
                     defaultApproverEmail: "",
                     stepOrder: prev.steps.length + 1,
-                    approverId:0,
-                    approverName:""
+                    approverId: 0,
+                    approverName: ""
                 }
             ]
         }));
@@ -230,7 +232,7 @@ const ApprovalWorkflowForm: React.FC<IApprovalWorkflowForm> = ({
                     {errors.flowName && (
                         <p className="text-red-500 text-xs mt-1">{errors.flowName}</p>
                     )}
-                </div>             
+                </div>
 
                 {/* Approval Workflow */}
                 <div className="space-y-2">

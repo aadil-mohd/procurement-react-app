@@ -26,11 +26,20 @@ interface VendorDocument {
 
 export interface Vendor {
   id: number;
-  createdAt: string; // ISO date
+  createdAt: string;
   createdBy: number;
   updatedAt: string;
   updatedBy: number;
-
+  city?:any;
+  state?:any;
+  country?:any;
+  address1?:any;
+  address2?:any;
+  activitiesOfCompany?:any;
+  bankIFSCCode?:any;
+  bankAccountNumber?:any;
+  bankAccountHolderName?:any;
+  specialization?:any;
   firstName: string;
   lastName: string;
   userName: string;
