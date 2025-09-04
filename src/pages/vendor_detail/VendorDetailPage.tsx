@@ -15,76 +15,57 @@ const VendorDetailPage: React.FC = () => {
 
     const [vendorData, setVendorData] = useState<Vendor>({
         id: Number(id) || 0,
-        createdAt: "2025-05-02",
+        createdAt: "0",
         createdBy: 0,
-        updatedAt: "2025-05-02",
+        updatedAt: "0",
         updatedBy: 0,
-        firstName: "Ajith", // string
-        lastName: "K",  // string
-        userName: "ajith",  // string
-        password: "xasxasxwwdssa",  // string
-        vendorEmail: "ajith@gmail.com", // string
-        businessGrade: "A+",
-        commercialRegNo: "DTFD-767dsg",
-        organisationName: "Ajith PVT", // string
-        mobile: "+91 9876543210", // string
-        phone: "+91 9876543210", // string
+        firstName: "", // string
+        lastName: "",  // string
+        userName: "",  // string
+        password: "",  // string
+        vendorEmail: "", // string
+        businessGrade: "",
+        commercialRegNo: "",
+        organisationName: "", // string
+        mobile: "", // string
+        phone: "", // string
         isTermsAndConditionsAccepted: false, // boolean
-        wayNo: "YTd6dsdgy",
+        wayNo: "",
         countryId: 0, // number | null
-        countryName: "US",     // object (you can define structure separately)
-        buildingNo: "B23",
+        countryName: "",     // object (you can define structure separately)
+        buildingNo: "",
         relatedToStakeholders: false,
         stateId: 0,   // number | null
-        stateName: "SAUD",       // object
-        principleActivities: "asdsadsad, asdassd, asdasdsa, dasasddfsdsdds, sdfsdfsd",
+        stateName: "",       // object
+        principleActivities: "",
         cityId: 0,    // number | null
-        cityName: "CGAV",        // object
-        address: "GSVG, GDbcdb, djcbhcbsjcb, sjbhsjcs",       // string | null
-        postalCode: "233223",    // string | null
-        fax: "343434",           // string | null
-        website: "aufait.in",       // string | null
-        organisationLegalStructure: "sadsadasdsa",
-        otherOrganisationLegalStructure: "ajgajsd", // string | null
+        cityName: "",        // object
+        address: "",       // string | null
+        postalCode: "",    // string | null
+        fax: "",           // string | null
+        website: "",       // string | null
+        organisationLegalStructure: "",
+        otherOrganisationLegalStructure: "", // string | null
         status: 1,
         isActive: true, // boolean
-        vendorCode: "VD-0001", // string | null
-        bankName: "HDFC",
-        bankBranch: "Branch",
-        ifscCode: "HDFC0001234",
-        accountNumber: "90765654563278",
-        accountBeneficiaryName: "Ajith k",
-        majorClients: "Microsoft, AWS, Rocka",
-        awardsAndRecognitions: `ISO 9001 Certified, 
-Excellence in Supply Chain 2022`,
-        experienceYear: 8,
-        specializations: `Precision Components, 
-Embedded Systems`,
+        vendorCode: "", // string | null
+        bankName: "",
+        bankBranch: "",
+        ifscCode: "",
+        accountNumber: "",
+        accountBeneficiaryName: "",
+        majorClients: "",
+        awardsAndRecognitions: ``,
+        experienceYear: 0,
+        specializations: ``,
 
         vendorCategories: [
-            { id: 0, categoryName: "IT & Networking, Office Supplies" },
-            { id: 0, categoryName: "Electronics" },
         ],
         usersDetails: [
-            {
-                name: "Akkib",
-                email: "akkib@gmail.com",
-                phone: "+91 9871267812",
-                divissionName: "DGD",
-                divissionId: 0
-            }
+
         ],
         vendorDivissions: [
-            {
-                id: 0,
-                divisionName: "DGD",
-                location: "calicut"
-            },
-            {
-                id: 0,
-                divisionName: "TDG",
-                location: "Palakkad"
-            },
+ 
         ],
         vendorDocuments: [
             
@@ -98,7 +79,8 @@ Embedded Systems`,
             const response = await getVendorsDetailsByIdAsync(Number(id));
             const vendorDocuments = await getVendorDocumentsAsync(Number(id));
             response.vendorDocuments = vendorDocuments;
-            setVendorData((prev) => ({ ...prev, ...response }));
+            console.log(response?.vendorCategory,"response?.vendorCategory")
+            setVendorData((prev) => ({ ...prev, ...response,vendorCategories:response?.vendorCategory, usersDetails:response?.vendorUsers, vendorDivissions:response?.vendorDivisions,}));
             // setRfpData(response);
         }
     }
