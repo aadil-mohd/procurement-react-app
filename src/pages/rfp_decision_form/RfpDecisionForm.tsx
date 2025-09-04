@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import { InboxOutlined } from "@ant-design/icons";
 import CommonTitleCard from "../../components/basic_components/CommonTitleCard";
-import { createOrUpdateRfpDecisionPaperAsync, getAllProposalsByFilterAsync, getAllRfpsByFilterAsync, getRfpDecisionPaperByRfpIdAsync, getRfpDecisionPapersAsync } from "../../services/rfpService";
+import { createOrUpdateRfpDecisionPaperAsync, getAllProposalsByFilterAsync, getAllRfpsByFilterAsync, getRfpDecisionPaperByRfpIdAsync } from "../../services/rfpService";
 import { getAllBudgetTypesAsync, getAllContractTypesAsync } from "../../services/commonService";
 import { useNavigate, useParams } from "react-router-dom";
 
