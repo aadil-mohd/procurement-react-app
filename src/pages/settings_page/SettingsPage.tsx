@@ -6,6 +6,7 @@ import UserManagement from '../../components/settings/user_managment/UserManagme
 import RolesPermissions from '../../components/settings/roles_and_permissions/RolesPermissions';
 import CommonTitleCard from '../../components/basic_components/CommonTitleCard';
 import CategoryManagment from '../../components/settings/category_managment/CategoryManagment';
+import CriteriaManagment from '../../components/settings/criteria_managment/CriteriaManagment';
 
 type SettingsSection =
   | 'User management'
@@ -13,7 +14,8 @@ type SettingsSection =
   | 'Manage department'
   | 'Roles & permissions'
   | 'Approval workflow'
-  | 'Budget allocation';
+  | 'Budget allocation'
+  | 'Criteria management'
 
 interface SettingsRoute {
   name: SettingsSection;
@@ -32,7 +34,7 @@ const SettingsPage = () => {
     { name: 'Manage department', path: '/settings/department-managment' },
     { name: 'Roles & permissions', path: '/settings/roles-managment' },
     { name: 'Approval workflow', path: '/settings/workflow-managment' },
-    // { name: 'Budget allocation', path: '/settings/budget-management' },
+    { name: 'Criteria management', path: '/settings/criteria-managment' },
   ];
 
   // Set active section based on current URL path
@@ -79,6 +81,8 @@ const SettingsPage = () => {
         return <RolesPermissions />;
       case 'Approval workflow':
         return <ApprovalWorkflow />;
+      case 'Criteria management':
+        return <CriteriaManagment />;
       //return <></>;
       default:
         return <UserManagement />;

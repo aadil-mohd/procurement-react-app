@@ -140,6 +140,7 @@ const RouteComponent: React.FC = () => {
                     <Route path="/settings/department-managment" element={<SettingsPage />} />
                     <Route path="/settings/workflow-managment" element={<SettingsPage />} />
                     <Route path="/settings/roles-managment" element={<SettingsPage />} />
+                    <Route path="/settings/criteria-managment" element={<SettingsPage />} />
                     <Route path="/profile" element={<UserProfilePage/>} />
                   </Routes>
                 ) : (

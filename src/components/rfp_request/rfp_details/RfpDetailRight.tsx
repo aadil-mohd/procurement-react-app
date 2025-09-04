@@ -62,11 +62,20 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
 
     const tabs = ["Proposals", "Clarifications"];
 
+    const handleProposalFilter = async (filterDto:IFilterDto=filter) => {
+        try {
+            if (activeTab == "Proposals") {
+                const filtered_proposals = await getAllProposalsByFilterAsync(filterDto);
+                setVendorProposals(filtered_proposals);
+            }
+        } catch (err) {
+
+        }
+    }
+
     const setupTabsAsync = async () => {
         try {
             if (activeTab == "Proposals") {
-                const filtered_proposals = await getAllProposalsByFilterAsync(filter);
-                setVendorProposals(filtered_proposals);
                 const intrestOnRfp = await getAllRfpIntrestByFilterAsync({
                     fields: [{
                         columnName: "RfpId",
@@ -74,7 +83,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                     }]
                 })
                 setVendorIntrestCount(intrestOnRfp.length);
-                if (rfp?.status != 5 && rfp?.status != 6) {
+                if (rfp?.status != 5) {
                     const evaluationReports = await getAllEvaluationReportsAsync(Number(rfp?.id || "0"));
                     const evalutionDocumentMapped = evaluationReports.map((d: any) => ({ documentUrl: d.filePath, documentName: d.fileTitle }));
                     setEvaluationDocuments(evalutionDocumentMapped);
@@ -87,6 +96,10 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
 
         }
     }
+
+    useEffect(()=>{
+        handleProposalFilter({...filter,globalSearch:searchQuery});
+    },[searchQuery])
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files ? event.target.files[0] : null;
@@ -105,7 +118,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
     useEffect(() => {
         setupTabsAsync();
         console.log(searchQuery)
-    }, [activeTab])
+    }, [activeTab, searchQuery])
 
     const [filter, setFilter] = useState<IFilterDto>({
         fields: [{ columnName: "RfpId", value: rfp?.id ?? 0 }],
@@ -175,7 +188,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                                             <span className="font-bold text-[16px] mb-[17.5px] flex"><span>Evaluation Report</span></span>
                                             <div className='flex flex-col'>
                                                 {
-                                                    evaluationDocuments.map((d: any) => (<span><a className="text-[13px] flex items-end mb-5" href={d.documentUrl ? d.documentUrl : d.document} target="blank" download={d.documentName} ><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.documentUrl} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.documentName}</p></a><label htmlFor="upload-eval-file"><span className='px-3 py-2 bg-white rounded-md border'>Reupload</span></label></span>))
+                                                    evaluationDocuments.map((d: any) => (<span><a className="text-[13px] flex items-end mb-5" href={d.documentUrl ? d.documentUrl : d.document} target="blank" download={d.documentName} ><DocumentIconByExtension className="w-[25px] h-[25px]" filePath={d.documentUrl} /><p className="pl-[4px]" style={{ color: "blue", textDecoration: "underline" }}>{d.documentName}</p></a>{rfp?.status != 6 && <label htmlFor="upload-eval-file"><span className='px-3 py-2 bg-white rounded-md border'>Reupload</span></label>}</span>))
                                                 }
                                             </div>
                                             {evaluationDocuments.length == 0 &&

@@ -12,7 +12,7 @@ export const getAllCountryCodes = async () => {
         })
         return response.data;
 
-    }catch (err: any) {
+    } catch (err: any) {
         throw err.response.data;
     }
 }
@@ -26,7 +26,7 @@ export const getAllDocumentTypesAsync = async () => {
         })
         return response.data;
 
-    }catch (err: any) {
+    } catch (err: any) {
         throw err.response.data;
     }
 }
@@ -40,7 +40,7 @@ export const getAllContractTypesAsync = async () => {
         })
         return response.data;
 
-    }catch (err: any) {
+    } catch (err: any) {
         throw err.response.data;
     }
 }
@@ -54,7 +54,49 @@ export const getAllBudgetTypesAsync = async () => {
         })
         return response.data;
 
-    }catch (err: any) {
+    } catch (err: any) {
+        throw err.response.data;
+    }
+}
+
+export const getAllCriteriasAsync = async () => {
+    try {
+        let response = await axios.get(`${Urls.defaultUrl}/api/Common/Criterias`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+
+    } catch (err: any) {
+        throw err.response.data;
+    }
+}
+
+export const createOrUpdateCriteriasAsync = async (data:any) => {
+    try {
+        let response = await axios.post(`${Urls.defaultUrl}/api/Common/Criterias`,data ,{
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+
+    } catch (err: any) {
+        throw err.response.data;
+    }
+}
+
+export const deleteCriteriaAsync = async (id:number) => {
+    try {
+        let response = await axios.delete(`${Urls.defaultUrl}/api/Common/Criterias/${id}`, {
+            headers: {
+                Authorization: `Bearer ${getUserToken()}`
+            }
+        })
+        return response.data;
+
+    } catch (err: any) {
         throw err.response.data;
     }
 }
