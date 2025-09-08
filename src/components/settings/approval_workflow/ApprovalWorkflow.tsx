@@ -8,7 +8,7 @@ import { getAllUsersByFilterAsync } from '../../../services/userService';
 
 const tabs = [
   { label: "Vendor Approvalflow", type: "vendor", flowType: 1 },
-  { label: "RFP Approvalflow", type: "rfp", flowType: 2 },
+  { label: "RFP Approvalflow", type: "rfpsubmission", flowType: 2 },
   { label: "RFP Proposal", type: "rfpproposal", flowType: 3 },
   { label: "RFP Award", type: "rfpaward", flowType: 4 },
 ];
