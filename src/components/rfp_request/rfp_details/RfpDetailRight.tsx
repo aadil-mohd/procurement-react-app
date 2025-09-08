@@ -12,6 +12,8 @@ import { getAllEvaluationReportsAsync, getAllProposalsByFilterAsync, getAllRfpIn
 import ClarificationList from './ClarificationList';
 import { DocumentIconByExtension, IntrestedIcon, OpenMainIcon } from '../../../utils/Icons';
 import { notification } from 'antd';
+import { getUserCredentials } from "../../../utils/common";
+import { documentTypeConst } from "../../../utils/constants";
 
 // interface User {
 //     name: string;
@@ -54,15 +56,41 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [activeTab, setActiveTab] = useState("Proposals");
     const [evaluationDocuments, setEvaluationDocuments] = useState<any>([
-        // {
-        //     fileTitle: "asjhads",
-        //     filePath: "sdhgfdsjhfdsk.png"
-        // }
     ]);
+    const [ownerIn, setOwnerIn] = useState<{ technical: boolean; commercial: boolean }>({
+        technical: false,
+        commercial: false,
+    });
+
+    useEffect(() => {
+        const tempOwnerIn = { technical: false, commercial: false };
+
+        (rfp?.rfpOwners as any[])?.forEach((ow) => {
+            if (
+                ow.ownerId.toString() === getUserCredentials().userId &&
+                ow.ownerType === documentTypeConst.technical
+            ) {
+                tempOwnerIn.technical = true;
+            } else if (
+                ow.ownerId.toString() === getUserCredentials().userId &&
+                ow.ownerType === documentTypeConst.commercial
+            ) {
+                tempOwnerIn.commercial = true;
+            }
+        });
+
+        setOwnerIn(tempOwnerIn);
+    }, [rfp]);
+
+    const maskedProposals = vendorProposals.map((p) => ({
+        ...p,
+        bidAmount: ownerIn.commercial ? p.bidAmount : "*******",
+        bidValidity: ownerIn.commercial ? p.bidValidity : "*******",
+    }));
 
     const tabs = ["Proposals", "Clarifications"];
 
-    const handleProposalFilter = async (filterDto:IFilterDto=filter) => {
+    const handleProposalFilter = async (filterDto: IFilterDto = filter) => {
         try {
             if (activeTab == "Proposals") {
                 const filtered_proposals = await getAllProposalsByFilterAsync(filterDto);
@@ -97,9 +125,9 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
         }
     }
 
-    useEffect(()=>{
-        handleProposalFilter({...filter,globalSearch:searchQuery});
-    },[searchQuery])
+    useEffect(() => {
+        handleProposalFilter({ ...filter, globalSearch: searchQuery });
+    }, [searchQuery])
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files ? event.target.files[0] : null;
@@ -211,7 +239,7 @@ const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
                                     </div>
                                     <Table
                                         columnLabels={columnLabels}
-                                        items={vendorProposals}
+                                        items={maskedProposals}
                                         columns={proposalTableColumns}
                                         title="Proposals"
                                         type="proposal"

@@ -114,7 +114,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
             {proposal?.isTechnicalTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Technical team Approved</div>}
             {proposal?.isCommercialTeamApproved && <div className="w-10/12 p-4 flex text-sm rounded-lg bg-[#EDF4FD]"><TickIcon className="w-5 h-5" />Commercial team Approved</div>}
           </div></div>
-        <div className="w-full p-4">
+        {(ownerIn.technical || ownerIn.commercial) && <div className="w-full p-4">
           <span className="font-bold text-[16px] mb-[12px] flex"><span className="">Remarks</span></span>
           <AddAttachment viewOnly={rfp.status == 6} id={"file-upload-1"} attachments={remarksAttachment} setAttachments={async (file) => {
             setRemarksAttachment([file])
@@ -125,7 +125,7 @@ const ProposalSubmissionModal: React.FC<ProposalSubmissionModalProps> = ({ rfp, 
             notification.success({ message: "Attachment uploaded successfully" });
             setupProposalModal();
           }} />
-        </div>
+        </div>}
         {/* {proposal?.status != "Approved" && proposal?.status != "Rejected" && (ownerIn.technical && !proposal?.isTechnicalTeamApproved  || ownerIn.commercial && !proposal?.isCommercialTeamApproved) && <div className="w-full flex justify-start pl-4 py-2 space-x-2 absolute bottom-0">
           <button
             onClick={(e) => handleSubmit(e, "Approved")}

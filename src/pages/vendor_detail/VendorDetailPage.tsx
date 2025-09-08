@@ -56,7 +56,7 @@ const VendorDetailPage: React.FC = () => {
         accountBeneficiaryName: "",
         majorClients: "",
         awardsAndRecognitions: ``,
-        experienceYear: 0,
+        experience: 0,
         specializations: ``,
 
         vendorCategories: [
@@ -80,6 +80,7 @@ const VendorDetailPage: React.FC = () => {
             const vendorDocuments = await getVendorDocumentsAsync(Number(id));
             response.vendorDocuments = vendorDocuments;
             console.log(response?.vendorCategory,"response?.vendorCategory")
+            console.log(response,"response?.-----")
             setVendorData((prev) => ({ ...prev, ...response,vendorCategories:response?.vendorCategory, usersDetails:response?.vendorUsers, vendorDivissions:response?.vendorDivisions,}));
             // setRfpData(response);
         }

@@ -88,7 +88,7 @@ export interface Vendor {
 
   majorClients: string;
   awardsAndRecognitions: string;
-  experienceYear: number;
+  experience: number;
   specializations: string;
 
   vendorCategories: VendorCategory[];

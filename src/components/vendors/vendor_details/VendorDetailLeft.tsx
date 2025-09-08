@@ -3,6 +3,7 @@ import userPhoto from "../../../assets/profile_photo/userPhoto.png"
 import { Vendor } from "../../../types/vendorTypes";
 import ViewTable from "../../basic_components/ViewTable";
 import { DocumentIconByExtension, GeneralDetailIcon } from "../../../utils/Icons";
+import dayjs from "dayjs";
 
 interface VendorDetailLeftProp {
     vendorDetails: Vendor
@@ -97,6 +98,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
     }
 
     useEffect(() => {
+        console.log(vendorDetails,)
         setDocuments()
     }, [vendorDetails])
 
@@ -182,18 +184,18 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Date added</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.createdAt}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.createdAt ? dayjs(vendorDetails.updatedAt).format("DD/MM/YYYY") : "—"}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Last active</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.updatedAt}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{vendorDetails?.updatedAt ? dayjs(vendorDetails.updatedAt).format("DD/MM/YYYY") : "—"}</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="mb-[24px]" style={{ width: "504px" }}>
                     <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Categories</span>
-                    <ViewTable columnLabels={{ index: "No.", name: "Category" }} columns={["index", "name"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i })) || []} />
+                    <ViewTable columnLabels={{ index: "No.", name: "Category" }} columns={["index", "name"]} items={vendorDetails?.vendorCategories.map((x, i) => ({ ...x, index: i + 1 })) || []} />
                 </div>
 
                 {/* Vendor Details */}
@@ -248,7 +250,7 @@ const VendorDetailLeft: React.FC<VendorDetailLeftProp> = ({ vendorDetails }: Ven
 
                         <div>
                             <p className="text-sm text-gray-500">{`Experience (in Years)`}</p>
-                            <p className="text-sm font-medium text-gray-800 w-[220px]">{`${vendorDetails?.experienceYear} Years`}</p>
+                            <p className="text-sm font-medium text-gray-800 w-[220px]">{`${vendorDetails?.experience} Years`}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Specializations</p>
