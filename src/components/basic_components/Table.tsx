@@ -259,13 +259,19 @@ const Table: React.FC<TableProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length + (dots ? 1 : 0)} className="px-6 py-12 text-center">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                      <span className="text-gray-400 text-2xl">📋</span>
+                <td colSpan={columns.length + (dots ? 1 : 0)} className="px-6 py-16 text-center">
+                  <div className="flex flex-col items-center space-y-4">
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mb-2">
+                      <span className="text-blue-500 text-3xl">📊</span>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">No RFPs found</h3>
-                    <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-semibold text-gray-800">No RFPs Available</h3>
+                      <p className="text-gray-500 max-w-sm">No RFP requests have been published yet. Create your first RFP to get started.</p>
+                    </div>
+                    <button className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                      <span className="mr-2">➕</span>
+                      Create New RFP
+                    </button>
                   </div>
                 </td>
               </tr>

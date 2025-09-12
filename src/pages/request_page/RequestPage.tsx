@@ -194,13 +194,13 @@ function RequestPage() {
                   <span className="text-white text-2xl font-bold">📋</span>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-semibold text-gray-900">RFPs</h1>
-                  <p className="text-gray-600 mt-1 text-sm">Manage your Request for Proposals</p>
+                  <h1 className="text-heading-2">RFPs</h1>
+                  <p className="text-body-small text-muted mt-1">Manage your Request for Proposals</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="px-6 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-                  <span className="text-sm font-semibold text-blue-700">
+                  <span className="text-button text-accent">
                     {rfpRequests.length} Total RFPs
                   </span>
                 </div>
@@ -215,10 +215,10 @@ function RequestPage() {
                 <div key={tab} className="flex items-center">
                   <button
                     onClick={() => setupTab(tab)}
-                    className={`relative px-6 py-3 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                    className={`relative px-6 py-3 text-button rounded-lg transition-all duration-200 ${
                       statusFilter === tab
                         ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform -translate-y-0.5"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        : "text-muted hover:text-slate-900 hover:bg-gray-50"
                     }`}
                   >
                     {tab}

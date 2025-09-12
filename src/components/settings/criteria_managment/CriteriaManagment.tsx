@@ -71,13 +71,32 @@ const CriteriaManagment: React.FC = () => {
 
 
   return (
-    <div className="bg-bgBlue">
-      <div className="pr-8 py-6 border-gray-200 flex justify-between items-center">
-        <h2 className="text-lg font-semibold"></h2>
-        <CreateButton name='Add criteria' onClick={() => setIsCreateModalOpen(true)} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-8">
+      {/* Header Section */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-white text-2xl font-bold">📋</span>
+            </div>
+            <div>
+              <h1 className="text-heading-2">Criteria Management</h1>
+              <p className="text-body-small text-muted">Define evaluation criteria for procurement processes</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="px-6 py-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border border-cyan-200">
+              <span className="text-button text-cyan-700">
+                {categories.length} Criteria
+              </span>
+            </div>
+            <CreateButton name='Add Criteria' onClick={() => setIsCreateModalOpen(true)} />
+          </div>
+        </div>
       </div>
 
-      <div className="px-8">
+      {/* Table Section */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
         <SettingsTable
           title="Criterias"
           columns={columns}

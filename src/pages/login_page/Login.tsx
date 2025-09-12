@@ -2,12 +2,10 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { LoginComponent } from "../../components/login/LoginComponent";
-import backgroundImage from "../../assets/login/login_background_image.jpg";
 import ProcurementLogo from "../../assets/procurement_logo/procurement-logo.png";
 
-// Fixing the prop type for setExpenditureTypes
 interface LoginProps {
-  setUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+  setUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Login: React.FC<LoginProps> = ({ setUserLoggedIn }) => {
@@ -21,40 +19,119 @@ export const Login: React.FC<LoginProps> = ({ setUserLoggedIn }) => {
   }, [navigate]);
 
   return (
-    <div className="desktop-wide:flex desktop-wide:justify-center">
-      <div className="flex w-screen h-screen">
-
-        {/* Left Section */}
-        <div
-          className="hidden lg:flex flex-col justify-end items-start w-2/5 h-full bg-cover bg-no-repeat bg-center text-white px-[50px] pb-[70px]"
-          style={{
-            backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(1, 1, 1, 0.2)), url(${backgroundImage})`,
-          }}
-        >
-          <p className="text-2xl mb-2 text-left font-semibold">
-            Transform Your Procurement Process
-          </p>
-          <p className="text-left text-base">
-            Efficiently manage your purchases, optimize costs, and accelerate your project's success — all from one seamless platform.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex">
+      {/* Left Side - Branding & Info */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <svg className="w-full h-full" viewBox="0 0 100 100" fill="none">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)" />
+          </svg>
         </div>
-
-        {/* Right Section */}
-        <div className="flex flex-col justify-center items-center w-full lg:w-3/5 xl:w-3/5 h-full bg-white">
-          <div className="text-start">
-            <div className="flex items-center justify-start ml-5">
-              <img
-                src={ProcurementLogo}
-                className="w-[60px] h-[60px]"
-                alt="Procurement Logo"
-              />
-              <p className="text-[34px] ml-2"></p>
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-center px-12 py-16 text-white">
+          <div className="mb-8">
+            <div className="flex items-center mb-6">
+              <img className="h-16 w-16 mr-4" src={ProcurementLogo} alt="Procurement Logo" />
+              <div>
+                <h1 className="text-3xl font-bold">TenderFlow</h1>
+                <p className="text-blue-200 text-sm">Procurement Management System</p>
+              </div>
             </div>
-            {/* Pass setExpenditureTypes properly to LoginComponent */}
-            <LoginComponent setUserLoggedIn={setUserLoggedIn}/>
+          </div>
+          
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-4xl font-bold mb-4">Streamline Your Procurement Process</h2>
+              <p className="text-blue-100 text-lg leading-relaxed">
+                Manage tenders, vendors, and approvals with our comprehensive procurement management platform.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-blue-100">Automated Tender Management</span>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-blue-100">Vendor Evaluation & Approval</span>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-blue-100">Real-time Analytics & Reporting</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-12 pt-8 border-t border-blue-400 border-opacity-30">
+            <p className="text-blue-200 text-sm">
+              Trusted by 500+ organizations worldwide
+            </p>
           </div>
         </div>
-
+      </div>
+      
+      {/* Right Side - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-8 py-12">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
+          <div className="lg:hidden mb-8 text-center">
+            <div className="flex items-center justify-center mb-4">
+              <img className="h-12 w-12 mr-3" src={ProcurementLogo} alt="Procurement Logo" />
+              <div>
+                <h1 className="text-2xl font-bold text-white">TenderFlow</h1>
+                <p className="text-gray-300 text-sm">Procurement Management</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Login Card */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+              <p className="text-gray-600">Sign in to your TenderFlow account</p>
+            </div>
+            
+            <LoginComponent setUserLoggedIn={setUserLoggedIn} />
+            
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-600">
+                Don't have an account? 
+                <a href="#" className="text-blue-600 hover:text-blue-500 font-medium ml-1">
+                  Contact Administrator
+                </a>
+              </p>
+            </div>
+          </div>
+          
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-400 text-xs">
+              © 2024 TenderFlow. All rights reserved.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

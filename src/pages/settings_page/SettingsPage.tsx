@@ -37,6 +37,19 @@ const SettingsPage = () => {
     { name: 'Criteria management', path: '/settings/criteria-managment' },
   ];
 
+  const getIcon = (section: SettingsSection) => {
+    switch (section) {
+      case 'User management': return '👥';
+      case 'Category management': return '📂';
+      case 'Manage department': return '🏢';
+      case 'Roles & permissions': return '🔐';
+      case 'Approval workflow': return '⚡';
+      case 'Criteria management': return '📋';
+      case 'Budget allocation': return '💰';
+      default: return '⚙️';
+    }
+  };
+
   // Set active section based on current URL path
   useEffect(() => {
     const currentPath = location.pathname;
@@ -71,7 +84,6 @@ const SettingsPage = () => {
         return <UserManagement />;
       case 'Category management':
         return <CategoryManagment />;
-        return <></>;
       case 'Manage department':
         return <DepartmentManagment />;
       case 'Budget allocation':
@@ -83,7 +95,6 @@ const SettingsPage = () => {
         return <ApprovalWorkflow />;
       case 'Criteria management':
         return <CriteriaManagment />;
-      //return <></>;
       default:
         return <UserManagement />;
     }
@@ -92,22 +103,38 @@ const SettingsPage = () => {
   // Mobile version with tabs
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Tab Navigation for Mobile */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <CommonTitleCard/>
-        <div className="bg-white border-b border-gray-200 sticky top-20 z-10 ">
+        
+        {/* Header Section */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mx-4 mt-6 mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-slate-600 to-gray-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-white text-xl font-bold">⚙️</span>
+            </div>
+            <div>
+              <h1 className="text-heading-2">Settings</h1>
+              <p className="text-body-small text-muted">Manage your application preferences</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation for Mobile */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mx-4 mb-6 overflow-hidden">
           <div className="overflow-x-auto">
-            <div className="flex whitespace-nowrap">
+            <div className="flex whitespace-nowrap p-2">
               {navigationItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleNavigation(item)}
-                  className={`px-4 py-3 text-sm font-medium border-b-2 focus:outline-none flex-shrink-0 ${activeSection === item.name
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }`}
+                  className={`px-4 py-3 text-button rounded-lg transition-all duration-200 flex-shrink-0 mr-2 flex items-center space-x-2 ${
+                    activeSection === item.name
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform -translate-y-0.5'
+                      : 'text-muted hover:text-slate-900 hover:bg-gray-50'
+                  }`}
                 >
-                  {item.name}
+                  <span className="text-lg">{getIcon(item.name as SettingsSection)}</span>
+                  <span>{item.name}</span>
                 </button>
               ))}
             </div>
@@ -115,8 +142,10 @@ const SettingsPage = () => {
         </div>
 
         {/* Main Content for Mobile */}
-        <div className="p-4">
-          {renderContent()}
+        <div className="px-4 pb-6">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            {renderContent()}
+          </div>
         </div>
       </div>
     );
@@ -124,35 +153,50 @@ const SettingsPage = () => {
 
   // Desktop version with sidebar
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <CommonTitleCard />
-      <div className="desktop-wide:flex desktop-wide:justify-center">
-        <div className="flex min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-12 gap-8">
           {/* Sidebar Navigation for Desktop */}
-          <div className="w-[234px] bg-white border-r border-gray-200 p-4">
-            <h1 className="text-xl font-semibold mb-6">Settings</h1>
-            <nav>
-              {navigationItems.map((item) => (
-                <div
-                  key={item.name}
-                  onClick={() => handleNavigation(item)}
-                  className={`flex items-center px-3 py-2 rounded-lg mb-1 cursor-pointer ${activeSection === item.name ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                >
-                  <span className="text-[14px]">{item.name}</span>
+          <div className="col-span-3">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sticky top-8">
+              <div className="flex items-center space-x-3 mb-8">
+                <div className="w-10 h-10 bg-gradient-to-r from-slate-600 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-white text-lg font-bold">⚙️</span>
                 </div>
-              ))}
-            </nav>
+                <div>
+                  <h1 className="text-heading-3">Settings</h1>
+                  <p className="text-body-small text-muted">Configuration</p>
+                </div>
+              </div>
+              <nav className="space-y-2">
+                {navigationItems.map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavigation(item)}
+                    className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-left space-x-3 ${
+                      activeSection === item.name 
+                        ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 shadow-sm' 
+                        : 'text-muted hover:text-slate-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-lg">{getIcon(item.name as SettingsSection)}</span>
+                    <span className="text-label">{item.name}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
           </div>
 
           {/* Main Content for Desktop */}
-          <div className="flex-1">
-            {renderContent()}
+          <div className="col-span-9">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden min-h-[600px]">
+              {renderContent()}
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   );
 };
 

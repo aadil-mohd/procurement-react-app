@@ -153,34 +153,38 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budg
   }, [budgetDetails]);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-[320px] overflow-hidden">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
-            <span className="text-white text-lg font-semibold">📊</span>
+    <div className="bg-white rounded-2xl shadow-lg border-0 p-6 h-[350px] overflow-hidden relative">
+      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full -translate-y-20 translate-x-20"></div>
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-white text-xl font-bold">💰</span>
+            </div>
+                                <div>
+                                    <h2 className="text-heading-3">{heading}</h2>
+                                    <p className="text-body-small text-muted">Financial overview</p>
+                                </div>
           </div>
-          <h2 className="text-lg font-semibold text-gray-900">{heading}</h2>
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-4 h-4 bg-blue-500 rounded-full shadow-sm"></div>
+              <span className="text-label text-muted">Estimated</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-4 h-4 bg-emerald-500 rounded-full shadow-sm"></div>
+              <span className="text-label text-muted">Actual</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <span className="text-sm font-medium text-gray-600">Estimated Budget</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-sm font-medium text-gray-600">Actual Spend</span>
-          </div>
+        <div className="relative h-[240px] bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-4">
+          <canvas
+            ref={chartRef}
+            className="w-full h-full"
+            width={width}
+            height={height}
+          />
         </div>
-      </div>
-      <div className="relative h-[220px] overflow-hidden rounded-lg">
-        <canvas
-          ref={chartRef}
-          className="w-full h-full drop-shadow-sm"
-          width={width}
-          height={height}
-        />
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-green-50/30 pointer-events-none"></div>
       </div>
     </div>
   );

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// import CreateButton from '../../buttons/CreateButton';
 import { Check } from 'lucide-react';
-import Modal from '../../basic_components/Modal';
-import CreateRoleForm from './CreateRoleForm';
 import { getAllUsersByFilterAsync } from '../../../services/userService';
-import { assignPermissionsToRoleAsync, deleteRoleAsync, getAllRolesFilterAsync, getPermissionsByRoleIdAsync } from '../../../services/roleService';
-import { Button, notification } from 'antd';
+import { assignPermissionsToRoleAsync, getAllRolesFilterAsync, getPermissionsByRoleIdAsync } from '../../../services/roleService';
+import { notification } from 'antd';
 import { IFilterDto } from '../../../types/commonTypes';
 import { formatDate, getUserCredentials } from '../../../utils/common';
-import { Modal as AntdModal } from 'antd';
 import SettingsSortModal from '../settings_components/SettingsSortModal';
 import { IUserDetails } from '../../../types/userTypes';
 
@@ -29,10 +25,8 @@ const defaultFilter = {
 }
 
 const RolesPermissions: React.FC = () => {
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
     const [trigger, setTrigger] = useState<boolean>(false);
     const [selectedRole, setSelectedRole] = useState<any>();
-    const [editData,] = useState<{ roleId: string, roleName: string }>();
     const [roles, setRoles] = useState<RoleData[]>([]);
     const [rolesPermissions,] = useState<number[]>([]);
     const [changesDone, setChangesDone] = useState(false);
@@ -221,10 +215,6 @@ const RolesPermissions: React.FC = () => {
     //     { key: 'createdAt', label: 'Created On' },
     // ];
 
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const [confirmAction,] = useState<{ type: "delete" | "block", role: RoleData } | null>(null);
-    // const [_, setFilterModalOpen] = useState(false);
     const [sortModalOpen, setSortModalOpen] = useState(false);
     const [searchQuery,] = useState("");
     const [filter, setFilter] = useState<IFilterDto>(defaultFilter);
@@ -249,24 +239,6 @@ const RolesPermissions: React.FC = () => {
         // setIsViewModalOpen(true);
     };
 
-    const handleConfirmAction = async () => {
-        try {
-            if (confirmAction?.type === "delete") {
-                await deleteRoleAsync(confirmAction.role.roleid as string);
-            }
-            setupRolesAndPermissions()
-            setIsConfirmModalOpen(false);
-            notification.success({
-                message: "Role deleted successfully",
-            })
-        } catch (err: any) {
-            setIsConfirmModalOpen(false);
-            notification.error({
-                message: "Cannot delete this role",
-                description: err.message
-            })
-        }
-    };
 
     const handleSaveChangesForRole = async (roleId?: string) => {
         // if (!roleId) return;
@@ -296,134 +268,95 @@ const RolesPermissions: React.FC = () => {
 
 
     return (
-        <div className="bg-bgBlue">
-            <div className="pr-8 py-6 border-gray-200 flex justify-between items-center">
-                {/* <h2 className="text-lg font-semibold"></h2>
-                <CreateButton name='Add role' onClick={() => setIsCreateModalOpen(true)} /> */}
-            </div>
-
-            <div className='px-8'>
-                <div className="w-full bg-white p-3 rounded-md shadow">
-                    <div className="flex justify-between items-center pb-3">
-                        <h2 className="flex justify-center items-center text-[18px] font-semibold">Roles & Permissions</h2>
-                        {selectedRole &&<button
-                            className={`px-4 py-2 text-white rounded-md text-sm font-medium ${changesDone ? "bg-blue-600" : "bg-blue-100"}`}
-                            disabled={!changesDone}
-                            onClick={() => handleSaveChangesForRole(selectedRole.roleid)}
-                        >
-                            Save changes
-                        </button>}
-                    </div>
-
-
-
-                    <div className="flex justify-start items-to mb-4">
-                        <div className="flex gap-2 overflow-x-auto w-full scrollbar">
-                            {roles?.map(role => {
-                                const isSelected = role.roleid === selectedRole.roleid;
-                                return (
-                                    <div
-                                        key={role.roleid}
-                                        onClick={() => handleRoleSelect(role)}
-                                        className={`px-3 py-1 rounded-lg text-sm border cursor-pointer ${isSelected ? 'bg-blue-100 text-blue-600' : 'text-black'}`}
-                                    >
-                                        {role.roleName}
-                                    </div>
-                                )
-                            })
-                            }
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-8">
+            {/* Header Section */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                        <div className="w-16 h-16 bg-gradient-to-r from-amber-600 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <span className="text-white text-2xl font-bold">🔐</span>
+                        </div>
+                        <div>
+                            <h1 className="text-heading-2">Roles & Permissions</h1>
+                            <p className="text-body-small text-muted">Manage user roles and system permissions</p>
                         </div>
                     </div>
-
-
-                    <div className="overflow-auto max-h-[350px]">
-                        <table className="min-w-full border-collapse table-auto">
-                            <thead className='sticky top-0 bg-white z-5'>
-                                <tr className="text-xs font-semibold text-gray-500">
-                                    <th className="text-left py-3 w-1/3">Permissions</th>
-                                    <th className="text-center py-3 w-[13%]">Grant access</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {permissions?.map((permission) => (
-                                    <tr key={permission.permissionId} className="border-t border-gray-200">
-                                        <td className="py-3 text-sm text-gray-900">{permission.permissionName}</td>
-                                        <td className="py-3 text-center">
-                                            <div className="flex justify-center">
-                                                <div
-                                                    className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) ? selectedRole?.roleName?.toLowerCase() == "superadmin" || userInfo?.role == selectedRole?.roleName ? 'bg-blue-400' : 'bg-blue-600' : 'border border-gray-300'}`}
-                                                    onClick={() => selectedRole.roleName != "SuperAdmin" && userInfo.role != selectedRole?.roleName && handlePermissionToggle(permission)}
-                                                >
-                                                    {selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="flex items-center space-x-3">
+                        <div className="px-6 py-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200">
+                            <span className="text-button text-amber-700">
+                                {roles.length} Roles
+                            </span>
+                        </div>
+                        {selectedRole && (
+                            <button
+                                className={`px-6 py-3 text-white rounded-xl text-button font-medium transition-all duration-200 ${
+                                    changesDone 
+                                        ? "bg-gradient-to-r from-amber-600 to-orange-600 shadow-lg hover:shadow-xl" 
+                                        : "bg-gray-300 cursor-not-allowed"
+                                }`}
+                                disabled={!changesDone}
+                                onClick={() => handleSaveChangesForRole(selectedRole.roleid)}
+                            >
+                                Save Changes
+                            </button>
+                        )}
                     </div>
-
                 </div>
             </div>
 
-            <Modal
-                content={
-                    <CreateRoleForm
-                        type='create'
-                        trigger={() => setTrigger(true)}
-                        closeModal={() => setIsCreateModalOpen(false)}
-                    />
-                }
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                modalPosition="end"
-                width="w-full md:w-2/6"
-                CloseButton={false}
-            />
+            {/* Main Content */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                <div className="flex justify-between items-center pb-6">
+                    <h2 className="text-heading-3">Role Permissions</h2>
+                </div>
 
-            <Modal
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                modalPosition="end"
-                width="w-full md:w-2/6"
-                CloseButton={false}
-                content={
-                    editData && (
-                        <CreateRoleForm
-                            type="edit"
-                            trigger={() => setTrigger(true)}
-                            closeModal={() => setIsEditModalOpen(false)}
-                            roleName={editData.roleName}
-                            roleId={editData.roleId}
-                        />
-                    )
-                }
-            />
+                <div className="flex justify-start items-to mb-4">
+                    <div className="flex gap-2 overflow-x-auto w-full scrollbar">
+                        {roles?.map(role => {
+                            const isSelected = role.roleid === selectedRole.roleid;
+                            return (
+                                <div
+                                    key={role.roleid}
+                                    onClick={() => handleRoleSelect(role)}
+                                    className={`px-3 py-1 rounded-lg text-sm border cursor-pointer ${isSelected ? 'bg-blue-100 text-blue-600' : 'text-black'}`}
+                                >
+                                    {role.roleName}
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
 
-            <AntdModal
-                title={confirmAction?.type === "delete" ? "Confirm Delete" : "Confirm Block"}
-                open={isConfirmModalOpen}
-                onCancel={() => setIsConfirmModalOpen(false)}
-                footer={[
-                    <Button key="cancel" onClick={() => setIsConfirmModalOpen(false)}>Cancel</Button>,
-                    <Button key="confirm" type="primary" danger={confirmAction?.type === "delete"} onClick={() => handleConfirmAction()}>
-                        {confirmAction?.type === "delete" ? "Delete" : "Block"}
-                    </Button>
-                ]}
-            >
-                <p>Are you sure you want to {confirmAction?.type} this department?</p>
-            </AntdModal>
+                <div className="overflow-auto max-h-[350px]">
+                    <table className="min-w-full border-collapse table-auto">
+                        <thead className='sticky top-0 bg-white z-5'>
+                            <tr className="text-xs font-semibold text-gray-500">
+                                <th className="text-left py-3 w-1/3">Permissions</th>
+                                <th className="text-center py-3 w-[13%]">Grant access</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {permissions?.map((permission) => (
+                                <tr key={permission.permissionId} className="border-t border-gray-200">
+                                    <td className="py-3 text-sm text-gray-900">{permission.permissionName}</td>
+                                    <td className="py-3 text-center">
+                                        <div className="flex justify-center">
+                                            <div
+                                                className={`w-[16px] h-[16px] rounded flex items-center justify-center cursor-pointer ${selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) ? selectedRole?.roleName?.toLowerCase() == "superadmin" || userInfo?.role == selectedRole?.roleName ? 'bg-blue-400' : 'bg-blue-600' : 'border border-gray-300'}`}
+                                                onClick={() => selectedRole.roleName != "SuperAdmin" && userInfo.role != selectedRole?.roleName && handlePermissionToggle(permission)}
+                                            >
+                                                {selectedRole?.permissions?.some((p: any) => p.permissionId === permission.permissionId) && <Check className="w-3 h-3 text-white" />}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             {/* Filter & Sort Modals */}
-            {/* {filterModalOpen && (
-        <SettingsFilterModal
-          defaultFilter={defaultFilter}
-          filter={filter}
-          setFilter={setFilter}
-          setIsFilterModalOpen={setFilterModalOpen}
-          type="role"
-        />
-      )} */}
             {sortModalOpen && (
                 <SettingsSortModal
                     filter={filter}

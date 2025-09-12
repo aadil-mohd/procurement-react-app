@@ -4,7 +4,6 @@ import { ModalProps } from "../../types/Types";
 const Modal = ({
   isOpen,
   onClose,
-  title,
   content,
   width = "3/4",
   modalPosition = "center",
@@ -29,30 +28,21 @@ const Modal = ({
 
   return (
     <div
-      className={`fixed inset-0 flex ${justifyClass} ${alignClass} z-20 bg-gray-500 bg-opacity-50`}
+      className={`fixed inset-0 flex ${justifyClass} ${alignClass} z-20 bg-black bg-opacity-25 backdrop-blur-sm`}
     >
       <div
-        className={`bg-white relative flex flex-col h-full ${width}`}
+        className={`bg-white relative flex flex-col h-full ${width} shadow-2xl`}
       >
-        {/* Overlay Section */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Title */}
-          {title && (
-            <div className="absolute top-0 left-0 w-full p-4 bg-opacity-50 bg-white text-xl font-bold">
-              {title}
-            </div>
-          )}
-          {/* Close Button */}
-          <button
-            className="absolute top-2 right-3 text-black z-30 p-1 bg-opacity-0 bg-white rounded-full pointer-events-auto"
-            onClick={onClose}
-          >
-            <CloseIcon className="w-6 h-6" />
-          </button>
-        </div>
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 z-30 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200"
+          onClick={onClose}
+        >
+          <CloseIcon className="w-5 h-5" />
+        </button>
 
         {/* Modal Content */}
-        <div className={`w-full h-full z-20 ${title ? "mt-10" : ""} overflow-auto`}>
+        <div className="w-full h-full overflow-hidden">
           {content}
         </div>
       </div>

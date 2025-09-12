@@ -122,52 +122,68 @@ function VendorPage() {
   const tabs = ["All vendors", "Assigned"];
 
   return (
-    <div className="desktop-wide:flex desktop-wide:justify-center">
-      <div>
-        <CommonTitleCard />
-        <div className="pt-[24px] px-[32px] h-full">
-          {!showLoader ? <>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <CommonTitleCard />
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {!showLoader ? <>
+          {/* Header Section */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
             <div className="flex items-center justify-between">
-              <div className="mb-2 text-xl font-bold">Vendors</div>
-              <div>
-                {/* <CreateButton name="Create request" onClick={onCreateRequest} /> */}
-
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-white text-2xl font-bold">🏢</span>
+                </div>
+                <div>
+                  <h1 className="text-heading-2">Vendors</h1>
+                  <p className="text-body-small text-muted mt-1">Manage your vendor partners</p>
+                </div>
               </div>
-
+              <div className="flex items-center space-x-3">
+                <div className="px-6 py-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
+                  <span className="text-button text-success">
+                    {vendors.length} Total Vendors
+                  </span>
+                </div>
+                {/* <CreateButton name="Create Vendor" onClick={onCreateRequest} /> */}
+              </div>
             </div>
-            <div className="pt-[24px] flex justify-start mb-[16px] ml-[10px] border-b">
+          </div>
+          {/* Tab Navigation */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+            <div className="flex items-center space-x-8">
               {tabs.map((tab, index) => (
-                <div className="flex items-center h-[37px]" key={tab}>
-                  <div
+                <div key={tab} className="flex items-center">
+                  <button
                     onClick={() => setupTab(tab)}
-                    className={`relative h-full w-full text-sm text-start cursor-pointer font-semibold ${statusFilter === tab
-                      ? "text-customBlue"
-                      : "text-gray-500 hover:text-black"
-                      }`}
+                    className={`relative px-6 py-3 text-button rounded-lg transition-all duration-200 ${
+                      statusFilter === tab
+                        ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg transform -translate-y-0.5"
+                        : "text-muted hover:text-slate-900 hover:bg-gray-50"
+                    }`}
                   >
                     {tab}
-                    <span
-                      className={`absolute bottom-0 left-0 w-full h-[3px] ${statusFilter === tab
-                        ? "bg-customBlue"
-                        : "bg-transparent group-hover:bg-customeBlue"
-                        }`}
-                    ></span>
-                  </div>
+                    {statusFilter === tab && (
+                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-emerald-500"></div>
+                    )}
+                  </button>
                   {index !== tabs.length - 1 && (
-                    <span className="mx-[12px] h-[37px] text-gray-400"></span>
+                    <div className="w-px h-6 bg-gray-300 mx-4"></div>
                   )}
                 </div>
               ))}
             </div>
+          </div>
 
+          {/* Table Section */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            <Table filter={filter} setFilter={setFilter} title={tableName || "All vendors"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
+          </div>
 
-            <div className="ml-[10px]">
-              <Table filter={filter} setFilter={setFilter} title={tableName || "Vendors"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={vendors || []} columnLabels={vendor_column_labels} setSearchQuery={setSearchQuery} totalCount={totalCount} type="vendors" rowNavigationPath="vendors" trigger={() => setTrigger(true)} />
-            </div></> : <PageLoader />}
-            {isSortModalOpen && <SortModal filter={filter} columns={vendor_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
-        </div>
+          {/* Modals */}
+          {isSortModalOpen && <SortModal filter={filter} columns={vendor_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+
+        </> : <PageLoader />}
       </div>
-
     </div>
   );
 }
