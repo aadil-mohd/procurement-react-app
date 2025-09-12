@@ -20,6 +20,7 @@ const RequestDetailPage: React.FC = () => {
     const { id } = useParams();
     const [rfpData, setRfpData] = useState<any>();
     const [masterData, setMasterData] = useState<{ categories: any[] }>({ categories: [] });
+    const [vendorProposals, setVendorProposals] = useState<any[]>([])
     const navigate = useNavigate();
 
     const getRequestDetailData = async () => {
@@ -50,7 +51,7 @@ const RequestDetailPage: React.FC = () => {
                             {/* Approval Flow Section - Top */}
                             <div className="bg-white rounded-lg border border-gray-200 p-6">
                                 {(rfpData.status == 5 || rfpData?.status == 6 || rfpData.status == 9 ) ? 
-                                    <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} /> :
+                                    <RfpDetailRight rfp={rfpData} trigger={() => { getRequestDetailData(); }} vendorProposals={vendorProposals} setVendorProposals={setVendorProposals}/> :
                                     rfpData.status == 8 ? 
                                         <RfpProposalApproveReject rfpDetails={rfpData} trigger={() => { getRequestDetailData(); }} /> :
                                         (rfpData.status == 9 || rfpData.status == 10) ? 
@@ -74,7 +75,7 @@ const RequestDetailPage: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                {(rfpData?.status == 1 || rfpData?.status == 5 || rfpData?.status == 9) && getUserCredentials().userId == rfpData?.createdBy.toString() && (
+                {(rfpData?.status == 1 || rfpData?.status == 5 || rfpData?.status == 9 && vendorProposals.length > 0) && getUserCredentials().userId == rfpData?.createdBy.toString() && (
                     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-md z-50">
                         <div className="max-w-4xl mx-auto px-4 py-3">
                             <form onSubmit={(e) => {

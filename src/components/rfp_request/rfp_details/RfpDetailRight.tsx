@@ -1,5 +1,5 @@
 // ApprovalWorkflow.tsx
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 // import { getAllUsersByFilterAsync } from '../../../services/userService';
 // import PageLoader from '../../basic_components/PageLoader';
 // import { notification } from 'antd';
@@ -34,6 +34,8 @@ import { documentTypeConst } from "../../../utils/constants";
 interface IRfpDetailRight {
     rfp: IRfp
     trigger: () => void
+    vendorProposals:any[]
+    setVendorProposals:React.Dispatch<SetStateAction<any[]>>
 }
 
 const ItemCountCard: React.FC<{ item: { icon: any, label: string, bgColor: string, count: number }, className?: string }> = ({ item, className }) => {
@@ -48,10 +50,10 @@ const ItemCountCard: React.FC<{ item: { icon: any, label: string, bgColor: strin
     )
 }
 
-const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger }) => {
+const RfpDetailRight: React.FC<IRfpDetailRight> = ({ rfp, trigger,vendorProposals, setVendorProposals }) => {
 
     const [isModalOpenItem, setIsModalOpenItem] = useState<any>(null);
-    const [vendorProposals, setVendorProposals] = useState<any[]>([]);
+    // const [vendorProposals, setVendorProposals] = useState<any[]>([]);
     const [vendorIntrestCount, setVendorIntrestCount] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [activeTab, setActiveTab] = useState("Proposals");
