@@ -17,25 +17,6 @@ interface RfpDetailLeftProp {
 }
 
 
-const CommonCard = ({ data, className }: { data: Record<string, any>, className?: string }) => {
-    return (
-        <div
-            className={`border border-lightblue p-4 flex text-sm rounded-lg bg-[#EDF4FD] ${className}`}
-        >
-            {Object.keys(data).map((k) => (
-                <div key={k} className="pr-[55px] group relative">
-                    <p className="mb-1 text-gray-500">{k}</p>
-                    <span className="block truncate">{data[k]}</span>
-
-                    {/* Tooltip on Hover */}
-                    {data[k] && data[k]?.length > 16 && <div className="absolute left-0 top-full hidden group-hover:flex bg-[#EDF4FD] shadow-md p-2 rounded w-max max-w-[300px] z-10 border border-gray-300">
-                        {data[k]}
-                    </div>}
-                </div>
-            ))}
-        </div>
-    )
-}
 
 type KeyValueProps = {
     data: {
@@ -157,111 +138,238 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }:
     }, [requestData])
 
     return (
-        <div className="h-full flex items-center bg-white flex-col px-10 pt-6 border-r border-gray-200 relative">
-            {requestData && <>
-                {/* Project Name,ID */}
-                <div className="mb-[16px]" style={{ width: "504px" }}>
-                    <div className="flex justify-between items-center">
-                        <>
-                            <span className="font-bold text-[22px] leading-[33.8px] mb-[8px] block">{requestData.rfpTitle}</span>
-                            <div>
-                                <span onClick={onEditRequest}><PenIcon className="text-gray-500" size={"1.2rem"} /></span>
+        <div className="space-y-4">
+            {requestData && (
+                <div className="bg-white rounded-lg border border-gray-200">
+                    {/* Header Section */}
+                    <div className="px-6 py-4 border-b border-gray-200">
+                        <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-3">
+                                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                                        <span className="text-white text-sm">📋</span>
+                                    </div>
+                                    <div>
+                                        <h1 className="text-xl font-bold text-gray-900">{requestData.rfpTitle}</h1>
+                                        <div className="flex items-center space-x-2 mt-1">
+                                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                                ID: {requestData?.tenderNumber || "-"}
+                                            </span>
+                                            <button onClick={onEditRequest} className="text-xs text-blue-600 hover:text-blue-800 hover:underline">
+                                                <PenIcon className="w-3 h-3 inline mr-1" /> Edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </>
+                        </div>
                     </div>
-                    <span style={{ padding: "4px 8px", border: "1px solid #A8AEBA", borderRadius: "20px", fontSize: "14px", backgroundColor: "#EBEEF4" }}>ID: {requestData?.tenderNumber || "-"}</span>
-                </div>
-                {/* Description */}
-                <div className="mb-[24px]" style={{ width: "504px" }}>
-                    <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Description</span>
-                    <p style={{ fontSize: "14px" }}>{requestData.rfpDescription}</p>
-                </div>
-                {/* General Details */}
-                <div className="h-full" style={{ width: "504px" }}>
-                    <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">General Details</span></span>
-                    <div className="mb-[24px]" style={{ width: "504px" }}>
-                        <span className="mb-[4px]" style={{ color: "gray", fontSize: "14px" }}>Published Categories</span>
-                        {masterData?.categories?.length > 0 && requestData?.rfpCategories?.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-2">
+
+                    {/* Content */}
+                    <div className="p-6">
+                        {/* Description */}
+                        <div className="mb-6">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Description</h3>
+                            <p className="text-sm text-gray-600 leading-relaxed">{requestData.rfpDescription}</p>
+                        </div>
+                        {/* General Details */}
+                        <div className="mb-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                <GeneralDetailIcon className="w-4 h-4 mr-2" /> General Details
+                            </h3>
+
+                            {/* Published Categories */}
+                            <div className="mb-4">
+                                <h4 className="text-xs font-medium text-gray-700 mb-2">Published Categories</h4>
+                                {masterData?.categories?.length > 0 && requestData?.rfpCategories?.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
                                 {requestData?.rfpCategories?.map((item: any) => {
                                     const category = masterData?.categories?.find(
                                         (c: any) => c.id === item.categoryId
                                     );
                                     return (
-                                        <div key={item.categoryId} className={"py-1 px-2 text-xs border rounded-full flex justify-center bg-blue-100 text-blue-700 border-blue-500"}>{category?.name || 'Unknown'}</div>
+                                                <span key={item.categoryId} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                                                    {category?.name || 'Unknown'}
+                                                </span>
                                     );
                                 })}
                             </div>
-                        )}
+                                ) : (
+                                    <p className="text-xs text-gray-500 bg-gray-50 rounded p-2">No categories assigned</p>
+                                )}
+                            </div>
+
+                            {/* Status and Requisition ID */}
+                            <div className="bg-gray-50 rounded p-4 mb-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-xs text-gray-500 mb-1">Purchase Requisition ID</p>
+                                        <p className="text-sm font-medium text-gray-900">{requestData?.purchaseRequisitionId || "-"}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 mb-1">RFP Status</p>
+                                        <ShowStatus type="rfps" status={requestData?.status} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Additional Details */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div className="bg-gray-50 rounded p-3">
+                                    <p className="text-xs text-gray-500 mb-1">Closed / Open</p>
+                                    <p className="text-sm font-medium text-gray-900">{requestData?.isOpen ? "Open" : "Closed"}</p>
+                                </div>
+                                <div className="bg-gray-50 rounded p-3">
+                                    <p className="text-xs text-gray-500 mb-1">Serial / Parallel</p>
+                                    <p className="text-sm font-medium text-gray-900">{requestData?.isSerial ? "Serial" : "Parallel"}</p>
+                                </div>
+                            </div>
+
+                            {/* Financial Details */}
+                            <div className="space-y-3">
+                                <div className="bg-gray-50 rounded p-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500">Estimated Contract Value</span>
+                                        <span className="text-sm font-semibold text-gray-900">{convertCurrencyLabel(requestData?.rfpCurrency)}{requestData?.estimatedContractValue}</span>
+                                    </div>
+                                </div>
+                                {requestData?.bidValue && (
+                                    <div className="bg-gray-50 rounded p-3">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-xs text-gray-500">Bid Value</span>
+                                            <span className="text-sm font-semibold text-gray-900">{convertCurrencyLabel(requestData?.rfpCurrency)}{requestData?.bidValue}</span>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="bg-gray-50 rounded p-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500">Tender Fee</span>
+                                        <span className="text-sm font-semibold text-gray-900">{convertCurrencyLabel(requestData?.rfpCurrency)}{requestData?.tenderFee}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* RFP Details */}
+                        <div className="mb-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                <GeneralDetailIcon className="w-4 h-4 mr-2" /> RFP Details
+                            </h3>
+
+                            {/* Buyer Information */}
+                            <div className="bg-gray-50 rounded p-4 mb-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <p className="text-xs text-gray-500 mb-1">Buyer Name</p>
+                                        <p className="text-sm font-medium text-gray-900">{requestData?.buyerName || "-"}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 mb-1">Department</p>
+                                        <p className="text-sm font-medium text-gray-900">{requestData?.departmentName || "-"}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 mb-1">Organization</p>
+                                        <p className="text-sm font-medium text-gray-900">{requestData?.buyerOrganizationName || "-"}</p>
+                                    </div>
                     </div>
-                    <CommonCard data={{
-                        // "Category": requestData?.categoryName ?? "-" as string,
-                        "Purchase\u00A0Requisition\u00A0ID": requestData?.purchaseRequisitionId as string,
-                        "RFP Status": <ShowStatus type="rfps" status={requestData?.status} />
-                    }} className="mb-[16px]" />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Closed / Open", value: requestData?.isOpen ? "Open" : "Closed" },
-                            { label: "Serial / Parallel", value: requestData?.isSerial ? "Serial" : "Parallel" },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            {
-                                label: "Estimated Contract Value",
-                                value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.estimatedContractValue}`,
-                            },
-                            ...(requestData?.bidValue
-                                ? [
-                                    {
-                                        label: "Bid Value",
-                                        value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.bidValue}`,
-                                    },
-                                ]
-                                : []),
-                            {
-                                label: "Tender Fee",
-                                value: `${convertCurrencyLabel(requestData?.rfpCurrency)}${requestData?.tenderFee}`,
-                            },
-                            // {
-                            //   label: "Contract Value Hidden From Vendor",
-                            //   value: requestData?.hideContractValueFromVendor ? "Yes" : "No",
-                            // },
-                        ]}
-                    />
                 </div>
 
-                {/* Rfp Details */}
-                <div className="h-full" style={{ width: "504px" }}>
-                    <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Rfp Details</span></span>
-                    <CommonCard data={{
-                        "Buyer Name": requestData?.buyerName as string,
-                        "Department": requestData?.departmentName ?? "-" as string,
-                        "Organization": requestData?.buyerOrganizationName as string
-                    }} className="mb-[16px]" />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Express Interest Last Date", value: dayjs(requestData?.expressInterestLastDate).format("DD-MM-YYYY") },
-                            { label: "Clarification Date", value: dayjs(requestData?.clarificationDate).format("DD-MM-YYYY") },
-                        ]}
-                    />
-                    <KeyValueGrid className="mb-[16px]"
-                        data={[
-                            { label: "Closing Date", value: dayjs(requestData?.closingDate).format("DD-MM-YYYY") },
-                            { label: "Closing Time", value: dayjs(requestData?.closingDate).format("hh:mm A") },
-                        ]}
-                    />
+                            {/* Timeline Information */}
+                            <div className="space-y-3">
+                                <div className="bg-gray-50 rounded p-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500">Express Interest Last Date</span>
+                                        <span className="text-sm font-medium text-gray-900">{dayjs(requestData?.expressInterestLastDate).format("DD-MM-YYYY")}</span>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 rounded p-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500">Clarification Date</span>
+                                        <span className="text-sm font-medium text-gray-900">{dayjs(requestData?.clarificationDate).format("DD-MM-YYYY")}</span>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 rounded p-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500">Closing Date</span>
+                                        <span className="text-sm font-medium text-gray-900">{dayjs(requestData?.closingDate).format("DD-MM-YYYY")}</span>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 rounded p-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500">Closing Time</span>
+                                        <span className="text-sm font-medium text-gray-900">{dayjs(requestData?.closingDate).format("hh:mm A")}</span>
+                                    </div>
+                                </div>
+                            </div>
                 </div>
 
-                {/* Ownership Details */}
-                <div className="h-full pb-6" style={{ width: "504px" }}>
-                    <span className="font-bold text-[16px] mb-[17.5px] flex"><GeneralDetailIcon className="size-5" /><span className="pl-[8px]">Ownership</span></span>
-                    <UserBadges title="Technical Owners" users={owners.technical} />
-                    <UserBadges title="Commercial Owners" users={owners.commercial} />
-                    <div className="text-[14px] mb-[8px]" style={{ color: "gray" }}>Supporting documents</div>
-                    <ViewTable columns={["attachmentComponent", "type"]} columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} items={rfpDocuments} />
+                        {/* Ownership Details */}
+                        <div className="mb-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                <GeneralDetailIcon className="w-4 h-4 mr-2" /> Ownership
+                            </h3>
+
+                            {/* Technical Owners */}
+                            <div className="mb-4">
+                                <h4 className="text-xs font-medium text-gray-700 mb-2">Technical Owners</h4>
+                                {owners.technical.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {owners.technical.map((user, idx) => (
+                                            <div key={idx} className="flex items-center bg-blue-100 rounded px-3 py-1">
+                                                <img
+                                                    src={user.avatarUrl || userPhoto}
+                                                    alt={user.name}
+                                                    className="w-6 h-6 rounded-full mr-2"
+                                                />
+                                                <span className="text-xs font-medium text-gray-800">{user.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-gray-500 bg-gray-50 rounded p-2">No technical owners assigned</p>
+                                )}
+                            </div>
+
+                            {/* Commercial Owners */}
+                            <div className="mb-4">
+                                <h4 className="text-xs font-medium text-gray-700 mb-2">Commercial Owners</h4>
+                                {owners.commercial.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {owners.commercial.map((user, idx) => (
+                                            <div key={idx} className="flex items-center bg-green-100 rounded px-3 py-1">
+                                                <img
+                                                    src={user.avatarUrl || userPhoto}
+                                                    alt={user.name}
+                                                    className="w-6 h-6 rounded-full mr-2"
+                                                />
+                                                <span className="text-xs font-medium text-gray-800">{user.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-gray-500 bg-gray-50 rounded p-2">No commercial owners assigned</p>
+                                )}
+                            </div>
+
+                            {/* Supporting Documents */}
+                            <div>
+                                <h4 className="text-xs font-medium text-gray-700 mb-2">Supporting Documents</h4>
+                                {rfpDocuments.length > 0 ? (
+                                    <div className="bg-gray-50 rounded p-3">
+                                        <ViewTable 
+                                            columns={["attachmentComponent", "type"]} 
+                                            columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} 
+                                            items={rfpDocuments} 
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-gray-500 bg-gray-50 rounded p-2">No supporting documents</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </>}
+            )}
         </div>
     )
 }

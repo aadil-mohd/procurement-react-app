@@ -20,21 +20,28 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
   ];
 
   return (
-    <div className="p-6 border-t">
-      {/* Left Title + Right Form */}
-      <div className="flex items-start gap-4">
-        {/* Section Label */}
-        <div className="w-[300px]">
-          <h2 className="text-lg font-semibold">RFP Details</h2>
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-8 py-6 border-b border-gray-200">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white text-xl font-bold">📊</span>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">RFP Details</h2>
+            <p className="text-gray-600 mt-1">Financial and operational specifications</p>
+          </div>
         </div>
+      </div>
 
-        {/* Form Fields */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Content */}
+      <div className="p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Column 1 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
+          <div className="space-y-6">
             {/* Serial or Parallel */}
-            <div className="w-full mb-8">
-              <label className="block text-sm font-medium mb-2">Serial or Parallel</label>
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-4">Serial or Parallel</label>
               <div className="flex space-x-4">
                 {[{ title: 'Serial', value: true }, { title: 'Parallel', value: false }].map((option, i) => (
                   <label key={i} className="flex items-center">
@@ -57,8 +64,8 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             </div>
 
             {/* Currency */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 RFP Currency <span className="text-red-500">*</span>
               </label>
               <SelectField
@@ -115,8 +122,8 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             </div> */}
 
             {/* Estimated Contract Value */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Estimated Contract Value <span className="text-red-500">*</span>
               </label>
               <div className="flex">
@@ -147,37 +154,10 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
           </div>
 
           {/* Column 2 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
-
-            {/* Hide Contract Value From Vendor */}
-            {/* <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Hide Contract Value From Vendor <span className="text-red-500">*</span>
-              </label>
-              <SelectField
-                id="hideContractValueFromVendor"
-                label=""
-                style="w-full"
-                value={
-                  yesNoOptions.find((x) => x.value === requestData?.hideContractValueFromVendor)
-                    ?.label as string
-                }
-                options={yesNoOptions.map((x) => ({
-                  label: x.label,
-                  value: x.value,
-                }))}
-                onChange={(selectedValue) =>
-                  setRequestData((prev: any) => ({
-                    ...prev,
-                    hideContractValueFromVendor: selectedValue,
-                  }))
-                }
-              />
-            </div> */}
-
+          <div className="space-y-6">
             {/* Is Tender Fee Applicable */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Is Tender Fee Applicable <span className="text-red-500">*</span>
               </label>
               <SelectField
@@ -202,8 +182,8 @@ const RfpDetails: React.FC<RfpDetailsProps> = ({
             </div>
 
             {/* Tender Fee */}
-            {requestData?.isTenderFeeApplicable && <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            {requestData?.isTenderFeeApplicable && <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Tender Fee <span className="text-red-500">*</span>
               </label>
               <div className="flex">

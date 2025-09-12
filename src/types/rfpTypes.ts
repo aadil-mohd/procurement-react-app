@@ -1,3 +1,10 @@
+export interface IProcurementItem {
+    id?: number
+    itemName: string
+    itemCode: string
+    quantity: number
+}
+
 export interface IRfp {
     id?: number
     rfpTitle?: string
@@ -27,5 +34,6 @@ export interface IRfp {
     rfpGeneralDocuments?:any[]
     rfpOwners: any[],
     rfpCategories:any[],
+    procurementItems?: IProcurementItem[],
     status?:number,
 }

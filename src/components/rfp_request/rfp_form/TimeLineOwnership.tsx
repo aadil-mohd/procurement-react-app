@@ -26,19 +26,26 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
   }, [owners]);
 
   return (
-    <div className="p-6 border-t">
-      {/* Left Title + Right Form */}
-      <div className="flex items-start gap-4">
-        {/* Section Label */}
-        <div className="w-[300px]">
-          <h2 className="text-lg font-semibold">Timeline & Ownership</h2>
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-8 py-6 border-b border-gray-200">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white text-xl font-bold">⏰</span>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Timeline & Ownership</h2>
+            <p className="text-gray-600 mt-1">Set important dates and assign ownership</p>
+          </div>
         </div>
+      </div>
 
-        {/* Form Fields */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Content */}
+      <div className="p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Column 1 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
-            <div className="w-full mb-4">
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
               <DateTimePicker
                 value={requestData.expressInterestLastDate || null}
                 label="Express Interest Last Date"
@@ -53,8 +60,8 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               />
             </div>
 
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Clarification End Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
@@ -71,8 +78,8 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               />
             </div>
 
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Publish Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
@@ -89,7 +96,7 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
               />
             </div>
 
-            <div className="w-full mb-4">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
               <DateTimePicker
                 required={true}
                 label="Closing Date & Time"
@@ -106,9 +113,9 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
           </div>
 
           {/* Column 2 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">Technical Owners <span className="text-red-500">*</span></label>
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Technical Owners <span className="text-red-500">*</span></label>
               <PeoplePicker
                 setValue={(value: any) =>
                   setOwners((prev: IRfp) => ({ ...prev, technical: value }))
@@ -118,8 +125,8 @@ const TimeLineOwnership: React.FC<TimeLineOwnershipProps> = ({
                 placeholder="search.."
               />
             </div>
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-1">Commercial Owners <span className="text-red-500">*</span></label>
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Commercial Owners <span className="text-red-500">*</span></label>
               <PeoplePicker
                 setValue={(value: any) =>
                   setOwners((prev: IRfp) => ({ ...prev, commercial: value }))

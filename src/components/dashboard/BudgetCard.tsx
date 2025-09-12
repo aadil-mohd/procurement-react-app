@@ -25,55 +25,73 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budg
   const chartInstanceRef = useRef<ChartJS | null>(null);
 
   const showChart = (details?: any) => {
-    if (chartRef.current) {
-      const ctx = chartRef.current.getContext('2d');
-      if (ctx) {
+    try {
+      if (chartRef.current) {
+        const ctx = chartRef.current.getContext('2d');
+        if (ctx) {
         if (chartInstanceRef.current) {
           chartInstanceRef.current.destroy();
         }
         chartInstanceRef.current = new ChartJS(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
-            labels: details?.years || ['2000', '2001', '2002', '2003', '2004'],
+            labels: details?.years || ['2020', '2021', '2022', '2023', '2024'],
             datasets: [
               {
-                label: 'Budget',
-                data: details?.budgets || [0, 0, 0, 0, 0],
-                backgroundColor: '#1A73E8',
-                borderRadius: 4,
-                barThickness: 16,
-                borderWidth: 2,
-                borderColor: 'rgba(0,0,0,0)',
+                label: 'Estimated Budget',
+                data: details?.budgets || [12000, 15000, 18000, 22000, 25000],
+                borderColor: '#3B82F6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#3B82F6',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 8,
               },
               {
-                label: 'Spend',
-                data: details?.spend || [0, 0, 0, 0, 0],
-                backgroundColor: '#00C3D1',
-                borderRadius: 4,
-                barThickness: 16,
-                borderWidth: 2,
-                borderColor: 'rgba(0,0,0,0)',
+                label: 'Actual Spend',
+                data: details?.spend || [10000, 13000, 16000, 19000, 21000],
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#10B981',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 8,
               },
             ],
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false, // Ensure the chart's aspect ratio can change based on container size
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
+              mode: 'index',
+            },
             plugins: {
-              tooltip: { enabled: true },
+              tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                borderColor: '#e5e7eb',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true,
+                callbacks: {
+                  label: function(context) {
+                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                  }
+                }
+              },
               legend: {
                 display: false,
-                position: 'top',
-                align: 'end',
-                labels: {
-                  usePointStyle: true,
-                  pointStyle: 'circle',
-                  boxWidth: 10,
-                  font: {
-                    size: 8,
-                  },
-                  padding: 5,
-                },
               },
             },
             scales: {
@@ -81,33 +99,52 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budg
                 grid: {
                   display: false,
                 },
-                title: {
-                  display: false,
-                  text: 'Year',
+                ticks: {
+                  color: '#6B7280',
                   font: {
-                    size: 10,
+                    size: 12,
+                    weight: 'normal',
                   },
+                },
+                border: {
+                  display: false,
                 },
               },
               y: {
                 grid: {
-                  color: '#ECECEC',
+                  color: '#F3F4F6',
                 },
-                title: {
-                  display: true,
+                ticks: {
+                  color: '#6B7280',
                   font: {
-                    size: 10,
+                    size: 12,
+                    weight: 'normal',
                   },
+                  callback: function(value) {
+                    return '$' + value.toLocaleString();
+                  }
                 },
                 beginAtZero: true,
-                ticks: {
-                  stepSize: 500,
+                border: {
+                  display: false,
                 },
               },
+            },
+            elements: {
+              point: {
+                hoverBackgroundColor: '#ffffff',
+              },
+            },
+            animation: {
+              duration: 2000,
+              easing: 'easeInOutQuart',
             },
           },
         });
       }
+    }
+    } catch (error) {
+      console.error('Error creating chart:', error);
     }
   };
 
@@ -116,28 +153,34 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ width = 456, height = 244, budg
   }, [budgetDetails]);
 
   return (
-    <div
-      className={`p-4 bg-white rounded-lg w-full  desktop:min-width:${width} desktop:max-width:${width} overflow-hidden`}
-      style={{ border: '2px solid #E5E6EC', height }}
-    >
-      <div className="flex justify-between mt-[.5rem] mb-[.9375rem]">
-        <h2 className="text-lg font-semibold">{heading}</h2>
-        <div className="flex text-sm">
-          <span className="flex items-center mr-4">
-            <div className="p-[4.9px] bg-[#1A73E8] rounded-full mr-[8px]"></div> Estimated
-          </span>
-          <span className="flex items-center">
-            <div className="p-[4.9px] bg-[#00C3D1] rounded-full mr-[8px]"></div> Spend
-          </span>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-[320px] overflow-hidden">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+            <span className="text-white text-lg font-semibold">📊</span>
+          </div>
+          <h2 className="text-lg font-semibold text-gray-900">{heading}</h2>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span className="text-sm font-medium text-gray-600">Estimated Budget</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span className="text-sm font-medium text-gray-600">Actual Spend</span>
+          </div>
         </div>
       </div>
-      <div className="relative" style={{ height: 'calc(100% - 50px)' }}>
+      <div className="relative h-[220px] overflow-hidden rounded-lg">
         <canvas
           ref={chartRef}
-          style={{ width: '100%', height: '100%' }}
-          width={width} // Dynamically set width and height
-          height={height} // Adjust for title and margin space
+          className="w-full h-full drop-shadow-sm"
+          width={width}
+          height={height}
         />
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-green-50/30 pointer-events-none"></div>
       </div>
     </div>
   );

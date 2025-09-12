@@ -182,81 +182,97 @@ function RequestPage() {
   const tabs = ["All RFPs", "My RFPs", "Assigned", "Draft RFPs"];
 
   return (
-    <div className="desktop-wide:flex desktop-wide:justify-center">
-      <div>
-        <CommonTitleCard />
-        <div className="pt-[24px] px-[32px] h-full">
-          {!showLoader ? <>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <CommonTitleCard />
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {!showLoader ? <>
+          {/* Header Section */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
             <div className="flex items-center justify-between">
-              <div className="mb-2 text-xl font-bold">RFPs</div>
-              <div>
-                <CreateButton name="Create RFP" onClick={onCreateRequest} />
-
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-white text-2xl font-bold">📋</span>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold text-gray-900">RFPs</h1>
+                  <p className="text-gray-600 mt-1 text-sm">Manage your Request for Proposals</p>
+                </div>
               </div>
-
+              <div className="flex items-center space-x-3">
+                <div className="px-6 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                  <span className="text-sm font-semibold text-blue-700">
+                    {rfpRequests.length} Total RFPs
+                  </span>
+                </div>
+                <CreateButton name="Create RFP" onClick={onCreateRequest} />
+              </div>
             </div>
-            <div className="pt-[24px] flex justify-start border-b ml-[10px] mb-[16px]">
+          </div>
+          {/* Tab Navigation */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
+            <div className="flex items-center space-x-8">
               {tabs.map((tab, index) => (
-                <div className="flex items-center h-[37px]" key={tab}>
-                  <div
+                <div key={tab} className="flex items-center">
+                  <button
                     onClick={() => setupTab(tab)}
-                    className={`relative h-full w-full text-sm text-start cursor-pointer font-semibold ${statusFilter === tab
-                      ? "text-customBlue"
-                      : "text-gray-500 hover:text-black"
-                      }`}
+                    className={`relative px-6 py-3 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                      statusFilter === tab
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform -translate-y-0.5"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    }`}
                   >
                     {tab}
-                    <span
-                      className={`absolute bottom-0 left-0 w-full h-[3px] ${statusFilter === tab
-                        ? "bg-customBlue"
-                        : "bg-transparent group-hover:bg-customeBlue"
-                        }`}
-                    ></span>
-                  </div>
+                    {statusFilter === tab && (
+                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-blue-500"></div>
+                    )}
+                  </button>
                   {index !== tabs.length - 1 && (
-                    <span className="mx-[12px] h-[37px] text-gray-400"></span>
+                    <div className="w-px h-6 bg-gray-300 mx-4"></div>
                   )}
                 </div>
               ))}
             </div>
+          </div>
 
 
-            <div className="ml-[10px]">
-              <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={setFilterModal} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} dots setEditOption={(user) => handleThreeDots("edit", user)}
-                setDeleteOption={(user) => handleThreeDots("delete", user)} setBlockOption={(user) => handleThreeDots("block", user)} />
-              {filterModalOpen && <RfpFilterModal filter={filter} defaultFilter={defaultFilter} setFilter={setFilter} setIsFilterModalOpen={setFilterModal} status={[
-                { label: "Open", value: true },
-                { label: "Closed", value: false },
-              ]} />}
-              {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+          {/* Table Section */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            <Table filter={filter} setFilter={setFilter} title={tableName || "All requests"} setIsSortModalOpen={setIsSortModalOpen} columns={columns} items={rfpRequests || []} columnLabels={rfp_column_labels} setIsFilterModalOpen={setFilterModal} setSearchQuery={setSearchQuery} totalCount={totalCount} type="rfps" rowNavigationPath="rfps" trigger={() => setTrigger(true)} dots setEditOption={(user) => handleThreeDots("edit", user)}
+              setDeleteOption={(user) => handleThreeDots("delete", user)} setBlockOption={(user) => handleThreeDots("block", user)} />
+          </div>
 
-              <AntdModal
-                title={confirmAction?.type === "delete" ? "Confirm Delete" : "Confirm Block"}
-                open={isConfirmModalOpen}
-                onCancel={() => setIsConfirmModalOpen(false)}
-                footer={[
-                  <Button key="cancel" onClick={() => setIsConfirmModalOpen(false)}>
-                    Cancel
-                  </Button>,
-                  <Button
-                    key="confirm"
-                    type="primary"
-                    danger={confirmAction?.type === "delete"}
-                    onClick={handleConfirmAction}
-                  >
-                    {confirmAction?.type === "delete" ? "Delete" : "Block"}
-                  </Button>,
-                ]}
+          {/* Modals */}
+          {filterModalOpen && <RfpFilterModal filter={filter} defaultFilter={defaultFilter} setFilter={setFilter} setIsFilterModalOpen={setFilterModal} status={[
+            { label: "Open", value: true },
+            { label: "Closed", value: false },
+          ]} />}
+          {isSortModalOpen && <SortModal filter={filter} columns={rfp_sorting_fields} setFilter={setFilter} setIsSortModalOpen={setIsSortModalOpen} />}
+
+          <AntdModal
+            title={confirmAction?.type === "delete" ? "Confirm Delete" : "Confirm Block"}
+            open={isConfirmModalOpen}
+            onCancel={() => setIsConfirmModalOpen(false)}
+            footer={[
+              <Button key="cancel" onClick={() => setIsConfirmModalOpen(false)}>
+                Cancel
+              </Button>,
+              <Button
+                key="confirm"
+                type="primary"
+                danger={confirmAction?.type === "delete"}
+                onClick={handleConfirmAction}
               >
-                <p>
-                  Are you sure you want to{" "}
-                  {confirmAction?.type === "delete" ? "delete" : "block"} this rfp?
-                </p>
-              </AntdModal>
+                {confirmAction?.type === "delete" ? "Delete" : "Block"}
+              </Button>,
+            ]}
+          >
+            <p>
+              Are you sure you want to{" "}
+              {confirmAction?.type === "delete" ? "delete" : "block"} this rfp?
+            </p>
+          </AntdModal>
 
-
-            </div></> : <PageLoader />}
-        </div>
+        </> : <PageLoader />}
       </div>
     </div>
   );

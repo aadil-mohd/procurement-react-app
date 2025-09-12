@@ -9,23 +9,58 @@ import { IStep } from "../../../../types/approvalflowTypes";
 const StepCard: React.FC<{ step: IStep, trigger: () => void, flowType:"rfp" | "rfpproposal" | "rfpaward" }> = ({ step, trigger, flowType }) => {
     console.log(step)
     return (
-        <div className="bg-white rounded-lg p-4 mb-4">
-            <div className="flex justify-between items-start mb-3">
-                <div className="flex items-centergap-2">
-                    <div className="flex items-center space-x-2 p-1">
-                        <div className="font-semibold text-[18px]">{step.approverRole}</div>
-                        <div className="flex items-center justify-center bg-[#EBEEF4] rounded-2xl space-x-2 p-1">
-                            <div className="w-[20px] h-[20px] rounded-full bg-[#EBEEF4]"><img className="w-full h-full z-2 rounded-full object-cover" src={step.photo || userPhoto} alt="imag" /></div>
-                            <div className="text-black font-semibold text-[13px]">{step.approverName}</div>
-                            <span className="text-gray-400 text-[13px]">|</span>
-                            <div className="text-[13px]">{step.approverEmail}</div>
-                        </div>
+        <div className="bg-white rounded border border-gray-200 overflow-hidden mb-2 hover:shadow-sm transition-all duration-200">
+            {/* Header Section */}
+            <div className="bg-gray-50 px-3 py-2 border-b border-gray-200">
+                <div className="flex items-center space-x-2">
+                    {/* Role Icon */}
+                    <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center">
+                        <span className="text-white text-xs">
+                            {step.approverRole === 'HOD' ? '👨‍💼' : 
+                             step.approverRole === 'IT' ? '💻' : 
+                             step.approverRole === 'Finance' ? '💰' : '👤'}
+                        </span>
+                    </div>
+                    
+                    {/* Role Title */}
+                    <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-gray-900">{step.approverRole}</h3>
                     </div>
                 </div>
             </div>
-            {step.current && step.status == "pending" && <CurrentStep step={step} trigger={trigger} flowType={flowType} />}
-            {(step.status == "rejected" || step.status == "approved" || step.status == "initiated") && <CompletedStep step={step} />}
-            {/* {step. && <ClarificationStep step={step} trigger={trigger} requestData={requestData} setUpdateRequestTrigger={setUpdateRequestTrigger}/>} */}
+
+            {/* User Information Section */}
+            <div className="p-3">
+                <div className="flex items-center space-x-2 mb-2">
+                    {/* User Avatar */}
+                    <div className="relative">
+                        <div className="w-8 h-8 rounded-full border border-white shadow-sm overflow-hidden">
+                            <img 
+                                className="w-full h-full object-cover" 
+                                src={step.photo || userPhoto} 
+                                alt={step.approverName} 
+                            />
+                        </div>
+                        {/* Status Indicator */}
+                        <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
+                    </div>
+
+                    {/* User Details */}
+                    <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-gray-900">{step.approverName}</h4>
+                        <div className="flex items-center space-x-1 text-gray-600">
+                            <span className="text-sm">📧</span>
+                            <span className="text-sm">{step.approverEmail}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action Section */}
+                <div className="mt-2">
+                    {step.current && step.status == "pending" && <CurrentStep step={step} trigger={trigger} flowType={flowType} />}
+                    {(step.status == "rejected" || step.status == "approved" || step.status == "initiated") && <CompletedStep step={step} />}
+                </div>
+            </div>
         </div>
     )
 };

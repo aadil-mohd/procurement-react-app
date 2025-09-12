@@ -6,6 +6,13 @@ html {
   @apply font-sans;
 }
 
+body {
+  @apply text-sm;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
 @layer utilities {
   .scrollbar-thin::-webkit-scrollbar {
     width: 8px;

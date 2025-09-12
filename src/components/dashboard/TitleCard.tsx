@@ -2,24 +2,13 @@ import CreateButton from "../buttons/CreateButton";
 import { useNavigate } from "react-router-dom";
 import { getUserCredentials } from "../../utils/common";
 import { useEffect } from "react";
-// import RequestForm from "../requests/RequestForm";
-// import { capexContext } from "../../routes/Route";
 
 const TitleCard = ({ trigger }: { trigger: () => void }) => {
-    // const { userInfo } = useContext(capexContext);
     const navigate = useNavigate();
     const onCreateRequest = () => {
         navigate("/rfps/create-rfp")
     }
 
-    // useEffect(() => {
-    //     if (isModalOpen) {
-    //         document.body.classList.add("modal-open"); // Disable background scrolling
-    //     }
-    //     return () => {
-    //         document.body.classList.remove("modal-open"); // Cleanup when modal closes
-    //     };
-    // }, [isModalOpen]);
 
     useEffect(()=>{
         trigger && trigger();
@@ -27,19 +16,28 @@ const TitleCard = ({ trigger }: { trigger: () => void }) => {
 
 
     return (
-        <div className="w-full h-full flex justify-between items-center">
-            <div className="flex flex-col">
-                <p className="text-[26px] flex justify-start items-center">
-                    Hello,&nbsp;<span className="text-[26px] font-semibold">{getUserCredentials().name}</span>!!
-                </p>
-                <span className="text-gray-400 text-[14px]">Welcome, Let's get back to work.</span>
-            </div>
-            <div>
-                <CreateButton name="Create RFP" onClick={onCreateRequest} />
-                
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+                        <span className="text-white text-lg font-semibold">👋</span>
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            Hello, <span className="text-blue-600">{getUserCredentials().name}</span>!
+                        </h1>
+                        <p className="text-gray-600 text-sm mt-1">Welcome back, let's get things done today</p>
+                    </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                    <div className="hidden sm:block text-right">
+                        <p className="text-sm text-gray-500">Ready to create?</p>
+                        <p className="text-xs text-gray-400">Start a new RFP request</p>
+                    </div>
+                    <CreateButton name="Create RFP" onClick={onCreateRequest} />
+                </div>
             </div>
         </div>
-
     )
 
 }

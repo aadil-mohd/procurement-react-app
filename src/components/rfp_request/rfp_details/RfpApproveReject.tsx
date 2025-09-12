@@ -1,11 +1,5 @@
 // ApprovalWorkflow.tsx
 import React, { useEffect, useState } from 'react';
-// import { getApprovalFlowById } from '../../services/flowService';
-// import { getAllUsersByFilterAsync } from '../../services/userService';
-// import { ApprovalStep } from '../../types/approvalTypes';
-// import { handleFile } from '../../utils/common';
-// import userPhoto from "../../../assets/profile_photo/userPhoto.png"
-// import { IStep } from '../../../types/approvalflowTypes';
 import { getRpfApprovalFlowsByIdAsync } from '../../../services/flowService';
 import { getUserCredentials } from '../../../utils/common';
 import StepIndicator from './rfp_approve-reject_right_component/StepIndicator';
@@ -18,20 +12,6 @@ interface IRfpDetailRight {
 }
 
 
-// const tempflows: IStep[] = [{
-//     id: 0,
-//     photo: userPhoto,
-//     approvalRequestId: 0,
-//     approverId: 1,
-//     approverRole: "admin",
-//     approverEmail: "admin@123",
-//     approverName: "Akkib",
-//     current: true,
-//     stepOrder: 1,
-//     status: "pending",
-//     actionDate: "2025-05-01",
-//     comments: ""
-// },
 // {
 //     id: 0,
 //     photo: userPhoto,
@@ -88,10 +68,10 @@ const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) =>
     }, [rfpDetails.id])
 
     return (
-        <div className="w-full space-y-2 desktop:max-w-[712px] mx-auto rounded-lg h-full px-6 max-h-[890px] overflow-y-auto scrollbar">
+        <div className="w-full space-y-3 desktop:max-w-[600px] mx-auto rounded h-full px-3 max-h-[400px] overflow-y-auto scrollbar">
             <StepIndicator steps={stepsList} />
 
-            <div className="w-full">
+            <div className="w-full space-y-2">
                 {stepsList.map((step, index) => {
                     // Find the index of the current step
 
@@ -128,8 +108,25 @@ const RfpApproveReject: React.FC<IRfpDetailRight> = ({ rfpDetails, trigger }) =>
                                     setupRfpApproveReject();
                                 }}
                             /> :
-                            <div key={index} className="text-gray-500 mb-4 bg-white px-2 py-2 rounded-md flex-col items-center justify-center">
-                                {step.approverRole} <p className='text-xs'>{step.approverName} | {step.approverEmail}</p>
+                            <div key={index} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4 opacity-60">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                                        <span className="text-gray-400 text-lg">
+                                            {step.approverRole === 'HOD' ? '👨‍💼' : 
+                                             step.approverRole === 'IT' ? '💻' : 
+                                             step.approverRole === 'Finance' ? '💰' : '👤'}
+                                        </span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="text-lg font-semibold text-gray-500">{step.approverRole}</h4>
+                                        <p className="text-sm text-gray-400">{step.approverName} | {step.approverEmail}</p>
+                                        <div className="mt-2">
+                                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                Pending
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                     );
                 })}

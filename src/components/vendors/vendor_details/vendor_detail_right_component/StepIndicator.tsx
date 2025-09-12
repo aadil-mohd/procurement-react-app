@@ -10,7 +10,6 @@ const StepIndicator: React.FC<{ steps: IStep[] }> = ({ steps }) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
 
-    console.log(steps, "steps")
     const updateScrollButtons = () => {
         if (scrollContainerRef.current) {
             setCanScrollLeft(scrollContainerRef.current.scrollLeft > 0);
@@ -44,70 +43,105 @@ const StepIndicator: React.FC<{ steps: IStep[] }> = ({ steps }) => {
     }, []);
 
     return (
-        <div className="relative flex items-center sticky top-0 bg-bgBlue">
-            {canScrollLeft && (
-                <button
-                    onClick={() => handleScroll("left")}
-                    className="absolute z-10 left-0 p-1 rounded-full bg-white shadow-md hover:bg-gray-50"
-                >
-                    <ChevronLeft className="w-4 h-4 text-blue-500" />
-                </button>
-            )}
-
-            <div
-                ref={scrollContainerRef}
-                className="overflow-x-auto py-4 px-10 flex-1 scroll-smooth no-scrollbar"
-            >
-                <div className="relative flex items-center min-w-max">
-                    {steps.map((step, index) => (
-                        <div key={index} className="relative flex items-center mr-3">
-                            <div className="flex items-center justify-center space-x-3">
-                                <div
-                                    className={`w-7 h-7 rounded-full flex items-center justify-center border-2 z-1
-                                        ${`${step.status === "approved" || ((step.status === "pending" && (index == 0 || steps[index - 1].status == "approved"))) ? "bg-blue-500 border-white ring-blue-500 ring-2"
-                                            : step.status === "rejected" ? "bg-red-500 border-white ring-red-500 ring-2"
-                                                : "bg-white border-gray-200"}`
-                                        }`}
-
-                                >
-                                    {step.status === "rejected" ? (
-                                        <XIcon className="w-4 h-4 text-white" />
-                                    ) : (step.status === "approved") ? (
-                                        <Check className="w-4 h-4 text-white" />
-                                    ) : (
-                                        <span className={`text-[26px] d-flex items-center justify-center ${((step.status === "pending" && (index == 0 || steps[index - 1].status == "approved"))) ? "text-white" : "text-gray-400"}`}>
-                                            •
-                                        </span>
-                                    )}
-
-                                </div>
-
-                                <div className="mt-2 mb-1">
-                                    <span className={`text-sm font-medium flex items-center ${step.current ? step.status == "rejected" ? "text-red-500" : "text-blue-500" : "text-gray-500"
-                                        }`}>
-                                        {step.approverRole}
-                                    </span>
-                                </div>
-
-                                {index < steps.length - 1 && (
-                                    <div className="w-12 flex items-center">
-                                        <div className="w-full h-[2px] bg-gray-200" />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+        <div className="bg-gray-50 rounded p-3 mb-3 border border-gray-200">
+            {/* Header */}
+            <div className="flex items-center space-x-2 mb-3">
+                <div className="w-5 h-5 bg-blue-500 rounded flex items-center justify-center">
+                    <span className="text-white text-xs">🔄</span>
+                </div>
+                <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Approval Flow</h3>
+                    <p className="text-sm text-gray-600">Track progress</p>
                 </div>
             </div>
 
-            {canScrollRight && (
-                <button
-                    onClick={() => handleScroll("right")}
-                    className="absolute right-0 z-10 p-1 rounded-full bg-white shadow-md hover:bg-gray-50"
+            {/* Progress Steps */}
+            <div className="relative flex items-center">
+                {canScrollLeft && (
+                    <button
+                        onClick={() => handleScroll("left")}
+                        className="absolute z-10 left-0 p-1 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-all duration-200"
+                    >
+                        <ChevronLeft className="w-3 h-3 text-blue-500" />
+                    </button>
+                )}
+
+                <div
+                    ref={scrollContainerRef}
+                    className="overflow-x-auto py-1 px-4 flex-1 scroll-smooth no-scrollbar"
                 >
-                    <ChevronRight className="w-4 h-4 text-blue-500" />
-                </button>
-            )}
+                    <div className="relative flex items-center min-w-max">
+                        {steps.map((step, index) => (
+                            <div key={index} className="relative flex items-center">
+                                {/* Step Circle */}
+                                <div className="flex flex-col items-center">
+                                    <div
+                                        className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                                            step.status === "approved" 
+                                                ? "bg-green-500 border-white" 
+                                                : step.status === "rejected" 
+                                                    ? "bg-red-500 border-white"
+                                                    : (step.status === "pending" && (index === 0 || steps[index - 1].status === "approved"))
+                                                        ? "bg-blue-500 border-white"
+                                                        : "bg-white border-gray-300"
+                                        }`}
+                                    >
+                                        {step.status === "rejected" ? (
+                                            <XIcon className="w-2 h-2 text-white" />
+                                        ) : step.status === "approved" ? (
+                                            <Check className="w-2 h-2 text-white" />
+                                        ) : (
+                                            <span className="text-xs font-bold text-white">
+                                                {index + 1}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Step Label */}
+                                    <div className="mt-1 text-center">
+                                        <div className={`text-sm font-medium px-2 py-1 rounded ${
+                                            step.status === "approved" 
+                                                ? "bg-green-100 text-green-800" 
+                                                : step.status === "rejected" 
+                                                    ? "bg-red-100 text-red-800"
+                                                    : (step.status === "pending" && (index === 0 || steps[index - 1].status === "approved"))
+                                                        ? "bg-blue-100 text-blue-800"
+                                                        : "bg-gray-100 text-gray-600"
+                                        }`}>
+                                            {step.approverRole}
+                                        </div>
+                                        <div className="text-sm text-gray-500">
+                                            {step.status === "approved" ? "Done" : 
+                                             step.status === "rejected" ? "Rejected" : 
+                                             (step.status === "pending" && (index === 0 || steps[index - 1].status === "approved")) ? "Active" : "Pending"}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Connector Line */}
+                                {index < steps.length - 1 && (
+                                    <div className="flex items-center mx-1.5">
+                                        <div className={`w-6 h-0.5 rounded-full transition-all duration-300 ${
+                                            step.status === "approved" 
+                                                ? "bg-green-500" 
+                                                : "bg-gray-200"
+                                        }`} />
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {canScrollRight && (
+                    <button
+                        onClick={() => handleScroll("right")}
+                        className="absolute right-0 z-10 p-1 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-all duration-200"
+                    >
+                        <ChevronRight className="w-3 h-3 text-blue-500" />
+                    </button>
+                )}
+            </div>
         </div>
     );
 };

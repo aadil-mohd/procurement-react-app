@@ -17,21 +17,28 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
   masterData,
 }) => {
   return (
-    <div className="p-6">
-      {/* Left label + Form side by side */}
-      <div className="flex items-start gap-4">
-        {/* Section Label */}
-        <div className="w-[300px]">
-          <h2 className="text-lg font-semibold">General Information</h2>
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-8 py-6 border-b border-gray-200">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white text-xl font-bold">ℹ️</span>
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">General Information</h2>
+            <p className="text-gray-600 mt-1 text-sm">Basic details about your RFP request</p>
+          </div>
         </div>
+      </div>
 
-        {/* Form Fields */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Content */}
+      <div className="p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Column 1 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
+          <div className="space-y-6">
             {/* RFP Title */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 RFP Title <span className="text-red-500">*</span>
               </label>
               <TextField
@@ -43,15 +50,15 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
                   setRequestData((prev: any) => ({ ...prev, rfpTitle: value }))
                 }
                 placeholder="Enter RFP Title"
-                style=""
+                style="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 type="text"
                 width="w-full"
               />
             </div>
 
             {/* RFP Description */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 RFP Description
               </label>
               <TextField
@@ -72,8 +79,8 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             </div>
 
             {/* Category */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Category <span className="text-red-500">*</span>
               </label>
                 <Select
@@ -98,8 +105,8 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             </div>
 
             {/* Purchase Requisition ID */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Purchase Requisition ID
               </label>
               <TextField
@@ -122,11 +129,10 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
           </div>
 
           {/* Column 2 */}
-          <div className="flex flex-col items-start w-full max-w-[400px]">
-
+          <div className="space-y-6">
             {/* Organization */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Organization
               </label>
               <TextField
@@ -182,8 +188,8 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             </div> */}
 
             {/* Buyer Department */}
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium mb-2">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Buyer Department <span className="text-red-500">*</span>
               </label>
               <SelectField
@@ -216,12 +222,15 @@ const GeneralInformation: React.FC<GeneralInformationProps> = ({
             </div>
 
             {/* Buyer */}
-            <div className="w-full mb-4">
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Buyer
+              </label>
               <PeoplePicker
                 users={masterData?.users}
                 setValue={(val) => { setRequestData((prev: any) => ({ ...prev, buyer: val.length ? [val[val.length - 1]] : [], buyerName: val.length ? val[val.length - 1].name : "" })) }}
                 value={requestData && requestData?.buyer ? requestData?.buyer : []}
-                label="Buyer"
+                label=""
                 height={"41px"}
               />
             </div>
