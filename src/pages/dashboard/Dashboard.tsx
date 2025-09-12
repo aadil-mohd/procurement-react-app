@@ -26,14 +26,36 @@ const defaultFilter: IFilterDto = {
 function Dashboard() {
   const commonColumns = ['tenderNumber', 'rfpTitle', 'buyerName', 'estimatedContractValueLabel', 'status']
 
-  const [requestStatus, setRequestStatus] = useState([5, 12, 8]);
+  const [requestStatus, setRequestStatus] = useState([8, 15, 12]);
 
   // State definitions
   const [dashboardData, setDashboardData] = useState({
     newRequests: [] as any[],
     // requestStatus: [0, 0, 0],
-    rfpRequests: [] as any[],
-    totalCount: 0,
+    rfpRequests: [
+      {
+        tenderNumber: "RFP-2024-001",
+        rfpTitle: "Office Equipment Procurement",
+        buyerName: "John Smith",
+        estimatedContractValueLabel: "$25,000.00",
+        status: 1
+      },
+      {
+        tenderNumber: "RFP-2024-002", 
+        rfpTitle: "IT Infrastructure Upgrade",
+        buyerName: "Sarah Johnson",
+        estimatedContractValueLabel: "$45,000.00",
+        status: 2
+      },
+      {
+        tenderNumber: "RFP-2024-003",
+        rfpTitle: "Marketing Services Contract",
+        buyerName: "Mike Davis",
+        estimatedContractValueLabel: "$15,000.00",
+        status: 1
+      }
+    ] as any[],
+    totalCount: 3,
   });
 
   const [budgetDetails, setBudgetDetails] = useState<any>({
@@ -52,23 +74,23 @@ function Dashboard() {
 
   const [statusData, setStatusData] = useState<statusDataProp[]>([
     {
-      icon: <TickIcon className="w-5 h-5" />,
+      icon: "🎯",
       label: "Closed RFPs",
-      value: 5,
+      value: 8,
       color: "bg-green-500/30",
       textColor: "text-green-900",
     },
     {
-      icon: "!",
+      icon: "📊",
       label: "Open RFPs",
-      value: 12,
+      value: 15,
       color: "bg-blue-500/30",
       textColor: "text-blue-900"
     },
     {
-      icon: "!",
+      icon: "⚡",
       label: "Under Approval",
-      value: 8,
+      value: 12,
       color: "bg-yellow-500/30",
       textColor: "text-yellow-900",
     }
@@ -228,29 +250,71 @@ function Dashboard() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {showLoader ? (
         <PageLoader />
       ) : (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Header Section */}
-          <div className="mb-8">
+          <div className="mb-6">
             <TitleCard trigger={() => setTrigger(true)} />
           </div>
 
           {/* Main Dashboard Layout */}
-          <div className="space-y-8">
-            {/* Status Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <StatusBar statuses={statusData || []} />
+          <div className="space-y-6">
+            {/* Top Section - Status Cards and Key Metrics */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              {/* Status Cards - Takes 3/4 width */}
+              <div className="lg:col-span-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <StatusBar statuses={statusData || []} />
+                </div>
+              </div>
+              
+              {/* Quick Stats - Takes 1/4 width */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-2xl shadow-lg border-0 p-4 h-full relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full -translate-y-8 translate-x-8"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <span className="text-white text-base font-bold">📊</span>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-heading-4">Overview</h3>
+                        <p className="text-body-small text-muted">Key metrics</p>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                        <div className="text-xl font-bold text-slate-900 mb-1">{requestStatus.reduce((a, b) => a + b, 0)}</div>
+                        <div className="text-caption">Total RFPs</div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-center p-2 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-100">
+                          <div className="text-base font-bold text-emerald-600 mb-1">{requestStatus[0] || 0}</div>
+                          <div className="text-caption">Completed</div>
+                        </div>
+                        <div className="text-center p-2 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-100">
+                          <div className="text-base font-bold text-amber-600 mb-1">{requestStatus[2] || 0}</div>
+                          <div className="text-caption">In Progress</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            {/* Middle Section - Charts and Analytics */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+              {/* Budget Chart - Takes 2/3 width */}
+              <div className="xl:col-span-2">
                 <BudgetCard budgetDetails={budgetDetails} />
               </div>
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              
+              {/* Request Status Chart - Takes 1/3 width */}
+              <div className="xl:col-span-1">
                 <RequestCard
                   labels={['Closed', 'Open', 'Under Approval']}
                   data={requestStatus || [0, 0, 0]}
@@ -259,119 +323,114 @@ function Dashboard() {
               </div>
             </div>
 
-            {/* Main Content Area */}
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+            {/* Bottom Section - Main Content and Sidebar */}
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
               {/* RFPs Table - Takes 3/4 width */}
               <div className="xl:col-span-3">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                  <Table 
-                    filter={filter} 
-                    setFilter={setFilter} 
-                    title={"Published RFPs"} 
-                    setIsSortModalOpen={setIsSortModalOpen} 
-                    columns={commonColumns} 
-                    items={dashboardData.rfpRequests || []} 
-                    columnLabels={rfp_column_labels} 
-                    setIsFilterModalOpen={() => { }} 
-                    setSearchQuery={setSearchQuery} 
-                    totalCount={20} 
-                    type="rfps" 
-                    rowNavigationPath="rfps" 
-                    trigger={() => setTrigger(true)} 
-                  />
+                <div className="bg-white rounded-2xl shadow-lg border-0 overflow-hidden relative">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-slate-50 to-gray-50 rounded-full -translate-y-20 translate-x-20"></div>
+                  <div className="relative z-10">
+                    <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-gray-50">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <span className="text-white text-lg font-bold">📋</span>
+                          </div>
+                          <div>
+                            <h3 className="text-heading-3">Published RFPs</h3>
+                            <p className="text-body-small text-muted">Manage and view your RFP requests</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <Table 
+                      filter={filter} 
+                      setFilter={setFilter} 
+                      title={""} 
+                      setIsSortModalOpen={setIsSortModalOpen} 
+                      columns={commonColumns} 
+                      items={dashboardData.rfpRequests || []} 
+                      columnLabels={rfp_column_labels} 
+                      setIsFilterModalOpen={() => { }} 
+                      setSearchQuery={setSearchQuery} 
+                      totalCount={20} 
+                      type="rfps" 
+                      rowNavigationPath="rfps" 
+                      trigger={() => setTrigger(true)}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Right Sidebar - Takes 1/4 width */}
               <div className="xl:col-span-1">
-                <div className="space-y-6">
-                  {/* Quick Stats Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center mb-6">
-                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                        <span className="text-white text-sm font-semibold">📊</span>
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">Quick Stats</h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-100">
-                        <div className="flex items-center">
-                          <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                          <span className="text-sm font-medium text-gray-700">Total RFPs</span>
-                        </div>
-                        <span className="text-xl font-bold text-blue-600">{requestStatus.reduce((a, b) => a + b, 0)}</span>
-                      </div>
-                      <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-100">
-                        <div className="flex items-center">
-                          <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                          <span className="text-sm font-medium text-gray-700">Completed</span>
-                        </div>
-                        <span className="text-xl font-bold text-green-600">{requestStatus[0] || 0}</span>
-                      </div>
-                      <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-100">
-                        <div className="flex items-center">
-                          <div className="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
-                          <span className="text-sm font-medium text-gray-700">In Progress</span>
-                        </div>
-                        <span className="text-xl font-bold text-orange-600">{requestStatus[2] || 0}</span>
-                      </div>
-                    </div>
-                  </div>
-
+                <div className="space-y-4">
                   {/* Recent Activity Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center mb-6">
-                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3">
-                        <span className="text-white text-sm font-semibold">🔄</span>
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900">New RFP created</p>
-                          <p className="text-xs text-gray-500 mt-1">2 hours ago</p>
+                  <div className="bg-white rounded-2xl shadow-lg border-0 p-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-orange-50 to-amber-50 rounded-full -translate-y-10 translate-x-10"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-12 h-12 bg-gradient-to-br from-orange-600 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg mr-4">
+                          <span className="text-white text-lg font-bold">🕒</span>
+                        </div>
+                        <div>
+                          <h3 className="text-heading-4">Recent Activity</h3>
+                          <p className="text-body-small text-muted">Latest updates</p>
                         </div>
                       </div>
-                      <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900">RFP approved</p>
-                          <p className="text-xs text-gray-500 mt-1">5 hours ago</p>
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300">
+                          <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0 shadow-sm"></div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-slate-900">New RFP created</p>
+                            <p className="text-xs text-slate-500 mt-1 font-normal">2 hours ago</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900">RFP under review</p>
-                          <p className="text-xs text-gray-500 mt-1">1 day ago</p>
+                        <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border border-emerald-100 hover:shadow-md transition-all duration-300">
+                          <div className="w-3 h-3 bg-emerald-500 rounded-full mt-2 flex-shrink-0 shadow-sm"></div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-slate-900">RFP approved</p>
+                            <p className="text-xs text-slate-500 mt-1 font-normal">5 hours ago</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100 hover:shadow-md transition-all duration-300">
+                          <div className="w-3 h-3 bg-amber-500 rounded-full mt-2 flex-shrink-0 shadow-sm"></div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-slate-900">RFP under review</p>
+                            <p className="text-xs text-slate-500 mt-1 font-normal">1 day ago</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Quick Actions Card */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center mb-6">
-                      <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
-                        <span className="text-white text-sm font-semibold">⚡</span>
+                  <div className="bg-white rounded-2xl shadow-lg border-0 p-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-full -translate-y-10 translate-x-10"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mr-4">
+                          <span className="text-white text-lg font-bold">🚀</span>
+                        </div>
+                        <div>
+                          <h3 className="text-heading-4">Quick Actions</h3>
+                          <p className="text-body-small text-muted">Common tasks</p>
+                        </div>
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm font-medium">
-                        <span className="mr-2">📝</span>
-                        Create New RFP
-                      </button>
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium">
-                        <span className="mr-2">📊</span>
-                        View Reports
-                      </button>
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium">
-                        <span className="mr-2">⚙️</span>
-                        Settings
-                      </button>
+                      <div className="space-y-3">
+                        <button className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg font-semibold">
+                          <span className="mr-3 text-base">📝</span>
+                          Create New RFP
+                        </button>
+                        <button className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-slate-100 to-gray-100 text-slate-700 rounded-xl hover:from-slate-200 hover:to-gray-200 transition-all duration-300 font-semibold">
+                          <span className="mr-3 text-base">📊</span>
+                          View Reports
+                        </button>
+                        <button className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-slate-100 to-gray-100 text-slate-700 rounded-xl hover:from-slate-200 hover:to-gray-200 transition-all duration-300 font-semibold">
+                          <span className="mr-3 text-base">⚙️</span>
+                          Settings
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

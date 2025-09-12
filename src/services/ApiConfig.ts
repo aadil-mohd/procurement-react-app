@@ -1,3 +1,3 @@
 export const Urls = {
-    defaultUrl : import.meta.env.VITE_API_DEFAULT_URL,
+    defaultUrl : '', // Use proxy from vite.config.ts
 }

@@ -167,15 +167,32 @@ const UserManagement: React.FC = () => {
 
 
     return (
-        <div className="bg-bgBlue">
-            {/* Header */}
-            <div className="pr-8 py-6 border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-semibold"></h2>
-                <CreateButton name='Add user' onClick={() => setIsCreateModalOpen(true)} />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-8">
+            {/* Header Section */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                        <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <span className="text-white text-2xl font-bold">👥</span>
+                        </div>
+                        <div>
+                            <h1 className="text-heading-2">User Management</h1>
+                            <p className="text-body-small text-muted">Manage system users and their permissions</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <div className="px-6 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                            <span className="text-button text-accent">
+                                {usersCount} Users
+                            </span>
+                        </div>
+                        <CreateButton name='Add User' onClick={() => setIsCreateModalOpen(true)} />
+                    </div>
+                </div>
             </div>
 
             {/* Table Section */}
-            <div className="px-8">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                 <SettingsTable
                     title="Users"
                     columns={columns}
