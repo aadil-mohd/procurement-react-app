@@ -309,7 +309,7 @@ function Dashboard() {
             {/* Middle Section - Charts and Analytics */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
               {/* Budget Chart - Takes 2/3 width */}
-              <div className="xl:col-span-2">
+              <div className="xl:col-span-2 relative">
                 <BudgetCard budgetDetails={budgetDetails} />
               </div>
               
