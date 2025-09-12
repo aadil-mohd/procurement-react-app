@@ -4,14 +4,28 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
   BarController,
+  LineController,
 } from 'chart.js';
 
 // Register necessary Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  BarController,
+  LineController,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface BudgetCardProps {
   heading?:string;
