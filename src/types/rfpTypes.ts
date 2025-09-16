@@ -34,6 +34,6 @@ export interface IRfp {
     rfpGeneralDocuments?:any[]
     rfpOwners: any[],
     rfpCategories:any[],
-    procurementItems?: IProcurementItem[],
+    rfpItems?: IProcurementItem[],
     status?:number,
 }

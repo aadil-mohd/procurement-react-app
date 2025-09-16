@@ -18,12 +18,12 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
       return;
     }
     
-    setItems([...items, { ...editForm, id: Date.now() }]);
+    setItems([...items, { ...editForm, id: 0 }]);
     setEditForm({ itemName: "", itemCode: "", quantity: 0 });
   };
 
   const handleEditItem = (index: number) => {
-    setEditForm(items[index]);
+    //setEditForm(items[index]);
     setEditingIndex(index);
   };
 
@@ -39,7 +39,7 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
 
     // Editing existing item
     const updatedItems = items.map((item, index) =>
-      index === editingIndex ? { ...editForm, id: item.id || Date.now() } : item
+      index === editingIndex ? { ...editForm, id: item.id || 0 } : item
     );
     setItems(updatedItems);
 
@@ -94,8 +94,8 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
       }
 
       // Convert parsed items to IProcurementItem format
-      const newItems: IProcurementItem[] = parsedItems.map((item, index) => ({
-        id: Date.now() + index,
+      const newItems: IProcurementItem[] = parsedItems.map((item) => ({
+        id: 0,
         itemName: item.itemName,
         itemCode: item.itemCode,
         quantity: item.quantity
@@ -193,7 +193,7 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {(items || []).map((item, index) => (
-                  <tr key={item.id || index} className="hover:bg-blue-50 transition-colors duration-150">
+                  <tr key={index} className="hover:bg-blue-50 transition-colors duration-150">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">

@@ -51,7 +51,7 @@ const defaultRfpState: IRfp = {
   rfpDocuments: [],
   rfpOwners: [],
   rfpCategories: [],
-  procurementItems: []
+  rfpItems: []
 };
 
 function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
@@ -93,6 +93,7 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
             }
           });
           setOwners(ownersTemp);
+          setProcurementItems(rfpRequest.rfpItems|| []);
           // ✅ Load previously uploaded files
           const filesArray: any = [];
           for (let fileDetail of rfpRequest.rfpGeneralDocuments || []) {
@@ -224,13 +225,14 @@ function RfpRequestFormComponent({ type = 'create' }: RfpRequestFormProps) {
                 i++;
               });
             }
-            else if (key === "procurementItems") {
+            else if (key === "rfpItems") {
               let i = 0;
               procurementItems.forEach((item: any) => {
-                formData.append(`procurementItems[${i}].itemName`, item.itemName);
-                formData.append(`procurementItems[${i}].itemCode`, item.itemCode);
-                formData.append(`procurementItems[${i}].quantity`, item.quantity);
-                formData.append(`procurementItems[${i}].rfpId`, formDataTemp.id);
+                formData.append(`rfpItems[${i}].id`, item?.id || "0");
+                formData.append(`rfpItems[${i}].itemName`, item.itemName);
+                formData.append(`rfpItems[${i}].itemCode`, item.itemCode);
+                formData.append(`rfpItems[${i}].quantity`, item.quantity);
+                formData.append(`rfpItems[${i}].rfpId`, formDataTemp.id);
                 i++;
               });
             }

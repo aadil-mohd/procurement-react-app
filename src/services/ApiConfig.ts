@@ -1,3 +1,4 @@
 export const Urls = {
-    defaultUrl : '', // Use proxy from vite.config.ts
+    defaultUrl : 'https://localhost:7067',
+    company:"aufait"
 }

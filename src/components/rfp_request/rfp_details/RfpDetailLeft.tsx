@@ -172,6 +172,16 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }:
                             <h3 className="text-sm font-semibold text-gray-700 mb-2">Description</h3>
                             <p className="text-sm text-gray-600 leading-relaxed">{requestData.rfpDescription}</p>
                         </div>
+
+                        {/* Rfp Items */}
+                        <div className="mb-6">
+                            <ViewTable
+                                columns={["itemCode", "itemName", "quantity"]}
+                                columnLabels={{ itemCode: "Id", itemName: "Item", quantity:"Quantity" }}
+                                items={requestData?.rfpItems}
+                            />
+                        </div>
+
                         {/* General Details */}
                         <div className="mb-4">
                             <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
@@ -183,17 +193,17 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }:
                                 <h4 className="text-xs font-medium text-gray-700 mb-2">Published Categories</h4>
                                 {masterData?.categories?.length > 0 && requestData?.rfpCategories?.length > 0 ? (
                                     <div className="flex flex-wrap gap-2">
-                                {requestData?.rfpCategories?.map((item: any) => {
-                                    const category = masterData?.categories?.find(
-                                        (c: any) => c.id === item.categoryId
-                                    );
-                                    return (
+                                        {requestData?.rfpCategories?.map((item: any) => {
+                                            const category = masterData?.categories?.find(
+                                                (c: any) => c.id === item.categoryId
+                                            );
+                                            return (
                                                 <span key={item.categoryId} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                                                     {category?.name || 'Unknown'}
                                                 </span>
-                                    );
-                                })}
-                            </div>
+                                            );
+                                        })}
+                                    </div>
                                 ) : (
                                     <p className="text-xs text-gray-500 bg-gray-50 rounded p-2">No categories assigned</p>
                                 )}
@@ -271,8 +281,8 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }:
                                         <p className="text-xs text-gray-500 mb-1">Organization</p>
                                         <p className="text-sm font-medium text-gray-900">{requestData?.buyerOrganizationName || "-"}</p>
                                     </div>
-                    </div>
-                </div>
+                                </div>
+                            </div>
 
                             {/* Timeline Information */}
                             <div className="space-y-3">
@@ -301,7 +311,7 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }:
                                     </div>
                                 </div>
                             </div>
-                </div>
+                        </div>
 
                         {/* Ownership Details */}
                         <div className="mb-4">
@@ -356,10 +366,10 @@ const RfpDetailLeft: React.FC<RfpDetailLeftProp> = ({ masterData, requestData }:
                                 <h4 className="text-xs font-medium text-gray-700 mb-2">Supporting Documents</h4>
                                 {rfpDocuments.length > 0 ? (
                                     <div className="bg-gray-50 rounded p-3">
-                                        <ViewTable 
-                                            columns={["attachmentComponent", "type"]} 
-                                            columnLabels={{ attachmentComponent: "Attachment", type: "Type" }} 
-                                            items={rfpDocuments} 
+                                        <ViewTable
+                                            columns={["attachmentComponent", "type"]}
+                                            columnLabels={{ attachmentComponent: "Attachment", type: "Type" }}
+                                            items={rfpDocuments}
                                         />
                                     </div>
                                 ) : (
