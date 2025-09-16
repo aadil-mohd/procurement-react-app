@@ -17,13 +17,13 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
     if (!editForm.itemName.trim()) {
       return;
     }
-    
+
     setItems([...items, { ...editForm, id: 0 }]);
     setEditForm({ itemName: "", itemCode: "", quantity: 0 });
   };
 
   const handleEditItem = (index: number) => {
-    //setEditForm(items[index]);
+    setEditForm(items[index]);
     setEditingIndex(index);
   };
 
@@ -67,7 +67,7 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
       'application/vnd.ms-excel',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
-    
+
     if (!allowedTypes.includes(file.type) && !file.name.match(/\.(csv|xls|xlsx)$/i)) {
       message.error('Please upload a CSV or Excel file (.csv, .xls, .xlsx)');
       return;
@@ -104,7 +104,7 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
       // Replace existing items with imported items
       setItems(newItems);
       message.success(`Successfully imported ${newItems.length} items from ${file.name}. Previous items have been replaced.`);
-      
+
       // Clear the file input
       event.target.value = '';
     } catch (error) {
@@ -219,7 +219,11 @@ const ProcurementItems: React.FC<ProcurementItemsProps> = ({ items = [], setItem
                     <td className="px-6 py-4 text-center">
                       <div className="flex justify-center space-x-2">
                         <button
-                          onClick={() => handleEditItem(index)}
+                          onClick={(e) => {
+                            handleEditItem(index)
+                            e.preventDefault();
+                          }
+                          }
                           className="inline-flex items-center justify-center w-8 h-8 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg transition-all duration-200"
                           title="Edit item"
                         >
